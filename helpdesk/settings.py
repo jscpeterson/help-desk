@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
+    'tickets',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'helpdesk.wsgi.application'
 
+AUTH_USER_MODEL = 'users.HelpDeskUser'
+# TODO Sync to LDAP
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
