@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Help Desk</title>
+</head>
+<body>
+
+{% if user.is_authenticated %}
+
+    <h3>Welcome, {{ user }}.</h3>
+
+    <a href="{% url 'index' %}">
+        Launch
+    </a>
+
+{% else %}
+
+    <h3>You are not logged in.</h3>
+
+    <a href="{% url 'login' %}">
+        Login
+    </a>
+
+{% endif %}
+
+</body>
+</html>
