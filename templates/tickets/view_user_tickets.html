@@ -7,7 +7,10 @@ These are your open tickets: <br/>
     <tr>
         <th>Ticket</th>
         <th>Opened</th>
+        <th>Assigned At</th>
         <th>Assigned To</th>
+        <th>Category</th>
+        <th>Priority</th>
         <th>Description</th>
     </tr>
 </thead>
@@ -15,15 +18,40 @@ These are your open tickets: <br/>
         <tr>
             <td>{{ ticket.id }}</td>
             <td>{{ ticket.created_date }}</td>
+            <td>{{ ticket.assignment_date }}</td>
             <td>{{ ticket.assignee }}</td>
+            <td>{{ ticket.category }}</td>
+            <td>{{ ticket.priority }}</td>
             <td>{{ ticket.problem_description }}</td>
         </tr>
     {% endfor %}
 </table>
+
 These are your closed tickets: <br/>
+<table>
+<thead>
+    <tr>
+        <th>Ticket</th>
+        <th>Opened</th>
+        <th>Assigned At</th>
+        <th>Assigned To</th>
+        <th>Closed</th>
+        <th>Description</th>
+        <th>Resolution</th>
+    </tr>
+</thead>
     {% for ticket in closed_tickets %}
-        <li>{{ ticket }}</li>
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td>{{ ticket.created_date }}</td>
+            <td>{{ ticket.assignment_date }}</td>
+            <td>{{ ticket.assignee }}</td>
+            <td>{{ ticket.closed_date }}</td>
+            <td>{{ ticket.problem_description }}</td>
+            <td>{{ ticket.resolution }}</td>
+        </tr>
     {% endfor %}
+</table>
 
 <br/><br/>
 <a href="{% url 'logout' %}">Logout</a>
