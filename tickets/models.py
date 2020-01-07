@@ -5,7 +5,6 @@ from users.models import HelpDeskUser
 
 class Ticket(models.Model):
 
-    # Automatically created
     user = models.ForeignKey(
         HelpDeskUser,
         related_name='submitted_tickets',
