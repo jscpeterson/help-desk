@@ -74,6 +74,10 @@ WSGI_APPLICATION = 'helpdesk.wsgi.application'
 AUTH_USER_MODEL = 'users.HelpDeskUser'
 # TODO Sync to LDAP
 
+LOGIN_URL = 'index'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
+
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
