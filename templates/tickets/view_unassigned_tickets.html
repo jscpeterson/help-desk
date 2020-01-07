@@ -1,0 +1,26 @@
+Hello {{ first_name }}. <br/>
+<br/>
+These tickets need to be assigned: <br/>
+<table>
+<thead>
+    <tr>
+        <th>Ticket</th>
+        <th>User</th>
+        <th>Opened</th>
+        <th>Description</th>
+    </tr>
+</thead>
+    {% for ticket in unassigned_tickets %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td>{{ ticket.user }}</td>
+            <td>{{ ticket.created_date }}</td>
+            <td>{{ ticket.problem_description }}</td>
+            <td><a href={% url 'tickets:assign_ticket' ticket.id %}>Assign</a></td>
+            <td><a href={% url 'tickets:resolve_ticket' ticket.id %}>Resolve</a></td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br/><br/>
+<a href="{% url 'logout' %}">Logout</a>
