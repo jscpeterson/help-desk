@@ -2,13 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <base target="_top">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Help Desk login</title>
 </head>
 <body>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type='submit' class="btn-large">Login</button>
-    </form>
+
+    <div class="container"> <!-- START CONTAINER -->
+
+    <div id="splash" class="row"> <!-- START ROW -->
+      <div class="center-align col s12">
+        <!-- serve the logo image from django static in the future -->
+        <img src="https://drive.google.com/uc?id=1NZwk32QRpOfiDCy2A1jadD4iAp2_l-kf" width="20%"/>
+      </div>
+      <div class="row">
+
+        <h3 class="center-align col s12">Welcome to the 2nd Judicial DA's Help Desk.  Login using your your DA2nd account credentials to
+          view and create help desk tickets.
+        </h3>
+      </div>
+    </div>                          <!-- CLOSE ROW -->
+
+
+    <form method="post" action="/users/login/" id="warrantForm" class="formValidate">
+      {% csrf_token %}
+    <div class="row hoverable"> <!-- START ROW -->
+      <h3 class="center-align">Username</h3>
+      <div class="input-field col s12 m6">
+      <i class="material-icons prefix">account_circle</i>
+      <input id="id_username" name="username" type="text" class="validate" maxlength="50" required>
+      <label for="id_username">Username</label>
+      <span class="helper-text" data-error="Please enter your Username" data-success="OK"></span>
+      </div>
+    </div>            <!-- CLOSE ROW -->
+
+    <div class="row hoverable"> <!-- START ROW -->
+      <h3 class="center-align">Password</h3>
+      <div class="input-field col s12 m6">
+      <i class="material-icons prefix">lock</i>
+      <input id="id_password" name="password" type="password" class="validate" maxlength="50" required>
+      <label for="id_password">Password</label>
+      <span class="helper-text" data-error="Please Enter Your Password" data-success="OK"></span>
+      </div>
+    </div> <!-- CLOSE ROW -->
+
+
+    <!-- SUBMIT BUTTON SECTION -->
+    <div id="buttonDiv">
+      <button class="btn waves-effect waves-light hoverable" id="btn" type="submit" name="action">Login
+      <i class="material-icons right">send</i>
+      </button>
+    </div>
+
+    </form><!-- CLOSE FORM -->
+
+    </div> <!-- CLOSE CONTAINER -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
 </body>
 </html>
