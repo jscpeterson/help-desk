@@ -5,7 +5,6 @@ from users.models import HelpDeskUser
 
 class Ticket(models.Model):
 
-    # Automatically created
     user = models.ForeignKey(
         HelpDeskUser,
         related_name='submitted_tickets',
@@ -77,6 +76,11 @@ class Ticket(models.Model):
         null=True
     )
 
+    assignment_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+
     # To be filled by IT or a supervisor
     notes = models.TextField(
         default=''
@@ -99,4 +103,9 @@ class Ticket(models.Model):
     status = models.IntegerField(
         choices=STATUS_CHOICES,
         default=OPEN,
+    )
+
+    closed_date = models.DateTimeField(
+        blank=True,
+        null=True,
     )

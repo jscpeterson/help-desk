@@ -1,0 +1,31 @@
+Hello {{ first_name }}. <br/>
+<br/>
+These are your assigned tickets: <br/>
+<table>
+<thead>
+    <tr>
+        <th>Ticket</th>
+        <th>User</th>
+        <th>Opened</th>
+        <th>Assigned At</th>
+        <th>Category</th>
+        <th>Priority</th>
+        <th>Description</th>
+    </tr>
+</thead>
+    {% for ticket in assigned_tickets %}
+        <tr>
+            <td>{{ ticket.id }}</td>
+            <td>{{ ticket.user }}</td>
+            <td>{{ ticket.created_date }}</td>
+            <td>{{ ticket.assignment_date }}</td>
+            <td>{{ ticket.get_category_display }}</td>
+            <td>{{ ticket.get_priority_display }}</td>
+            <td>{{ ticket.problem_description }}</td>
+            <td><a href={% url 'tickets:resolve_ticket' ticket.id %}>Resolve</a></td>
+        </tr>
+    {% endfor %}
+</table>
+
+<br/><br/>
+<a href="{% url 'logout' %}">Logout</a>
