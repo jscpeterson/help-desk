@@ -1,5 +1,24 @@
-<form method="post">
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+  <form method="post" action="/tickets/new/" class="col s12">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+    <div class="row">
+      <h4>Describe your issue below</h4>
+      <h6>Use as much space as you need to describe the problem you are experiencing.
+        <br>When complete click the submit button to submit your ticket</h6>
+      <div class="input-field col s12 m6">
+        <textarea name="problem_description" id="id_problem_description" class="materialize-textarea"></textarea>
+        <label for="id_problem_description">Problem Description</label>
+      </div>
+    </div>
+
+    <div id="buttonDiv">
+      <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Submit
+      <i class="material-icons right">send</i>
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
