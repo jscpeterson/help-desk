@@ -1,0 +1,9 @@
+{% extends "emails/email_template.html" %}
+
+{% block content %}
+Ticket #{{ ticket_num }} has been resolved by <strong>{{ assignee }}.</strong><br/>
+<br/>
+Your issue was as follows: {{ problem_description }}<br/>
+<br/>
+<strong>{{ assignee }}</strong> provided this information with the resolution: {{ resolution }}<br/>
+{% endblock %}

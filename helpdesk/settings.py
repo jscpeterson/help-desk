@@ -128,3 +128,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Email settings
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+
+SYSADMIN_EMAIL = os.environ.get('SYSADMIN_EMAIL')
+SUPPORT_EMAIL = os.environ.get('SUPPORT_EMAIL')
+
+# TODO Set up forwarding to sysadmin email when 500 errors are hit in production
