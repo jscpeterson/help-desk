@@ -1,57 +1,153 @@
-Hello {{ first_name }}. How is the weather in Biloxi <br/>
-<a href="{% url 'tickets:new_ticket' %}">New Ticket</a>
-<br/><br/>
-These are your open tickets: <br/>
-<table>
-<thead>
-    <tr>
-        <th>Ticket</th>
-        <th>Opened</th>
-        <th>Assigned At</th>
-        <th>Assigned To</th>
-        <th>Category</th>
-        <th>Priority</th>
-        <th>Description</th>
-    </tr>
-</thead>
-    {% for ticket in open_tickets %}
-        <tr>
-            <td>{{ ticket.id }}</td>
-            <td>{{ ticket.created_date }}</td>
-            <td>{{ ticket.assignment_date }}</td>
-            <td>{{ ticket.assignee }}</td>
-            <td>{{ ticket.get_category_display }}</td>
-            <td>{{ ticket.get_priority_display }}</td>
-            <td>{{ ticket.problem_description }}</td>
-        </tr>
-    {% endfor %}
-</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base target="_top">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Help Desk login</title>
+    <style>
+      #addticketh3 {
+        letter-spacing: .3em;
+        padding-top: 2em;
+      }
+      #addbutton {
+        margin-right: 2em;
+      }
+      .card {
+        overflow-y: scroll;
+        max-height: 40vh;
+      }
+      img {
+        padding-right: 1em;
+        padding-left: 1em;
+      }
+    </style>
+</head>
 
-These are your closed tickets: <br/>
-<table>
-<thead>
-    <tr>
-        <th>Ticket</th>
-        <th>Opened</th>
-        <th>Assigned At</th>
-        <th>Assigned To</th>
-        <th>Closed</th>
-        <th>Description</th>
-        <th>Resolution</th>
-    </tr>
-</thead>
-    {% for ticket in closed_tickets %}
-        <tr>
-            <td>{{ ticket.id }}</td>
-            <td>{{ ticket.created_date }}</td>
-            <td>{{ ticket.assignment_date }}</td>
-            <td>{{ ticket.assignee }}</td>
-            <td>{{ ticket.closed_date }}</td>
-            <td>{{ ticket.problem_description }}</td>
-            <td>{{ ticket.resolution }}</td>
-        </tr>
-    {% endfor %}
-</table>
 
-<br/><br/>
-<a href="{% url 'logout' %}">Logout</a>
+<nav> <!-- NAVBAR START -->
+  <div class="nav-wrapper blue darken-4">
+    <!-- replace the image link with the logo when it's put into static assets later -->
+
+    <ul class="left">
+      <li>
+        <img src="https://drive.google.com/uc?id=1onuUR3J_ufFbEbyGNP1seeFHJh8ivvRD" alt="DA2nd Logo" height="25px">
+      </li>
+      <li>Welcome {{first_name}}</li>
+    </ul>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </div>
+</nav> <!-- NAVBAR END -->
+
+<body>
+
+  <h2 class="center-align">DA Help Desk</h2>
+
+    <div class="container"> <!-- START CONTAINER -->
+
+    <div class="row"> <!-- START ROW -->
+      <h3 id="addticketh3" class="center-align">
+        <a href="{% url 'tickets:new_ticket' %}" class="btn-floating btn-large waves-effect waves-light red" id="addbutton">
+          <i class="material-icons">add</i>
+        </a>Create New Ticket
+      </h3>
+    </div>            <!-- CLOSE ROW -->
+
+<!-- TODO: MAKE TABLE HEADERS STICKY SO THEY STAY AT TOP WHEN SCROLLING -->
+<div class="row"> <!-- START ROW -->
+  <div id="admin" class="col s12">
+    <div class="card material-table blue-grey darken-1">
+      <div class="table-header">
+        <span class="table-title truncate">{{first_name}}'s Open Tickets</span>
+      </div>
+      <table class="white-text highlight" id="datatable">
+        <thead>
+          <tr>
+            <th>Ticket</th>
+            <th>Opened</th>
+            <th>Assigned At</th>
+            <th>Assigned To</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ticket in open_tickets %}
+              <tr>
+                  <td>{{ ticket.id }}</td>
+                  <td>{{ ticket.created_date }}</td>
+                  {% if ticket.assignment_date == none %}
+                    <td colspan="4">Ticket Not Yet Assigned</td>
+                  {% else %}
+                  <td>{{ ticket.assignment_date }}</td>
+                  <td>{{ ticket.assignee }}</td>
+                  <td>{{ ticket.category }}</td>
+                  <td>{{ ticket.priority }}</td>
+                  {% endif %}
+                  <td>{{ ticket.problem_description }}</td>
+              </tr>
+          {% endfor %}
+          {% if open_tickets|length == 0 %}
+          <tr>
+            <td colspan="7">No Open Tickets...</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>        <!-- CLOSE ROW -->
+
+<div class="row">    <!-- START ROW -->
+  <div id="admin" class="col s12">
+    <div class="card material-table blue-grey darken-1">
+      <div class="table-header">
+        <span class="table-title">{{first_name}}'s Closed Tickets</span>
+      </div>
+      <table class="white-text highlight" id="datatable">
+        <thead>
+          <tr>
+            <th>Ticket</th>
+            <th>Opened</th>
+            <th>Assigned At</th>
+            <th>Assigned To</th>
+            <th>Closed</th>
+            <th>Description</th>
+            <th>Resolution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ticket in closed_tickets %}
+              <tr>
+                <td>{{ ticket.id }}</td>
+                <td>{{ ticket.created_date }}</td>
+                <td>{{ ticket.assignment_date }}</td>
+                <td>{{ ticket.assignee }}</td>
+                <td>{{ ticket.closed_date }}</td>
+                <td>{{ ticket.problem_description }}</td>
+                <td>{{ ticket.resolution }}</td>
+              </tr>
+          {% endfor %}
+          {% if closed_tickets|length == 0 %}
+          <tr>
+            <td colspan="7">No Closed Tickets...</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>      <!-- CLOSE ROW -->
+
+    </div> <!-- CLOSE CONTAINER -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+
+</body>
+</html>
