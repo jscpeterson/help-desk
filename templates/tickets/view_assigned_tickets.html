@@ -19,8 +19,8 @@ These are your assigned tickets: <br/>
             <td>{{ ticket.user }}</td>
             <td>{{ ticket.created_date }}</td>
             <td>{{ ticket.assignment_date }}</td>
-            <td>{{ ticket.category }}</td>
-            <td>{{ ticket.priority }}</td>
+            <td>{{ ticket.get_category_display }}</td>
+            <td>{{ ticket.get_priority_display }}</td>
             <td>{{ ticket.problem_description }}</td>
             <td><a href={% url 'tickets:resolve_ticket' ticket.id %}>Resolve</a></td>
         </tr>

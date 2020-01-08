@@ -1,0 +1,20 @@
+{% load static %}
+
+<nav> <!-- NAVBAR START -->
+  <div class="nav-wrapper blue darken-4">
+    <!-- replace the image link with the logo when it's put into static assets later -->
+
+    <ul class="left">
+      <li>
+        <img src="https://drive.google.com/uc?id=1onuUR3J_ufFbEbyGNP1seeFHJh8ivvRD" alt="DA2nd Logo" height="25px">
+      </li>
+      <li>Welcome {{first_name}}</li>
+    </ul>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </div>
+</nav> <!-- NAVBAR END -->
+
+
+  <h2 class="center-align">DA Help Desk</h2>

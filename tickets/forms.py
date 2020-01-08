@@ -4,6 +4,8 @@ from django.forms import Form
 from tickets.models import Ticket
 from users.models import HelpDeskUser, GROUP_SUPPORT
 
+EMPTY_CHOICE = '---------'
+
 
 class NewTicketForm(Form):
 
@@ -30,14 +32,17 @@ class AssignTicketForm(Form):
             required=True,
         )
 
+        priority_choices_with_empty = [('', EMPTY_CHOICE)] + list(Ticket.PRIORITY_CHOICES)
+        category_choices_with_empty = [('', EMPTY_CHOICE)] + list(Ticket.CATEGORY_CHOICES)
+
         self.fields['priority'] = forms.ChoiceField(
-            choices=Ticket.PRIORITY_CHOICES,
+            choices=priority_choices_with_empty,
             label='Assign a priority level:',
             required=True,
         )
 
         self.fields['category'] = forms.ChoiceField(
-            choices=Ticket.CATEGORY_CHOICES,
+            choices=category_choices_with_empty,
             label='Assign a category:',
             required=True,
         )

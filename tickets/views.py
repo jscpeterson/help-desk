@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 
@@ -17,6 +17,7 @@ def home(request):
         return HttpResponseRedirect(reverse('tickets:view_assigned_tickets'))
     else:
         return HttpResponseRedirect(reverse('tickets:view_user_tickets'))
+
 
 @login_required
 def view_user_tickets(request):
@@ -56,6 +57,7 @@ def view_unassigned_tickets(request):
         'first_name': request.user.first_name,
         'unassigned_tickets': Ticket.objects.filter(status=Ticket.OPEN, assignee=None),
     }
+    # TODO Order tickets by datetimes
 
     return render(request, template, context)
 
@@ -63,9 +65,10 @@ def view_unassigned_tickets(request):
 @login_required
 def assign_ticket(request, *args, **kwargs):
     template = 'tickets/assign_ticket.html'
-    # TODO Throw 404? if ticket fails to get
-    ticket = Ticket.objects.get(id=kwargs.get('ticket_id'))
+    ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
 
+    # TODO Check support or supervisor permission
+    # TODO Pass user to check permission
     if request.method == 'POST':
         form = forms.AssignTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():
@@ -94,6 +97,7 @@ def view_assigned_tickets(request):
         'first_name': request.user.first_name,
         'assigned_tickets': Ticket.objects.filter(assignee=request.user, status=Ticket.OPEN),
     }
+    # TODO Order tickets by priority and datetime
 
     return render(request, template, context)
 
@@ -101,10 +105,9 @@ def view_assigned_tickets(request):
 @login_required
 def resolve_ticket(request, *args, **kwargs):
     template = 'tickets/resolve_ticket.html'
-    # TODO Throw 404? if ticket fails to get
-    ticket = Ticket.objects.get(id=kwargs.get('ticket_id'))
+    ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
 
-    # TODO Check Support permission
+    # TODO Check support or supervisor permission
     if request.method == 'POST':
         form = forms.ResolveTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():
