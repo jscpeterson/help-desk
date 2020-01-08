@@ -69,8 +69,8 @@
                   {% else %}
                   <td>{{ ticket.assignment_date }}</td>
                   <td>{{ ticket.assignee }}</td>
-                  <td>{{ ticket.category }}</td>
-                  <td>{{ ticket.priority }}</td>
+                  <td>{{ ticket.get_category_display }}</td>
+                  <td>{{ ticket.get_priority_display }}</td>
                   {% endif %}
                   <td>{{ ticket.problem_description }}</td>
               </tr>
