@@ -1,10 +1,14 @@
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 
+from helpdesk import settings
 from tickets.models import Ticket
+from tickets.utils import send_resolution_email
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT
 from . import forms
 
@@ -117,6 +121,8 @@ def resolve_ticket(request, *args, **kwargs):
             ticket.closed_date = timezone.now()
             ticket.status = Ticket.CLOSED
             ticket.save()
+
+            send_resolution_email(ticket)
 
             return HttpResponseRedirect(reverse('tickets:home'))
 
