@@ -1,28 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Help Desk</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
+{% block content %}
+  <div class="container">
 {% if user.is_authenticated %}
+
 
     <h3>Welcome, {{ user }}.</h3>
 
-    <a href="{% url 'tickets:home' %}">
-        Launch
+    <a href="{% url 'tickets:home' %}" class="btn waves-effect waves-light hoverable blue darken-4" id="launchHomeButton">
+      <i class="material-icons right">send</i>
+      Launch
     </a>
 
 {% else %}
 
     <h3>You are not logged in.</h3>
 
-    <a href="{% url 'login' %}">
-        Login
+    <a href="{% url 'login' %}" class="btn waves-effect waves-light hoverable blue darken-4" id="loginButton">
+      <i class="material-icons right">send</i>
+      Login
     </a>
 
 {% endif %}
-
+  </div>
+{% endblock %}
 </body>
 </html>
