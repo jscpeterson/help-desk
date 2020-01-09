@@ -44,5 +44,54 @@
       </div>
     </div>
   </div>        <!-- CLOSE ROW -->
+
+  <div class="divider"></div>
+
+  <div class="row">
+    <h4>These tickets are assigned but not yet resolved:</h4>
+  </div>
+  <div class="row"> <!-- START ROW -->
+    <div id="admin" class="col s12">
+      <div class="card material-table blue-grey darken-1">
+        <div class="table-header">
+          <span class="table-title">Assigned Open Tickets</span>
+        </div>
+        <table class="white-text highlight" id="datatable">
+        <thead>
+            <tr>
+                <th>Ticket</th>
+                <th>User</th>
+                <th>Opened</th>
+                <th>Assigned At</th>
+                <th>Assigned To</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Description</th>
+                <th>Resolve</th>
+            </tr>
+        </thead>
+            {% for ticket in assigned_tickets %}
+                <tr>
+                    <td>{{ ticket.id }}</td>
+                    <td>{{ ticket.user }}</td>
+                    <td>{{ ticket.created_date }}</td>
+                    <td>{{ ticket.problem_description }}</td>
+                    <td>{{ ticket.assignment_date }}</td>
+                    <td>{{ ticket.assignee }}</td>
+                    <td>{{ ticket.get_category_display }}</td>
+                    <td>{{ ticket.get_priority_display }}</td>
+                    <td>{{ ticket.problem_description }}</td>
+                    <td><a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
+                      <i class="material-icons">check_circle</i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+  </div>
+</div>        <!-- CLOSE ROW -->
 </div> <!-- CLOSE CONTAINER -->
+
+
 {% endblock %}
