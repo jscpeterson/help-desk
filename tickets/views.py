@@ -51,10 +51,9 @@ def view_user_tickets(request):
     template = 'tickets/view_user_tickets.html'
     context = {
         'first_name': request.user.first_name,
-        'open_tickets': Ticket.objects.filter(user=request.user, status=Ticket.OPEN),
-        'closed_tickets': Ticket.objects.filter(user=request.user, status=Ticket.CLOSED),
+        'open_tickets': Ticket.objects.filter(user=request.user, status=Ticket.OPEN).order_by('created_date'),
+        'closed_tickets': Ticket.objects.filter(user=request.user, status=Ticket.CLOSED).order_by('created_date'),
     }
-    # TODO Order tickets by datetimes
 
     return render(request, template, context)
 
@@ -86,15 +85,16 @@ def view_unassigned_tickets(request):
     template = 'tickets/view_unassigned_tickets.html'
     context = {
         'first_name': request.user.first_name,
-        'unassigned_tickets': Ticket.objects.filter(status=Ticket.OPEN, assignee=None),
+        'unassigned_tickets': Ticket.objects.filter(status=Ticket.OPEN, assignee=None).order_by('created_date'),
     }
-    # TODO Order tickets by datetimes
 
     return render(request, template, context)
 
 
 @login_required
 def assign_ticket(request, *args, **kwargs):
+    # TODO Return error view if ticket already assigned or resolved
+    #  (assignment change should be done in future DetailView)
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
     check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
 
@@ -129,15 +129,16 @@ def view_assigned_tickets(request):
     template = 'tickets/view_assigned_tickets.html'
     context = {
         'first_name': request.user.first_name,
-        'assigned_tickets': Ticket.objects.filter(assignee=request.user, status=Ticket.OPEN),
+        'assigned_tickets': Ticket.objects.filter(assignee=request.user, status=Ticket.OPEN).order_by('created_date')
+        .order_by('priority'),
     }
-    # TODO Order tickets by priority and datetime
 
     return render(request, template, context)
 
 
 @login_required
 def resolve_ticket(request, *args, **kwargs):
+    # TODO Return error view if ticket already resolved
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
     check_is_assigned(request.user, ticket)
 
