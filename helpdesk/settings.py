@@ -140,4 +140,6 @@ EMAIL_PORT = 587
 SYSADMIN_EMAIL = os.environ.get('SYSADMIN_EMAIL')
 SUPPORT_EMAIL = os.environ.get('SUPPORT_EMAIL')
 
-# TODO Set up forwarding to sysadmin email when 500 errors are hit in production
+ADMINS = [
+    (os.environ.get('SYSADMIN_NAME'), os.environ.get('SYSADMIN_EMAIL'))
+]
