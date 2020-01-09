@@ -6,33 +6,9 @@ from django.urls import reverse
 from django.utils import timezone
 
 from tickets.models import Ticket
-from tickets.utils import send_resolution_email
+from tickets.utils import send_resolution_email, check_groups, check_is_assigned
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT
 from . import forms
-
-
-def check_groups(user, group_names):
-    """
-    Checks if the user is a superuser or in an allowed group for a given list of group names.
-    Raises PermissionDenied exception if not.
-    """
-    if user.is_superuser or any(user.groups.filter(name=group_name).exists() for group_name in group_names):
-        return True
-    else:
-        raise PermissionDenied()
-
-
-def check_is_assigned(user, ticket):
-    """
-    Checks if user is a superuser/supervisor or if the user is a support user and is assigned to a ticket.
-    Raises PermissionDenied exception if not.
-    """
-    if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
-        return True
-    elif user.groups.filter(name=GROUP_SUPPORT).exists() and ticket.assignee == user:
-        return True
-    else:
-        raise PermissionDenied()
 
 
 @login_required
@@ -64,11 +40,18 @@ def new_ticket(request, *args, **kwargs):
 
     template = 'tickets/new_ticket.html'
 
+    kwargs['user'] = request.user
+
     if request.method == 'POST':
         form = forms.NewTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():
+            if form.cleaned_data.get('user'):
+                user = form.cleaned_data.get('user')
+            else:
+                user = request.user
+            print(user)
             ticket = Ticket.objects.create(
-                user=request.user,
+                user=user,
                 problem_description=form.cleaned_data.get('problem_description')
             )
             return HttpResponseRedirect(reverse('tickets:home'))

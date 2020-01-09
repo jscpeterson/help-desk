@@ -2,6 +2,7 @@ from django import forms
 from django.forms import Form
 
 from tickets.models import Ticket
+from tickets.utils import is_in_groups
 from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
 
 EMPTY_CHOICE = '---------'
@@ -10,7 +11,19 @@ EMPTY_CHOICE = '---------'
 class NewTicketForm(Form):
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
         super(NewTicketForm, self).__init__(*args, **kwargs)
+
+        if is_in_groups(user, [GROUP_SUPPORT, GROUP_SUPERVISOR]):
+            self.fields['user'] = forms.ModelChoiceField(
+                queryset=HelpDeskUser.objects.all().order_by('first_name'),
+                label='Select the user this ticket is for:',
+                help_text='If you do not see a user, they may need to log in first.',
+                initial=user.pk,
+            )
+
+        # TODO Allow supervisors and support to immediately assign, categorize and prioritize tickets
+
         self.fields['problem_description'] = forms.CharField(
             widget=forms.Textarea,
             label='Please describe your problem.',
