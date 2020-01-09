@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from tickets.models import Ticket
-from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT
+from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
 
 
@@ -85,8 +85,16 @@ def assign_ticket(request, *args, **kwargs):
 
     else:
         form = forms.AssignTicketForm(*args, **kwargs)
+        assignee_queryset = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
+        priority_choices = list(Ticket.PRIORITY_CHOICES)
+        category_choices = list(Ticket.CATEGORY_CHOICES)
 
-    context = {'form': form}
+    context = {
+        'form': form,
+        'support_agents': assignee_queryset,
+        'category_choices': category_choices,
+        'priority_choices': priority_choices
+    }
     return render(request, template, context)
 
 

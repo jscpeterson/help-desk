@@ -1,5 +1,60 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container"> <!-- Container start -->
+
+  <form method="post"> <!-- Form start -->
+
+  <div class="row"> <!-- Row start -->
+      {% csrf_token %}
+      <div class="input-field col s12 m8">
+      <select name="assignee" required id="id_assignee">
+        <option value="" disabled  selected>Support Agents</option>
+        {% for agent in support_agents %}
+        <option value="{{agent.id}}">{{agent}}</option>
+        {% endfor %}
+      </select>
+      <label>Select support agent to assign</label>
+    </div>
+  </div> <!-- Row end -->
+
+  <div class="row"> <!-- Row start -->
+      <div class="input-field col s12 m8">
+      <select name="priority" required id="id_priority">
+        <option value="" disabled selected>Priority Level</option>
+        {% for priority in priority_choices %}
+        <option value="{{priority.0}}">{{ priority.1 }}</option>
+        {% endfor %}
+      </select>
+      <label>Select the ticket priority level</label>
+    </div>
+  </div> <!-- Row end -->
+
+  <div class="row"> <!-- Row start -->
+      <div class="input-field col s12 m8">
+      <select name="category" required id="id_category">
+        <option value="" disabled selected>Issue Category</option>
+        {% for category in category_choices %}
+        <option value="{{category.0}}">{{ category.1 }}</option>
+        {% endfor %}
+      </select>
+      <label>Select an issue category</label>
+    </div>
+  </div> <!-- Row end -->
+
+  <div class="row">
+    <div class="input-field col s12 m8">
+      <textarea name="notes" id="id_notes" class="materialize-textarea"></textarea>
+      <label for="id_notes">Notes</label>
+    </div>
+  </div>
+
+  <div id="buttonDiv">
+    <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Submit
+    <i class="material-icons right">send</i>
+    </button>
+  </div>
+
+</form> <!-- Form end -->
+</div> <!-- Container end -->
+{% endblock %}
