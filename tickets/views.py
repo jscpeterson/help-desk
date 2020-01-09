@@ -1,16 +1,38 @@
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 
-from helpdesk import settings
 from tickets.models import Ticket
 from tickets.utils import send_resolution_email
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT
 from . import forms
+
+
+def check_groups(user, group_names):
+    """
+    Checks if the user is a superuser or in an allowed group for a given list of group names.
+    Raises PermissionDenied exception if not.
+    """
+    if user.is_superuser or any(user.groups.filter(name=group_name).exists() for group_name in group_names):
+        return True
+    else:
+        raise PermissionDenied()
+
+
+def check_is_assigned(user, ticket):
+    """
+    Checks if user is a superuser/supervisor or if the user is a support user and is assigned to a ticket.
+    Raises PermissionDenied exception if not.
+    """
+    if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
+        return True
+    elif user.groups.filter(name=GROUP_SUPPORT).exists() and ticket.assignee == user:
+        return True
+    else:
+        raise PermissionDenied()
 
 
 @login_required
@@ -25,6 +47,7 @@ def home(request):
 
 @login_required
 def view_user_tickets(request):
+
     template = 'tickets/view_user_tickets.html'
     context = {
         'first_name': request.user.first_name,
@@ -38,7 +61,9 @@ def view_user_tickets(request):
 
 @login_required
 def new_ticket(request, *args, **kwargs):
+
     template = 'tickets/new_ticket.html'
+
     if request.method == 'POST':
         form = forms.NewTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():
@@ -56,6 +81,8 @@ def new_ticket(request, *args, **kwargs):
 
 @login_required
 def view_unassigned_tickets(request):
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+
     template = 'tickets/view_unassigned_tickets.html'
     context = {
         'first_name': request.user.first_name,
@@ -68,11 +95,12 @@ def view_unassigned_tickets(request):
 
 @login_required
 def assign_ticket(request, *args, **kwargs):
-    template = 'tickets/assign_ticket.html'
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
 
-    # TODO Check support or supervisor permission
-    # TODO Pass user to check permission
+    template = 'tickets/assign_ticket.html'
+    kwargs['user'] = request.user
+
     if request.method == 'POST':
         form = forms.AssignTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():
@@ -96,6 +124,8 @@ def assign_ticket(request, *args, **kwargs):
 
 @login_required
 def view_assigned_tickets(request):
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+
     template = 'tickets/view_assigned_tickets.html'
     context = {
         'first_name': request.user.first_name,
@@ -108,10 +138,11 @@ def view_assigned_tickets(request):
 
 @login_required
 def resolve_ticket(request, *args, **kwargs):
-    template = 'tickets/resolve_ticket.html'
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+    check_is_assigned(request.user, ticket)
 
-    # TODO Check support or supervisor permission
+    template = 'tickets/resolve_ticket.html'
+
     if request.method == 'POST':
         form = forms.ResolveTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():

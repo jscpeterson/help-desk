@@ -2,7 +2,7 @@ from django import forms
 from django.forms import Form
 
 from tickets.models import Ticket
-from users.models import HelpDeskUser, GROUP_SUPPORT
+from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
 
 EMPTY_CHOICE = '---------'
 
@@ -22,10 +22,14 @@ class AssignTicketForm(Form):
 
     def __init__(self, *args, **kwargs):
         ticket = Ticket.objects.get(id=kwargs.pop('ticket_id'))
+        user = kwargs.pop('user')
         super(AssignTicketForm, self).__init__(*args, **kwargs)
 
-        # TODO If the user is SUPPORT and not SUPERVISOR, make the only choice themself
-        assignee_queryset = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
+        if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
+            assignee_queryset = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
+        elif user.groups.filter(name=GROUP_SUPPORT).exists():
+            assignee_queryset = HelpDeskUser.objects.filter(id=user.id)
+
         self.fields['assignee'] = forms.ModelChoiceField(
             queryset=assignee_queryset,
             label='Assign this task to a support agent:',
