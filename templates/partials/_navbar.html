@@ -6,14 +6,19 @@
 
     <ul class="left">
       <li>
-        <img id="navbarLogo" src="https://drive.google.com/uc?id=1onuUR3J_ufFbEbyGNP1seeFHJh8ivvRD" alt="DA2nd Logo" height="25px">
+        <a href="{% url 'tickets:home' %}">
+          <img id="navbarLogo" src="https://drive.google.com/uc?id=1onuUR3J_ufFbEbyGNP1seeFHJh8ivvRD" alt="DA2nd Logo" height="25px">
+        </a>
       </li>
       {% if first_name %}
       <li>Welcome {{first_name}}</li>
       {% endif %}
     </ul>
+
     <ul class="right hide-on-med-and-down">
+      <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
       <li><a href="{% url 'logout' %}">Logout</a></li>
     </ul>
+  
   </div>
 </nav> <!-- NAVBAR END -->
