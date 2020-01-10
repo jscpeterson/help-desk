@@ -117,13 +117,14 @@ def assign_ticket(request, *args, **kwargs):
 
     else:
         form = forms.AssignTicketForm(*args, **kwargs)
-        assignee_queryset = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
-        priority_choices = list(Ticket.PRIORITY_CHOICES)
-        category_choices = list(Ticket.CATEGORY_CHOICES)
+
+    assignee_choices = form.fields['assignee'].choices
+    priority_choices = form.fields['priority'].choices
+    category_choices = form.fields['category'].choices
 
     context = {
         'form': form,
-        'support_agents': assignee_queryset,
+        'support_agents': assignee_choices,
         'category_choices': category_choices,
         'priority_choices': priority_choices
     }
