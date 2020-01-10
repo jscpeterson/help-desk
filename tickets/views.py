@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from tickets.models import Ticket
 from tickets.utils import send_resolution_email
-from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT
+from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
 
 
@@ -118,7 +118,16 @@ def assign_ticket(request, *args, **kwargs):
     else:
         form = forms.AssignTicketForm(*args, **kwargs)
 
-    context = {'form': form}
+    assignee_choices = form.fields['assignee'].choices
+    priority_choices = form.fields['priority'].choices
+    category_choices = form.fields['category'].choices
+
+    context = {
+        'form': form,
+        'support_agents': assignee_choices,
+        'category_choices': category_choices,
+        'priority_choices': priority_choices
+    }
     return render(request, template, context)
 
 

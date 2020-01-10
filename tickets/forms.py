@@ -31,22 +31,23 @@ class AssignTicketForm(Form):
             assignee_queryset = HelpDeskUser.objects.filter(id=user.id)
 
         self.fields['assignee'] = forms.ModelChoiceField(
+            initial="",
             queryset=assignee_queryset,
             label='Assign this task to a support agent:',
             required=True,
         )
 
-        priority_choices_with_empty = [('', EMPTY_CHOICE)] + list(Ticket.PRIORITY_CHOICES)
-        category_choices_with_empty = [('', EMPTY_CHOICE)] + list(Ticket.CATEGORY_CHOICES)
+        priority_choices = list(Ticket.PRIORITY_CHOICES)
+        category_choices = list(Ticket.CATEGORY_CHOICES)
 
         self.fields['priority'] = forms.ChoiceField(
-            choices=priority_choices_with_empty,
+            choices=priority_choices,
             label='Assign a priority level:',
             required=True,
         )
 
         self.fields['category'] = forms.ChoiceField(
-            choices=category_choices_with_empty,
+            choices=category_choices,
             label='Assign a category:',
             required=True,
         )

@@ -1,31 +1,57 @@
-Hello {{ first_name }}. <br/>
-<br/>
-These are your assigned tickets: <br/>
-<table>
-<thead>
-    <tr>
-        <th>Ticket</th>
-        <th>User</th>
-        <th>Opened</th>
-        <th>Assigned At</th>
-        <th>Category</th>
-        <th>Priority</th>
-        <th>Description</th>
-    </tr>
-</thead>
-    {% for ticket in assigned_tickets %}
-        <tr>
-            <td>{{ ticket.id }}</td>
-            <td>{{ ticket.user }}</td>
-            <td>{{ ticket.created_date }}</td>
-            <td>{{ ticket.assignment_date }}</td>
-            <td>{{ ticket.get_category_display }}</td>
-            <td>{{ ticket.get_priority_display }}</td>
-            <td>{{ ticket.problem_description }}</td>
-            <td><a href={% url 'tickets:resolve_ticket' ticket.id %}>Resolve</a></td>
-        </tr>
-    {% endfor %}
-</table>
+{% extends 'base.html' %}
 
-<br/><br/>
-<a href="{% url 'logout' %}">Logout</a>
+{% block content %}
+
+<div class="container"> <!-- START CONTAINER -->
+
+  <div class="row">
+    <h4>These are your assigned tickets:</h4>
+  </div>
+
+  <div class="row"> <!-- START ROW -->
+    <div id="admin" class="col s12">
+      <div class="card material-table blue-grey darken-1">
+        <div class="table-header">
+          <span class="table-title">{{first_name}}'s Assigned Tickets</span>
+        </div>
+        <table class="white-text highlight">
+        <thead>
+            <tr>
+                <th>Ticket</th>
+                <th>User</th>
+                <th>Opened</th>
+                <th>Assigned At</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Description</th>
+                <th>Resolve</th>
+            </tr>
+        </thead>
+            {% for ticket in assigned_tickets %}
+                <tr>
+                    <td>{{ ticket.id }}</td>
+                    <td>{{ ticket.user }}</td>
+                    <td>{{ ticket.created_date }}</td>
+                    <td>{{ ticket.assignment_date }}</td>
+                    <td>{{ ticket.get_category_display }}</td>
+                    <td>{{ ticket.get_priority_display }}</td>
+                    <td>{{ ticket.problem_description }}</td>
+                    <td><a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
+                      <i class="material-icons">check_circle</i>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            {% if assigned_tickets|length == 0 %}
+            <tr>
+              <td colspan="8">No Assigned Tickets...</td>
+            </tr>
+            {% endif %}
+        </table>
+      </div>
+    </div>
+  </div>        <!-- CLOSE ROW -->
+
+
+</div> <!-- Container end -->
+{% endblock %}

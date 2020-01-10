@@ -1,15 +1,19 @@
 {% load static %}
 
-<!-- Navbar -->
-  <nav>
-    <div class="nav-wrapper blue darken-4">
-      <!-- replace the image link with the logo when it's put into static assets later -->
-      <img src="https://drive.google.com/uc?id=1onuUR3J_ufFbEbyGNP1seeFHJh8ivvRD" alt="DA2nd Logo" height="50%">
-      <ul class="right hide-on-med-and-down">
-        <li><a href="/tickets/closed/">Closed Tickets</a></li>
-        <li><a href="/users/login/">Logout</a></li>
-      </ul>
-    </div>
-  </nav>
+<nav> <!-- NAVBAR START -->
+  <div class="nav-wrapper blue darken-4">
+    <!-- replace the image link with the logo when it's put into static assets later -->
 
-  <h3 class="center-align">DA Help Desk</h3>
+    <ul class="left">
+      <li>
+        <img id="navbarLogo" src="https://drive.google.com/uc?id=1onuUR3J_ufFbEbyGNP1seeFHJh8ivvRD" alt="DA2nd Logo" height="25px">
+      </li>
+      {% if first_name %}
+      <li>Welcome {{first_name}}</li>
+      {% endif %}
+    </ul>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </div>
+</nav> <!-- NAVBAR END -->
