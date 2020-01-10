@@ -8,5 +8,11 @@ GROUP_SUPERVISOR = 'Supervisor'
 
 class HelpDeskUser(AbstractUser):
 
+    def is_supervisor(self):
+        return self.groups.filter(name=GROUP_SUPERVISOR).exists()
+
+    def is_support(self):
+        return self.groups.filter(name=GROUP_SUPPORT).exists()
+
     def __str__(self):
         return self.first_name + ' ' + self.last_name
