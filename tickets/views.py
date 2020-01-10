@@ -86,6 +86,8 @@ def view_unassigned_tickets(request):
     context = {
         'first_name': request.user.first_name,
         'unassigned_tickets': Ticket.objects.filter(status=Ticket.OPEN, assignee=None).order_by('created_date'),
+        'assigned_tickets': Ticket.objects.filter(status=Ticket.OPEN).exclude(assignee=None).order_by('created_date')
+        .order_by('priority'),
     }
 
     return render(request, template, context)
