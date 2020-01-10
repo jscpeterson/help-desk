@@ -1,5 +1,25 @@
-<form method="post">
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container"> <!-- Container start -->
+
+  <form method="post"> <!-- Form start -->
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+
+  <div class="row"> <!-- Row start -->
+    <div class="input-field col s12 m8">
+      <textarea name="resolution" id="id_resolution" class="materialize-textarea"></textarea>
+      <label for="id_notes">Resolution Notes</label>
+    </div>
+  </div> <!-- Row end -->
+
+  <div id="buttonDiv">
+    <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Submit
+    <i class="material-icons right">send</i>
+    </button>
+  </div>
+
+</form> <!-- Form end -->
+</div> <!-- Container end -->
+{% endblock %}

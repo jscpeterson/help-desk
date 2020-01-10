@@ -1,21 +1,50 @@
-<!-- TODO Setup base template -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
     <base target="_top">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Help Desk</title>
+    <!-- TODO: PUT THE STYLES INTO CSS SHEET IN STATIC -->
+    <style>
+      #addticketh3 {
+        letter-spacing: .3em;
+        padding-top: 2em;
+      }
+      #addbutton {
+        margin-right: 2em;
+      }
+      .card {
+        overflow-y: scroll;
+        max-height: 40vh;
+      }
+      #navbarLogo {
+        padding-right: 1em;
+        padding-left: 1em;
+      }
+    </style>
   </head>
   <body>
 
     <!-- Navbar -->
     {% include 'partials/_navbar.html' %}
 
+    <!-- Topbar -->
+    {% include 'partials/_topbar.html' %}
+
     <!-- Main Content -->
     {% block content %}
     {% endblock %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+    // <!-- Initializing select elements on document ready -->
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('select');
+      M.FormSelect.init(elems);
+      });    
+    </script>
   </body>
 </html>
