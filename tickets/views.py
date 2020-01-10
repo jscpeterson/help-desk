@@ -1,38 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 
 from tickets.models import Ticket
-from tickets.utils import send_resolution_email
+from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
+    check_ticket_unassigned
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
-
-
-def check_groups(user, group_names):
-    """
-    Checks if the user is a superuser or in an allowed group for a given list of group names.
-    Raises PermissionDenied exception if not.
-    """
-    if user.is_superuser or any(user.groups.filter(name=group_name).exists() for group_name in group_names):
-        return True
-    else:
-        raise PermissionDenied()
-
-
-def check_is_assigned(user, ticket):
-    """
-    Checks if user is a superuser/supervisor or if the user is a support user and is assigned to a ticket.
-    Raises PermissionDenied exception if not.
-    """
-    if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
-        return True
-    elif user.groups.filter(name=GROUP_SUPPORT).exists() and ticket.assignee == user:
-        return True
-    else:
-        raise PermissionDenied()
 
 
 @login_required
@@ -95,10 +71,14 @@ def view_unassigned_tickets(request):
 
 @login_required
 def assign_ticket(request, *args, **kwargs):
-    # TODO Return error view if ticket already assigned or resolved
-    #  (assignment change should be done in future DetailView)
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+
     check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+
+    if ticket.status is Ticket.CLOSED:
+        return render(request, 'errors/ticket_already_resolved.html', {'ticket_num': ticket.id})
+    if ticket.assignee is not None:
+        return render(request, 'errors/ticket_already_assigned.html', {'ticket_num': ticket.id})
 
     template = 'tickets/assign_ticket.html'
     kwargs['user'] = request.user
@@ -149,9 +129,12 @@ def view_assigned_tickets(request):
 
 @login_required
 def resolve_ticket(request, *args, **kwargs):
-    # TODO Return error view if ticket already resolved
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
-    check_is_assigned(request.user, ticket)
+
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+
+    if ticket.status is Ticket.CLOSED:
+        return render(request, 'errors/ticket_already_resolved.html', {'ticket_num': ticket.id})
 
     template = 'tickets/resolve_ticket.html'
 
