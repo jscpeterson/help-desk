@@ -24,6 +24,17 @@
         padding-right: 1em;
         padding-left: 1em;
       }
+      #firstFormRow {
+        margin-top: 1em;
+      }
+      /* display the error messages for select boxes */
+      .assignTicketSelect {
+        display: block;
+        height: 0;
+        padding: 0;
+        width: 0;
+        position: absolute;
+      }
     </style>
   </head>
   <body>
@@ -39,12 +50,13 @@
     {% endblock %}
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <script>
     // <!-- Initializing select elements on document ready -->
     document.addEventListener('DOMContentLoaded', function() {
       var elems = document.querySelectorAll('select');
       M.FormSelect.init(elems);
-      });    
+      });
     </script>
   </body>
 </html>

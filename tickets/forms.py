@@ -28,6 +28,7 @@ class AssignTicketForm(Form):
 
         self.fields['assignee'] = forms.ModelChoiceField(
             queryset=assignee_queryset,
+            initial="",
         )
 
         priority_choices = list(Ticket.PRIORITY_CHOICES)
@@ -41,7 +42,9 @@ class AssignTicketForm(Form):
             choices=category_choices,
         )
 
-        self.fields['notes'] = forms.CharField()
+        self.fields['notes'] = forms.CharField(
+            required=False
+        )
 
 
 class ResolveTicketForm(Form):
@@ -50,4 +53,6 @@ class ResolveTicketForm(Form):
         ticket = Ticket.objects.get(id=kwargs.pop('ticket_id'))
         super(ResolveTicketForm, self).__init__(*args, **kwargs)
 
-        self.fields['resolution'] = forms.CharField()
+        self.fields['resolution'] = forms.CharField(
+            required=False
+        )
