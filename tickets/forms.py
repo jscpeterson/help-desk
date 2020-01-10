@@ -28,6 +28,7 @@ class AssignTicketForm(Form):
 
         self.fields['assignee'] = forms.ModelChoiceField(
             queryset=assignee_queryset,
+            initial="",
         )
 
         priority_choices = list(Ticket.PRIORITY_CHOICES)
