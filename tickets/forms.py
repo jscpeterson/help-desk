@@ -11,11 +11,7 @@ class NewTicketForm(Form):
 
     def __init__(self, *args, **kwargs):
         super(NewTicketForm, self).__init__(*args, **kwargs)
-        self.fields['problem_description'] = forms.CharField(
-            widget=forms.Textarea,
-            label='Please describe your problem.',
-            required=True,
-        )
+        self.fields['problem_description'] = forms.CharField()
 
 
 class AssignTicketForm(Form):
@@ -31,10 +27,7 @@ class AssignTicketForm(Form):
             assignee_queryset = HelpDeskUser.objects.filter(id=user.id)
 
         self.fields['assignee'] = forms.ModelChoiceField(
-            initial="",
             queryset=assignee_queryset,
-            label='Assign this task to a support agent:',
-            required=True,
         )
 
         priority_choices = list(Ticket.PRIORITY_CHOICES)
@@ -42,21 +35,13 @@ class AssignTicketForm(Form):
 
         self.fields['priority'] = forms.ChoiceField(
             choices=priority_choices,
-            label='Assign a priority level:',
-            required=True,
         )
 
         self.fields['category'] = forms.ChoiceField(
             choices=category_choices,
-            label='Assign a category:',
-            required=True,
         )
 
-        self.fields['notes'] = forms.CharField(
-            widget=forms.Textarea,
-            label='Notes:',
-            required=False,
-        )
+        self.fields['notes'] = forms.CharField()
 
 
 class ResolveTicketForm(Form):
@@ -65,8 +50,4 @@ class ResolveTicketForm(Form):
         ticket = Ticket.objects.get(id=kwargs.pop('ticket_id'))
         super(ResolveTicketForm, self).__init__(*args, **kwargs)
 
-        self.fields['resolution'] = forms.CharField(
-            widget=forms.Textarea,
-            label='Resolution Notes:',
-            required=False,
-        )
+        self.fields['resolution'] = forms.CharField()
