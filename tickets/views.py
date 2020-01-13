@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -13,11 +14,17 @@ from . import forms
 
 @login_required
 def home(request):
+
+    welcomeMessage = messages.success(request, "Welcome")
+
     if request.user.groups.filter(name=GROUP_SUPERVISOR).exists():
+        welcomeMessage
         return HttpResponseRedirect(reverse('tickets:view_unassigned_tickets'))
     elif request.user.groups.filter(name=GROUP_SUPPORT).exists():
+        welcomeMessage
         return HttpResponseRedirect(reverse('tickets:view_assigned_tickets'))
     else:
+        welcomeMessage
         return HttpResponseRedirect(reverse('tickets:view_user_tickets'))
 
 
@@ -157,4 +164,22 @@ def resolve_ticket(request, *args, **kwargs):
         form = forms.ResolveTicketForm(*args, **kwargs)
 
     context = {'form': form}
+    return render(request, template, context)
+
+
+@login_required
+def closed_tickets(request):
+    """Retrieve the closed tickets for supervisor and support roles."""
+    template = 'tickets/view_closed_tickets.html'
+
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+
+    all_closed_tickets = Ticket.objects.filter(status=Ticket.CLOSED)
+    user_closed_tickets = all_closed_tickets.filter(assignee=request.user)
+
+    context = {
+        'all_closed_tickets': all_closed_tickets.order_by('created_date'),
+        'user_closed_tickets': user_closed_tickets.order_by('created_date'),
+    }
+
     return render(request, template, context)
