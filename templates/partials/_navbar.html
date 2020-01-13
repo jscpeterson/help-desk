@@ -16,9 +16,11 @@
     </ul>
 
     <ul class="right hide-on-med-and-down">
+      {% if user.is_support or user.is_supervisor %}
       <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
+      {% endif %}
       <li><a href="{% url 'logout' %}">Logout</a></li>
     </ul>
-  
+
   </div>
 </nav> <!-- NAVBAR END -->
