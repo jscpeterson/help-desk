@@ -21,6 +21,9 @@ urlpatterns = [
     # Support Ticket Resolution
     path('resolve/<int:ticket_id>/', views.resolve_ticket, name='resolve_ticket'),
 
+    # Support / Supervisor Closed Tickets
+    path('closed/', views.closed_tickets, name='view_closed_tickets'),
+
     # TODO Supervisor/Support All Tickets / Ticket History / Past Tickets? URL
     # TODO Detail Ticket View URL
 

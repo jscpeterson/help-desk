@@ -10,15 +10,24 @@
           <img id="navbarLogo" src="https://drive.google.com/uc?id=1onuUR3J_ufFbEbyGNP1seeFHJh8ivvRD" alt="DA2nd Logo" height="25px">
         </a>
       </li>
-      {% if first_name %}
-      <li>Welcome {{first_name}}</li>
-      {% endif %}
+      {% for message in messages %}
+        {% if message.message == "Welcome" %}
+          <li>{{ message.message }} {{request.user.first_name}}</li>
+        {% endif %}
+      {% endfor %}
     </ul>
 
     <ul class="right hide-on-med-and-down">
+      {% if user.is_support or user.is_supervisor %}
       <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
-      <li><a href="{% url 'logout' %}">Logout</a></li>
+      <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
+      {% endif %}
+      {% if user.is_authenticated %}
+      <li><a href="{% url 'logout' %}">Logout {{request.user.username}}</a></li>
+      {% else %}
+      <li><a href="{% url 'login' %}">Login</a></li>
+      {% endif %}
     </ul>
-  
+
   </div>
 </nav> <!-- NAVBAR END -->

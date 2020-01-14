@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+{% if user.is_support %}
+  <div class="row">
+    <h4>These are your closed tickets:</h4>
+  </div>
+  <div class="row"> <!-- START ROW -->
+    <div id="admin" class="col s12">
+      <div class="card material-table blue-grey darken-1">
+        <div class="table-header">
+          <span class="table-title">{{user.first_name}}'s Closed Tickets</span>
+        </div>
+        <table class="white-text highlight" id="datatable">
+        <thead>
+            <tr>
+                <th>Ticket</th>
+                <th>User</th>
+                <th>Opened</th>
+                <th>Assigned At</th>
+                <th>Assigned To</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Description</th>
+                <th>Resolution</th>
+            </tr>
+        </thead>
+            {% for ticket in user_closed_tickets %}
+                <tr>
+                    <td>{{ ticket.id }}</td>
+                    <td>{{ ticket.user }}</td>
+                    <td>{{ ticket.created_date }}</td>
+                    <td>{{ ticket.assignment_date }}</td>
+                    <td>{{ ticket.assignee }}</td>
+                    <td>{{ ticket.get_category_display }}</td>
+                    <td>{{ ticket.get_priority_display }}</td>
+                    <td>{{ ticket.problem_description }}</td>
+                    <td>{{ ticket.resolution }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+  </div>
+  </div>        <!-- CLOSE ROW -->
+  {% endif %}
+
+<div class="row">
+  <h4>These are all closed tickets:</h4>
+</div>
+<div class="row"> <!-- START ROW -->
+  <div id="admin" class="col s12">
+    <div class="card material-table blue-grey darken-1">
+      <div class="table-header">
+        <span class="table-title">All Closed Tickets</span>
+      </div>
+      <table class="white-text highlight" id="datatable">
+      <thead>
+          <tr>
+              <th>Ticket</th>
+              <th>User</th>
+              <th>Opened</th>
+              <th>Assigned At</th>
+              <th>Assigned To</th>
+              <th>Category</th>
+              <th>Priority</th>
+              <th>Description</th>
+              <th>Resolution</th>
+          </tr>
+      </thead>
+          {% for ticket in all_closed_tickets %}
+              <tr>
+                  <td>{{ ticket.id }}</td>
+                  <td>{{ ticket.user }}</td>
+                  <td>{{ ticket.created_date }}</td>
+                  <td>{{ ticket.assignment_date }}</td>
+                  <td>{{ ticket.assignee }}</td>
+                  <td>{{ ticket.get_category_display }}</td>
+                  <td>{{ ticket.get_priority_display }}</td>
+                  <td>{{ ticket.problem_description }}</td>
+                  <td>{{ ticket.resolution }}</td>
+              </tr>
+          {% endfor %}
+      </table>
+  </div>
+</div>
+</div>        <!-- CLOSE ROW -->
+</div> <!-- CLOSE CONTAINER -->
+{% endblock %}
