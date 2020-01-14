@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -174,12 +175,34 @@ def closed_tickets(request):
 
     check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
 
-    all_closed_tickets = Ticket.objects.filter(status=Ticket.CLOSED)
-    user_closed_tickets = all_closed_tickets.filter(assignee=request.user)
+    all_closed_tickets = Ticket.objects.filter(status=Ticket.CLOSED).order_by('-created_date')
+    user_closed_tickets = all_closed_tickets.filter(assignee=request.user).order_by('-created_date')
+
+    all_tickets_paginator = Paginator(all_closed_tickets, 10)
+    user_tickets_paginator = Paginator(user_closed_tickets, 10)
+
+    # ACCOUNTING FOR THE MULTIPLE PAGINATION IN THIS VIEW
+    # SETS A SESSION VARIABLE TO MAINTAIN THE PAGINATION PAGE FOR ALL TICKETS
+    if 'all_closed_page' in request.session and not request.GET.get('all_closed_page'):
+        all_tickets_page = request.session.get('all_closed_page')
+    else:
+        all_tickets_page = request.GET.get('all_closed_page')
+        request.session['all_closed_page'] = all_tickets_page
+
+    # ACCOUNTING FOR THE MULTIPLE PAGINATION IN THIS VIEW
+    # SETS A SESSION VARIABLE TO MAINTAIN THE PAGINATION PAGE FOR USER TICKETS
+    if 'user_closed_page' in request.session and not request.GET.get('user_closed_page'):
+        user_tickets_page = request.session.get('user_closed_page')
+    else:
+        user_tickets_page = request.GET.get('user_closed_page')
+        request.session['user_closed_page'] = user_tickets_page
+
+    all_paged_tickets = all_tickets_paginator.get_page(all_tickets_page)
+    user_paged_tickets = user_tickets_paginator.get_page(user_tickets_page)
 
     context = {
-        'all_closed_tickets': all_closed_tickets.order_by('created_date'),
-        'user_closed_tickets': user_closed_tickets.order_by('created_date'),
+        'all_paged_tickets': all_paged_tickets,
+        'user_paged_tickets': user_paged_tickets,
     }
 
     return render(request, template, context)
