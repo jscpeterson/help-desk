@@ -23,7 +23,7 @@
       <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
       {% endif %}
       {% if user.is_authenticated %}
-      <li><a href="{% url 'logout' %}">Logout {{request.user.username}}</a></li>
+      <li><a href="{% url 'logout' %}">Logout <b>{{request.user.username}}</b></a></li>
       {% else %}
       <li><a href="{% url 'login' %}">Login</a></li>
       {% endif %}
