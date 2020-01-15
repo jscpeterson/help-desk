@@ -26,7 +26,7 @@
                 <th>Resolution</th>
             </tr>
         </thead>
-            {% for ticket in user_closed_tickets %}
+            {% for ticket in user_paged_tickets %}
                 <tr>
                     <td>{{ ticket.id }}</td>
                     <td>{{ ticket.user }}</td>
@@ -42,8 +42,51 @@
         </table>
     </div>
   </div>
+
   </div>        <!-- CLOSE ROW -->
+
+  <!-- USER TICKETS PAGINATION LINKS START -->
+    <div class="row">
+      <div class="col s12">
+        {% if user_paged_tickets.has_other_pages %}
+        <ul class="pagination">
+          {% if user_paged_tickets.has_previous %}
+            <li class="page-item">
+              <a href="?user_closed_page={{ user_paged_tickets.previous_page_number }}" class="page-link">&laquo;</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link">&laquo;</a>
+            </li>
+          {% endif %}
+          {% for i in user_paged_tickets.paginator.page_range %}
+            {% if user_paged_tickets.number == i %}
+              <li class="page-item active">
+                <a href="" class="page-link">{{ i }}</a>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a href="?user_closed_page={{ i }}" class="page-link">{{ i }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          {% if user_paged_tickets.has_next %}
+            <li class="page-item">
+              <a href="?user_closed_page={{ user_paged_tickets.next_page_number }}" class="page-link">&raquo;</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <a class="page-link">&raquo;</a>
+            </li>
+          {% endif %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+  <!-- USER TICKETS PAGINATION LINKS END -->
   {% endif %}
+
+
 
 <div class="row">
   <h4>These are all closed tickets:</h4>
@@ -68,7 +111,7 @@
               <th>Resolution</th>
           </tr>
       </thead>
-          {% for ticket in all_closed_tickets %}
+          {% for ticket in all_paged_tickets %}
               <tr>
                   <td>{{ ticket.id }}</td>
                   <td>{{ ticket.user }}</td>
@@ -85,5 +128,47 @@
   </div>
 </div>
 </div>        <!-- CLOSE ROW -->
+
+
+<!-- ALL TICKETS PAGINATION LINKS START -->
+  <div class="row">
+    <div class="col s12">
+      {% if all_paged_tickets.has_other_pages %}
+      <ul class="pagination">
+        {% if all_paged_tickets.has_previous %}
+          <li class="page-item">
+            <a href="?all_closed_page={{ all_paged_tickets.previous_page_number }}" class="page-link">&laquo;</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link">&laquo;</a>
+          </li>
+        {% endif %}
+        {% for i in all_paged_tickets.paginator.page_range %}
+          {% if all_paged_tickets.number == i %}
+            <li class="page-item active">
+              <a href="" class="page-link">{{ i }}</a>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a href="?all_closed_page={{ i }}" class="page-link">{{ i }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+        {% if all_paged_tickets.has_next %}
+          <li class="page-item">
+            <a href="?all_closed_page={{ all_paged_tickets.next_page_number }}" class="page-link">&raquo;</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <a class="page-link">&raquo;</a>
+          </li>
+        {% endif %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+<!-- ALL TICKETS PAGINATION LINKS END -->
+
 </div> <!-- CLOSE CONTAINER -->
 {% endblock %}
