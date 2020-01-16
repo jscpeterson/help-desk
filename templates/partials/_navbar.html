@@ -19,6 +19,7 @@
 
     <ul class="right hide-on-med-and-down">
       {% if user.is_support or user.is_supervisor %}
+      <li><a href="{% url 'tickets:search_tickets' %}">Search Tickets</a></li>
       <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
       <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
       {% endif %}

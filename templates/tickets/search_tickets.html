@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <div class="row text-center">
+    <div class="col med 12">
+      <form action="{% url 'tickets:search_tickets' %}">
+        <!-- Form Row 1 -->
+        <div class="form-row">
+          <div class="col m4">
+            <label class="sr-only">Keyword</label>
+            <input type="text" name="keywords" class="form-control" placeholder="Keyword in Resolution/Notes/Problem"
+            value="{{ values.keywords }}">
+          </div>
+
+          <div class="col m4">
+            <label class="sr-only">User</label>
+            <input type="text" name="user" class="form-control" placeholder="User" value="{{ values.user }}">
+          </div>
+
+          <div class="col m4">
+            <label class="sr-only">Assignee</label>
+            <select multiple name="assignee" class="form-control">
+              <option selected="true" disabled>Support Agents</option>
+              {% for assignee in assignee_choices %}
+              <option value="{{ assignee.id }}"
+              {% if assignee.id == values.assignee.id %}
+                selected
+              {% endif %}>{{ assignee.username }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <!-- Form Row 2 -->
+        <div class="form-row">
+          <div class="col m6">
+            <label class="sr-only">Priority</label>
+            <select multiple name="priority" class="form-control">
+              <option selected="true" disabled="disabled">Priority Levels</option>
+              {% for key, value in priority_choices %}
+              <option value="{{ key }}"
+              {% if key == values.priority %}
+                selected
+              {% endif %}>{{ value }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col m6">
+            <label class="sr-only">Category</label>
+            <select multiple name="category" class="form-control">
+              <option selected="true" disabled>Categories</option>
+              {% for key, value in category_choices %}
+              <option value="{{ key }}"
+              {% if key == values.category %}
+                selected
+              {% endif %}>{{ value }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col m6">
+            <label class="sr-only">Status</label>
+            <select multiple name="status" class="form-control">
+              <option selected="true" disabled="disabled">Ticket Status</option>
+              {% for key, value in status_choices %}
+              <option value="{{ key }}"
+              {% if key == values.status %}
+                selected
+              {% endif %}>{{ value }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="col s12">
+          <button class="btn btn-secondary btn-block mt-4" type="submit">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% for x in found_tickets %}
+<h1>{{x.problem_description}}</h1>
+<h2>{{x.notes}}</h2>
+<h3>{{x.resolution}}</h3>
+{% endfor %}
+
+{% endblock %}

@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.db.models import Q
 
 from tickets.models import Ticket
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
@@ -203,6 +204,64 @@ def closed_tickets(request):
     context = {
         'all_paged_tickets': all_paged_tickets,
         'user_paged_tickets': user_paged_tickets,
+    }
+
+    return render(request, template, context)
+
+
+@login_required
+def search_tickets(request):
+    """Return the tickets search page."""
+    template = 'tickets/search_tickets.html'
+
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+
+    queryset_list = Ticket.objects.all()
+
+    # Assignees
+    if 'assignee' in request.GET:
+        assignees = request.GET.getlist('assignee')
+        queryset_list = queryset_list.filter(assignee_id__in=assignees)
+
+    # Users
+    if 'user' in request.GET:
+        user = request.GET['user']
+        queryset_list = queryset_list.filter(user__username__icontains=user)
+
+    # Keywords
+    if 'keywords' in request.GET:
+        keywords = request.GET['keywords']
+        queryset_list = queryset_list.filter(Q(problem_description__icontains=keywords) | Q(notes__icontains=keywords) | Q(resolution__icontains=keywords))
+
+    # Priority Levels
+    if 'priority' in request.GET:
+        priorities = request.GET.getlist('priority')
+        queryset_list = queryset_list.filter(priority__in=priorities)
+
+    # Categories
+    if 'category' in request.GET:
+        categories = request.GET.getlist('category')
+        queryset_list = queryset_list.filter(category__in=categories)
+
+    # Ticket status
+    if 'status' in request.GET:
+        status = request.GET['status']
+        queryset_list = queryset_list.filter(status__in=status)
+
+    # TODO: DATE RANGES!!
+
+    assignee_choices = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
+    priority_choices = Ticket.PRIORITY_CHOICES
+    category_choices = Ticket.CATEGORY_CHOICES
+    status_choices = Ticket.STATUS_CHOICES
+
+    context = {
+        'assignee_choices': assignee_choices,
+        'priority_choices': priority_choices,
+        'category_choices': category_choices,
+        'status_choices': status_choices,
+        'found_tickets': queryset_list,
+        'values': request.GET,
     }
 
     return render(request, template, context)
