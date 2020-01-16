@@ -24,6 +24,7 @@
                 <th>Priority</th>
                 <th>Description</th>
                 <th>Resolution</th>
+                <th>Notes</th>
             </tr>
         </thead>
             {% for ticket in user_paged_tickets %}
@@ -37,6 +38,7 @@
                     <td>{{ ticket.get_priority_display }}</td>
                     <td>{{ ticket.problem_description }}</td>
                     <td>{{ ticket.resolution }}</td>
+                    <td>{{ ticket.notes }}</td>
                 </tr>
             {% endfor %}
         </table>
@@ -109,6 +111,7 @@
               <th>Priority</th>
               <th>Description</th>
               <th>Resolution</th>
+              <th>Notes</th>
           </tr>
       </thead>
           {% for ticket in all_paged_tickets %}
@@ -122,6 +125,7 @@
                   <td>{{ ticket.get_priority_display }}</td>
                   <td>{{ ticket.problem_description }}</td>
                   <td>{{ ticket.resolution }}</td>
+                  <td>{{ ticket.notes }}</td>
               </tr>
           {% endfor %}
       </table>
