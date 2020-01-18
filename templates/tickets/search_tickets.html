@@ -8,14 +8,14 @@
         <!-- Form Row 1 -->
         <div class="form-row">
           <div class="col m4">
-            <label class="sr-only">Keyword</label>
-            <input type="text" name="keywords" class="form-control" placeholder="Keyword in Resolution/Notes/Problem"
+            <label class="sr-only">Keywords</label>
+            <input type="text" name="keywords" class="form-control" placeholder="Keywords in Resolution/Notes/Problem"
             value="{{ values.keywords }}">
           </div>
 
           <div class="col m4">
-            <label class="sr-only">User</label>
-            <input type="text" name="user" class="form-control" placeholder="User" value="{{ values.user }}">
+            <label class="sr-only">Users</label>
+            <input type="text" name="users" class="form-control" placeholder="User" value="{{ values.user }}">
           </div>
 
           <div class="col m4">
@@ -70,18 +70,83 @@
             </select>
           </div>
         </div>
+        <div class="row">
+          <div class="col s12">
+            <label>Ticket Opened On Or After</label>
+              <input name="openStart" type="text" class="datepicker">
+            <label>Ticket Opened On Or Before</label>
+              <input name="openEnd" type="text" class="datepicker">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <label>Ticket Assigned On Or After</label>
+              <input name="assignStart" type="text" class="datepicker">
+            <label>Ticket Assigned On Or Before</label>
+              <input name="assignEnd" type="text" class="datepicker">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12">
+            <label>Ticket Closed On Or After</label>
+              <input name="closeStart" type="text" class="datepicker">
+            <label>Ticket Closed On Or Before</label>
+              <input name="closeEnd" type="text" class="datepicker">
+          </div>
+        </div>
         <div class="col s12">
-          <button class="btn btn-secondary btn-block mt-4" type="submit">Search</button>
+          <button class="btn waves-effect waves-light hoverable blue darken-4" type="submit">Search</button>
         </div>
       </form>
     </div>
   </div>
 </div>
 
-{% for x in found_tickets %}
-<h1>{{x.problem_description}}</h1>
-<h2>{{x.notes}}</h2>
-<h3>{{x.resolution}}</h3>
-{% endfor %}
+<div class="row">
+  <h4>These are the found tickets:</h4>
+</div>
+
+<div class="row"> <!-- START ROW -->
+  <div id="admin" class="col s12">
+    <div class="card material-table blue-grey darken-1">
+      <div class="table-header">
+        <span class="table-title">{{first_name}}'s Assigned Tickets</span>
+      </div>
+      <table class="white-text highlight">
+      <thead>
+          <tr>
+              <th>Ticket</th>
+              <th>User</th>
+              <th>Opened</th>
+              <th>Assigned At</th>
+              <th>Category</th>
+              <th>Priority</th>
+              <th>Description</th>
+              <th>Resolution</th>
+              <th>Notes</th>
+          </tr>
+      </thead>
+          {% for ticket in found_tickets %}
+              <tr>
+                  <td>{{ ticket.id }}</td>
+                  <td>{{ ticket.user }}</td>
+                  <td>{{ ticket.created_date }}</td>
+                  <td>{{ ticket.assignment_date }}</td>
+                  <td>{{ ticket.get_category_display }}</td>
+                  <td>{{ ticket.get_priority_display }}</td>
+                  <td>{{ ticket.problem_description }}</td>
+                  <td>{{ ticket.resolution }}</td>
+                  <td>{{ ticket.notes }}</td>
+              </tr>
+          {% endfor %}
+          {% if assigned_tickets|length == 0 %}
+          <tr>
+            <td colspan="8">No Assigned Tickets...</td>
+          </tr>
+          {% endif %}
+      </table>
+    </div>
+  </div>
+</div>        <!-- CLOSE ROW -->
 
 {% endblock %}

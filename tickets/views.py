@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.db.models import Q
 
+from datetime import date, datetime
+
 from tickets.models import Ticket
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
     check_ticket_unassigned
@@ -224,14 +226,36 @@ def search_tickets(request):
         queryset_list = queryset_list.filter(assignee_id__in=assignees)
 
     # Users
-    if 'user' in request.GET:
-        user = request.GET['user']
-        queryset_list = queryset_list.filter(user__username__icontains=user)
+    if 'users' in request.GET:
+        users = request.GET['users']
+        if users == '':
+            pass
+        else:
+            users = users.split()
+            queries = [Q(user__username__icontains=user) for user in users]
+            query = queries.pop()
+            for item in queries:
+                query |= item
+            queryset_list = queryset_list.filter(query)
 
     # Keywords
+    # queries for keywords in resolution, notes and problem_description
     if 'keywords' in request.GET:
         keywords = request.GET['keywords']
-        queryset_list = queryset_list.filter(Q(problem_description__icontains=keywords) | Q(notes__icontains=keywords) | Q(resolution__icontains=keywords))
+        if keywords == '':
+            pass
+        else:
+            keywords = keywords.split()
+            description_queries = [Q(problem_description__icontains=keyword) for keyword in keywords]
+            notes_queries = [Q(notes__icontains=keyword) for keyword in keywords]
+            resolution_queries = [Q(resolution__icontains=keyword) for keyword in keywords]
+
+            queries = resolution_queries + notes_queries + description_queries
+
+            query = queries.pop()
+            for item in queries:
+                query |= item
+            queryset_list = queryset_list.filter(query)
 
     # Priority Levels
     if 'priority' in request.GET:
@@ -248,7 +272,62 @@ def search_tickets(request):
         status = request.GET['status']
         queryset_list = queryset_list.filter(status__in=status)
 
-    # TODO: DATE RANGES!!
+    # Ticket opened on or after
+    if 'openStart' in request.GET:
+        open_start = request.GET['openStart']
+        if open_start == '':
+            pass
+        else:
+            open_start_datetime = date.fromisoformat(open_start)
+            queryset_list = queryset_list.filter(created_date__gte=open_start_datetime)
+
+    # Ticket opened on or before
+    if 'openEnd' in request.GET:
+        open_end = request.GET['openEnd']
+        if open_end == '':
+            pass
+        else:
+            open_end_datetime = date.fromisoformat(open_end)
+            open_end_datetime = datetime.combine(open_end_datetime, datetime.max.time())
+            queryset_list = queryset_list.filter(created_date__lte=open_end_datetime)
+
+    # Ticket assigned on or after
+    if 'assignStart' in request.GET:
+        assigned_start = request.GET['assignStart']
+        if assigned_start == '':
+            pass
+        else:
+            assigned_start_datetime = date.fromisoformat(assigned_start)
+            queryset_list = queryset_list.filter(assignment_date__gte=assigned_start_datetime)
+
+    # Ticket assigned on or before
+    if 'assignEnd' in request.GET:
+        assigned_end = request.GET['assignEnd']
+        if assigned_end == '':
+            pass
+        else:
+            assigned_end_datetime = date.fromisoformat(assigned_end)
+            assigned_end_datetime = datetime.combine(assigned_end_datetime, datetime.max.time())
+            queryset_list = queryset_list.filter(assignment_date__lte=assigned_end_datetime)
+
+    # Ticket closed on or after
+    if 'closeStart' in request.GET:
+        closed_start = request.GET['closeStart']
+        if closed_start == '':
+            pass
+        else:
+            closed_start_datetime = date.fromisoformat(closed_start)
+            queryset_list = queryset_list.filter(assignment_date__gte=closed_start_datetime)
+
+    # Ticket closed on or before
+    if 'closeEnd' in request.GET:
+        closed_end = request.GET['closeEnd']
+        if closed_end == '':
+            pass
+        else:
+            closed_end_datetime = date.fromisoformat(closed_end)
+            closed_end_datetime = datetime.combine(closed_end_datetime, datetime.max.time())
+            queryset_list = queryset_list.filter(assignment_date__lte=closed_end_datetime)
 
     assignee_choices = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
     priority_choices = Ticket.PRIORITY_CHOICES
