@@ -225,38 +225,6 @@ def search_tickets(request):
         assignees = request.GET.getlist('assignee')
         queryset_list = queryset_list.filter(assignee_id__in=assignees)
 
-    # Users
-    if 'users' in request.GET:
-        users = request.GET['users']
-        if users == '':
-            pass
-        else:
-            users = users.split()
-            queries = [Q(user__username__icontains=user) for user in users]
-            query = queries.pop()
-            for item in queries:
-                query |= item
-            queryset_list = queryset_list.filter(query)
-
-    # Keywords
-    # queries for keywords in resolution, notes and problem_description
-    if 'keywords' in request.GET:
-        keywords = request.GET['keywords']
-        if keywords == '':
-            pass
-        else:
-            keywords = keywords.split()
-            description_queries = [Q(problem_description__icontains=keyword) for keyword in keywords]
-            notes_queries = [Q(notes__icontains=keyword) for keyword in keywords]
-            resolution_queries = [Q(resolution__icontains=keyword) for keyword in keywords]
-
-            queries = resolution_queries + notes_queries + description_queries
-
-            query = queries.pop()
-            for item in queries:
-                query |= item
-            queryset_list = queryset_list.filter(query)
-
     # Priority Levels
     if 'priority' in request.GET:
         priorities = request.GET.getlist('priority')
@@ -329,6 +297,32 @@ def search_tickets(request):
             closed_end_datetime = datetime.combine(closed_end_datetime, datetime.max.time())
             queryset_list = queryset_list.filter(assignment_date__lte=closed_end_datetime)
 
+    # Users and Keywords
+    # OR filter when searching on Keywords AND Users fields
+    # Queryset of all tickets with partial matches of keywords and or users
+    # keywords and users are text input fields, so they will always be present
+    if 'keywords' in request.GET and 'users' in request.GET:
+        keywords = request.GET['keywords']
+        users = request.GET['users']
+        if keywords == '' and users == '':
+            pass
+        else:
+            keywords = keywords.split()
+            users = users.split()
+
+            description_queries = [Q(problem_description__icontains=keyword) for keyword in keywords]
+            notes_queries = [Q(notes__icontains=keyword) for keyword in keywords]
+            resolution_queries = [Q(resolution__icontains=keyword) for keyword in keywords]
+
+            user_queries = [Q(user__username__icontains=user) for user in users]
+
+            queries = resolution_queries + notes_queries + description_queries + user_queries
+
+            query = queries.pop()
+            for item in queries:
+                query |= item
+            queryset_list = queryset_list.filter(query)
+
     assignee_choices = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
     priority_choices = Ticket.PRIORITY_CHOICES
     category_choices = Ticket.CATEGORY_CHOICES
@@ -342,5 +336,8 @@ def search_tickets(request):
         'found_tickets': queryset_list,
         'values': request.GET,
     }
+
+    print(request.GET)
+
 
     return render(request, template, context)
