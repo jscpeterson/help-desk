@@ -3,10 +3,9 @@ version: '3'
 services:
   nginx:
     image: nginx:latest
-    container_name: ml-nginx
+    container_name: nginx
     ports:
       - "80:80"
-      - "443:443"
     volumes:
       - .:/app
       - ./config/nginx:/etc/nginx/conf.d
@@ -34,12 +33,9 @@ services:
     ports:
       - "$POSTGRES_PORT:$POSTGRES_PORT"
 
-  redis:
-    image: "redis:alpine"
-
   web:
     build: .
-    command: bash -c "/usr/local/bin/gunicorn reminders.wsgi:application --bind 0.0.0.0:8000"
+    command: bash -c "/usr/local/bin/gunicorn helpdesk.wsgi:application --bind 0.0.0.0:8000"
     env_file:
      - .env
     volumes:
@@ -49,7 +45,6 @@ services:
       - "8000:8000"
     depends_on:
       - db
-      - redis
 
 
 volumes:
