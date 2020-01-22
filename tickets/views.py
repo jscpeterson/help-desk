@@ -218,6 +218,18 @@ def search_tickets(request):
 
     check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
 
+    # If the REFERER is a page other than the tickets
+    # search page don't do any extra work, and don't render the table
+    # filled with all Ticket objects. Just render the search page.
+    if request.path not in request.META.get('HTTP_REFERER'):
+        return render(request, template, {
+            'assignee_choices': HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT]),
+            'priority_choices': Ticket.PRIORITY_CHOICES,
+            'category_choices': Ticket.CATEGORY_CHOICES,
+            'status_choices': Ticket.STATUS_CHOICES,
+            'values': request.GET,
+        })
+
     queryset_list = Ticket.objects.all()
 
     # Assignees
@@ -299,8 +311,8 @@ def search_tickets(request):
 
     # Users and Keywords
     # OR filter when searching on Keywords AND Users fields
-    # Queryset of all tickets with partial matches of keywords and or users
-    # keywords and users are text input fields, so they will always be present
+    # Queryset of all tickets with partial matches of keywords and or users.
+    # Keywords and users are text input fields, so they will always be present
     if 'keywords' in request.GET and 'users' in request.GET:
         keywords = request.GET['keywords']
         users = request.GET['users']
@@ -336,8 +348,5 @@ def search_tickets(request):
         'found_tickets': queryset_list,
         'values': request.GET,
     }
-
-    print(request.GET)
-
 
     return render(request, template, context)
