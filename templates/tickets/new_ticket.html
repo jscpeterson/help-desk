@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container">
 <div class="row">
   <form method="post" action="/tickets/new/" class="col s12">
     {% csrf_token %}
@@ -20,5 +21,6 @@
       </button>
     </div>
   </form>
+</div>
 </div>
 {% endblock %}

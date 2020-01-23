@@ -1,47 +1,18 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <base target="_top">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
+    <!-- Material Icons -->
+    <link rel="stylesheet" href="{% static 'iconfont/material-icons.css' %}">
+    <!-- Helpdesk stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta name="viewport" content="wifdth=device-width, initial-scale=1.0"/>
     <title>Help Desk</title>
-    <!-- TODO: PUT THE STYLES INTO CSS SHEET IN STATIC -->
-    <style>
-      #addticketh3 {
-        letter-spacing: .3em;
-        padding-top: 2em;
-      }
-      #addbutton {
-        margin-right: 2em;
-      }
-      .card {
-        overflow-y: scroll;
-        min-height: 40vh;
-        max-height: 40vh;
-      }
-      #navbarLogo {
-        padding-right: 1em;
-        padding-left: 1em;
-      }
-      #firstFormRow {
-        margin-top: 1em;
-      }
-      /* display the error messages for select boxes */
-      .assignTicketSelect {
-        display: block;
-        height: 0;
-        padding: 0;
-        width: 0;
-        position: absolute;
-      }
-      th {
-        position: sticky;
-        top: 0;
-        background: #0d47a1;
-      }
-    </style>
   </head>
   <body>
 
@@ -55,16 +26,9 @@
     {% block content %}
     {% endblock %}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
-    <script>
-    // <!-- Initializing select elements on document ready -->
-    document.addEventListener('DOMContentLoaded', function() {
-      var selects = document.querySelectorAll('select');
-      M.FormSelect.init(selects);
-      var datepickers = document.querySelectorAll('.datepicker');
-      M.Datepicker.init(datepickers, {format: 'yyyy-mm-dd', showClearBtn: true});
-      });
-    </script>
+    <!-- Materialize JS -->
+    <script src="{% static 'js/materialize.min.js'  %} "></script>
+    <!-- Helpdesk JS -->
+    <script src="{% static 'js/main.js' %}"></script>
   </body>
 </html>
