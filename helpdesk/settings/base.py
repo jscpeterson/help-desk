@@ -29,7 +29,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 ALLOWED_HOSTS = [os.environ.get('HOST_NAME'), os.environ.get('HOST_IP')]
 
-
 # Application definition
 
 INSTALLED_APPS = [
