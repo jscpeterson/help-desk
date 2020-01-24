@@ -156,3 +156,6 @@ backups/
 
 # Config files
 *.conf
+
+# Static
+/static

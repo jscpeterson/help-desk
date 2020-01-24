@@ -7,7 +7,7 @@
     <ul class="left">
       <li>
         <a href="{% url 'tickets:home' %}">
-          <img id="navbarLogo" src="https://drive.google.com/uc?id=1onuUR3J_ufFbEbyGNP1seeFHJh8ivvRD" alt="DA2nd Logo" height="25px">
+          <img id="navbarLogo" src="{% static 'img/dalogo250.png' %}" alt="DA d logo">
         </a>
       </li>
       {% for message in messages %}
