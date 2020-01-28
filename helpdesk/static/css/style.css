@@ -64,3 +64,14 @@ IDS
   padding-left: 1em;
   height: 25px;
 }
+
+/**************
+***************
+MATERIALIZE CUSTOMIZATION
+*************
+*************/
+
+/*TEXT COLOR FOR NAV DROPDOWN*/
+.dropdown-content li a{
+    color: #0d47a1;
+}
