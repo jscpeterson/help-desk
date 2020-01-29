@@ -25,6 +25,7 @@ class AssignTicketForm(Form):
         if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
             # ASSIGNEES FOR SUPERVISOR SHOULD BE ALL SUPPORT AGENTS AND SUPERVISOR SELF
             assignee_queryset = HelpDeskUser.objects.filter(Q(groups__name__in=[GROUP_SUPPORT]) | Q(id=user.id))
+            assignee_queryset = assignee_queryset.distinct()
         elif user.groups.filter(name=GROUP_SUPPORT).exists():
             assignee_queryset = HelpDeskUser.objects.filter(id=user.id)
 
