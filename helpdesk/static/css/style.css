@@ -8,6 +8,7 @@ th {
   position: sticky;
   top: 0;
   background: #0d47a1;
+  z-index: 2;
 }
 
 /**************
@@ -33,7 +34,6 @@ CLASSES
 
 .error_message {
   color: #ED4434;
-
 }
 
 /**************
