@@ -167,7 +167,12 @@ def resolve_ticket(request, *args, **kwargs):
     else:
         form = forms.ResolveTicketForm(*args, **kwargs)
 
-    context = {'form': form}
+    ticket_id = kwargs.get('ticket_id')
+
+    context = {
+        'form': form,
+        'ticket_id': ticket_id,
+    }
     return render(request, template, context)
 
 
