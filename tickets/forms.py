@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import Form
+from django.db.models import Q
 
 from tickets.models import Ticket
 from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
@@ -22,7 +23,8 @@ class AssignTicketForm(Form):
         super(AssignTicketForm, self).__init__(*args, **kwargs)
 
         if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
-            assignee_queryset = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
+            # ASSIGNEES FOR SUPERVISOR SHOULD BE ALL SUPPORT AGENTS AND SUPERVISOR SELF
+            assignee_queryset = HelpDeskUser.objects.filter(Q(groups__name__in=[GROUP_SUPPORT]) | Q(id=user.id))
         elif user.groups.filter(name=GROUP_SUPPORT).exists():
             assignee_queryset = HelpDeskUser.objects.filter(id=user.id)
 
