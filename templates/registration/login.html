@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{% static 'iconfont/material-icons.css' %}">
     <!-- Helpdesk stylesheet -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/dalogo250.png' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Help Desk login</title>
 </head>
@@ -30,9 +32,9 @@
       </div>
     </div>                          <!-- CLOSE ROW -->
 
-    {% if form.errors %}
-      <h6 class='error_message'>Your username and password didn't match. Please try again.</h6>
-    {% endif %}
+    {% for key,value in form.errors.items %}
+    <h6 class='error_message'>{{ value }}</h6>
+    {% endfor %}
 
     <form method="post" action="/users/login/" id="warrantForm" class="formValidate">
       {% csrf_token %}
