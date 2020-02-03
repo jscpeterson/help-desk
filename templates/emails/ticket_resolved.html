@@ -1,9 +1,9 @@
 {% extends "emails/email_template.html" %}
 
 {% block content %}
-Ticket #{{ ticket_num }} has been resolved by <strong>{{ assignee }}</strong>({{ assignee.email }})<br/>
+Ticket #{{ ticket_num }} has been resolved by <strong>{{ assignee }}</strong> ({{ assignee.email }})<br/>
 <br/>
-Your issue was as follows: <em>{{ problem_description }}</em><br/>
+Your issue was as follows: <br/><em>{{ problem_description }}</em><br/>
 <br/>
-<strong>{{ assignee }}</strong> provided this information with the resolution: <em>{{ resolution }}</em><br/>
+<strong>{{ assignee }}</strong> provided this information with the resolution: <br/><em>{{ resolution }}</em><br/>
 {% endblock %}
