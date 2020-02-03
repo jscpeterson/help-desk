@@ -11,7 +11,7 @@ from datetime import date, datetime
 
 from tickets.models import Ticket
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
-    check_ticket_unassigned, send_new_ticket_alert_email
+    check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
 
@@ -108,6 +108,8 @@ def assign_ticket(request, *args, **kwargs):
             ticket.notes = data.get('notes')
             ticket.assignment_date = timezone.now()
             ticket.save()
+
+            send_ticket_assigned_email(ticket, request)
 
             return HttpResponseRedirect(reverse('tickets:home'))
 
