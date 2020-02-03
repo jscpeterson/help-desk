@@ -1,0 +1,9 @@
+{% extends "emails/email_template.html" %}
+
+{% block content %}
+Ticket #{{ ticket.id }} has been assigned to you by {{ assigner }}.
+<br/>
+The issue is as follows: <br/><em>{{ ticket.problem_description }}</em><br/>
+<br/>
+View your current tickets at {{ host }}{% url 'tickets:view_assigned_tickets' %}.<br/>
+{% endblock %}

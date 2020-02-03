@@ -16,14 +16,40 @@ def get_staff_emails():
     return [user.email for user in HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT, GROUP_SUPERVISOR])]
 
 
+def send_ticket_assigned_email(ticket, request):
+
+    # Specify if a ticket was assigned to you by yourself or someone else
+    assigner = request.user if ticket.assignee != request.user else 'yourself'
+
+    context = {
+        'recipient': ticket.assignee,
+        'ticket': ticket,
+        'assigner': assigner,
+        'host': request.get_host(),
+    }
+
+    message = PLAINTEXT_MESSAGE
+
+    # TODO Include category, priority, and notes in message (if they exist) (get_field_display not working correctly?)
+    html_message = render_to_string('emails/ticket_assigned.html', context)
+
+    send_mail(
+        subject='You have been assigned Help Desk Ticket #{id}'.format(
+            id=ticket.id,
+        ),
+        message=message,
+        html_message=html_message,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[ticket.assignee.email],
+        fail_silently=False,
+    )
+
+
 def send_new_ticket_alert_email(ticket, request):
 
     context = {
         'recipient': 'staff member',
-        'ticket_num': ticket.id,
-        'user': ticket.user,
-        'user_email': ticket.user.email,
-        'problem_description': ticket.problem_description,
+        'ticket': ticket,
         'host': request.get_host()
     }
 
@@ -44,10 +70,7 @@ def send_new_ticket_alert_email(ticket, request):
 def send_resolution_email(ticket):
     context = {
         'recipient': ticket.user,
-        'ticket_num': ticket.id,
-        'assignee': ticket.assignee,
-        'problem_description': ticket.problem_description,
-        'resolution': ticket.resolution,
+        'ticket': ticket,
     }
 
     message = PLAINTEXT_MESSAGE
