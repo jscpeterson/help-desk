@@ -1,0 +1,9 @@
+{% extends "emails/email_template.html" %}
+
+{% block content %}
+Ticket #{{ ticket_num }} has been submitted by <strong>{{ user }}</strong> ({{ user_email }}).
+<br/>
+Their issue is as follows: <em>{{ problem_description }}</em>
+<br/>
+The ticket can be assigned at {{ host }}{% url 'tickets:assign_ticket' ticket_num %}.
+{% endblock %}

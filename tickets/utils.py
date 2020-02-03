@@ -1,3 +1,5 @@
+import os
+
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.shortcuts import render
@@ -5,11 +7,41 @@ from django.template.loader import render_to_string
 
 from helpdesk import settings
 from tickets.models import Ticket
-from users.models import GROUP_SUPPORT, GROUP_SUPERVISOR
+from users.models import GROUP_SUPPORT, GROUP_SUPERVISOR, HelpDeskUser
+
+PLAINTEXT_MESSAGE = 'Please view this message in HTML rather than plaintext.'
+
+
+def get_staff_emails():
+    return [user.email for user in HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT, GROUP_SUPERVISOR])]
+
+
+def send_new_ticket_alert_email(ticket, request):
+
+    context = {
+        'recipient': 'staff member',
+        'ticket_num': ticket.id,
+        'user': ticket.user,
+        'user_email': ticket.user.email,
+        'problem_description': ticket.problem_description,
+        'host': request.get_host()
+    }
+
+    message = PLAINTEXT_MESSAGE
+
+    html_message = render_to_string('emails/new_ticket.html', context)
+
+    send_mail(
+        subject='New Help Desk Ticket #{id} from {user}'.format(id=ticket.id, user=ticket.user),
+        message=message,
+        html_message=html_message,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=get_staff_emails(),
+        fail_silently=False,
+    )
 
 
 def send_resolution_email(ticket):
-
     context = {
         'recipient': ticket.user,
         'ticket_num': ticket.id,
@@ -18,13 +50,7 @@ def send_resolution_email(ticket):
         'resolution': ticket.resolution,
     }
 
-    message = """
-    Ticket #{{ ticket_num }} has been resolved by {{ assignee }}.
-
-    Your issue was as follows: {{ problem_description }}
-
-    {{ assignee }} provided this information with the resolution: {{ resolution }}
-    """.format(context)
+    message = PLAINTEXT_MESSAGE
 
     html_message = render_to_string('emails/ticket_resolved.html', context)
 
