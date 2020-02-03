@@ -11,7 +11,7 @@ from datetime import date, datetime
 
 from tickets.models import Ticket
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
-    check_ticket_unassigned
+    check_ticket_unassigned, send_new_ticket_alert_email
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
 
@@ -57,6 +57,9 @@ def new_ticket(request, *args, **kwargs):
                 user=request.user,
                 problem_description=form.cleaned_data.get('problem_description')
             )
+
+            send_new_ticket_alert_email(ticket, request)
+
             return HttpResponseRedirect(reverse('tickets:home'))
     else:
         form = forms.NewTicketForm(*args, **kwargs)
