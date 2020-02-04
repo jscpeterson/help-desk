@@ -187,12 +187,14 @@
               <th>Priority</th>
               <th>Description</th>
               <th>Resolution</th>
-              <th>Notes</th>
           </tr>
       </thead>
           {% for ticket in found_tickets %}
               <tr>
-                  <td>{{ ticket.id }}</td>
+                  <td><a href={% url 'tickets:view_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="idbutton">
+                      {{ ticket.id }}
+                      </a>
+                  </td>
                   <td>{{ ticket.user }}</td>
                   <td>{{ ticket.created_date }}</td>
                   <td>{{ ticket.assignment_date }}</td>
@@ -202,7 +204,6 @@
                   <td>{{ ticket.get_priority_display }}</td>
                   <td>{{ ticket.problem_description }}</td>
                   <td>{{ ticket.resolution }}</td>
-                  <td>{{ ticket.notes }}</td>
               </tr>
           {% endfor %}
           {% if found_tickets|length == 0 %}

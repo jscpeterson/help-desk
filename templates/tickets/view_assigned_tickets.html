@@ -29,7 +29,10 @@
         </thead>
             {% for ticket in assigned_tickets %}
                 <tr>
-                    <td>{{ ticket.id }}</td>
+                    <td><a href={% url 'tickets:view_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="idbutton">
+                        {{ ticket.id }}
+                        </a>
+                    </td>
                     <td>{{ ticket.user }}</td>
                     <td>{{ ticket.created_date }}</td>
                     <td>{{ ticket.assignment_date }}</td>
@@ -73,7 +76,10 @@
         </thead>
             {% for ticket in unassigned_tickets %}
                 <tr>
-                    <td>{{ ticket.id }}</td>
+                    <td><a href={% url 'tickets:view_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="idbutton">
+                        {{ ticket.id }}
+                        </a>
+                    </td>
                     <td>{{ ticket.user }}</td>
                     <td>{{ ticket.created_date }}</td>
                     <td>{{ ticket.problem_description }}</td>
