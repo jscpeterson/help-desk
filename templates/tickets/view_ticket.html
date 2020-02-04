@@ -2,6 +2,9 @@
 
 {% block content %}
 
+<!-- TODO: MAKE THE PROBLEM DESCRIPTION SECTION, AND POSSIBLY RESOLUTION, A CARD
+REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
+
 <!-- CONTAINER START -->
 <div class="container">
 
@@ -73,6 +76,26 @@
               {% endif %}
             </div> <!--  COLUMN IN CARD FOR STATUS, DESCRIPTION, RESOLUTION END -->
           </div> <!-- DETAIL ROW FOR TICKET TITLE, META, STATUS, DESCRIPTION, RESOLUTION END -->
+          <div class="row"> <!-- ROW FOR TIMELINE FOOTER START-->
+            <div class="col s12"> <!-- COLUMN FOR FOOTER WITH TIMELINE START-->
+              <div class="divider"></div>
+              <h6>Timeline</h6>
+              <div class="divider"></div>
+              <div class="section"> <!-- TIMELINE SECTION START -->
+                <h6>CREATED AT: {{ticket.created_date}}</h6>
+                <h6>BY: {{ticket.user}}</h6>
+                {% if ticket.assignment_date %}
+                <h6>ASSIGNED AT: {{ticket.assignment_date}}</h6>
+                <h6>TO: {{ticket.assignee}}</h6>
+                <h6>BY: {{ticket.assigned_by}}</h6>
+                {% endif %}
+                {% if ticket.status == 2 %}
+                <h6>RESOLVED AT: {{ticket.closed_date}}</h6>
+                <h6>BY: {{ticket.assignee}}</h6>
+                {% endif %}
+              </div> <!-- TIMELINE SECTION END -->
+            </div> <!-- COLUMN FOR FOOTER WITH TIMELINE END-->
+          </div> <!-- ROW FOR TIMELINE FOOTER END-->
         </div>
       </div>
       <!-- TICKET DETAILS CARD END -->
