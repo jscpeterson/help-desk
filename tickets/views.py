@@ -11,7 +11,8 @@ from datetime import date, datetime
 
 from tickets.models import Ticket, Note
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
-    check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user
+    check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user, \
+    send_new_note_email
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
 
@@ -377,13 +378,14 @@ def add_note(request, *args, **kwargs):
             note_instance.user = request.user
             note_instance.ticket = ticket
             note_instance.save()
-            # TODO Send notification emails for new note
-            return HttpResponseRedirect(reverse('tickets:home'))  # TODO Go to DetailView for ticket
+            send_new_note_email(note_instance, request)
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
     else:
         form = forms.NewNoteForm()
 
     context = {'form': form}
     return render(request, template, context)
+
 
 @login_required
 def view_ticket(request, *args, **kwargs):

@@ -87,6 +87,50 @@ def send_resolution_email(ticket):
     )
 
 
+def send_new_note_email(note, request):
+
+    # TODO Include information about attachment, if available.
+
+    context = {
+        'note': note,
+        'host': request.get_host(),
+    }
+
+    # If there is no assignee, notify the user only.
+    if note.ticket.assignee is None:
+        context['recipient'] = note.ticket.user
+        recipient_list = [note.ticket.user.email]
+    # If the author of the note is the ticket assignee, notify the user
+    elif note.user == note.ticket.assignee:
+        context['recipient'] = note.ticket.user
+        recipient_list = [note.ticket.user.email]
+    # If the author of the note is the ticket user, notify the assignee
+    elif note.user == note.ticket.user:
+        context['recipient'] = note.ticket.assignee
+        recipient_list = [note.ticket.assignee.email]
+    # If the author of the note is not the assignee or the user but is a supervisor or superuser,
+    # notify both the user and the assignee.
+    elif note.user.is_superuser or note.user.is_supervisor():
+        context['recipient'] = 'user'
+        recipient_list = [note.ticket.user.email, note.ticket.assignee.email]
+    else:
+        # Something went wrong.
+        raise Exception('New note added, author is not the assignee, user, or a superuser/supervisor.')
+
+    message = PLAINTEXT_MESSAGE
+
+    html_message = render_to_string('emails/new_note.html', context)
+
+    send_mail(
+        subject='Note posted on Help Desk Ticket #{}'.format(note.ticket.id),
+        message=message,
+        html_message=html_message,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=recipient_list,
+        fail_silently=False,
+    )
+
+
 def is_in_groups(user, group_names):
     """
     Returns True if the user is a member of any groups given their names in group_names
