@@ -1,8 +1,8 @@
 from django import forms
-from django.forms import Form
+from django.forms import Form, ModelForm
 from django.db.models import Q
 
-from tickets.models import Ticket
+from tickets.models import Ticket, Note
 from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
 
 EMPTY_CHOICE = '---------'
@@ -59,3 +59,10 @@ class ResolveTicketForm(Form):
         self.fields['resolution'] = forms.CharField(
             required=False
         )
+
+
+class NewNoteForm(ModelForm):
+
+    class Meta:
+        model = Note
+        fields = ['text']  # TODO Add File

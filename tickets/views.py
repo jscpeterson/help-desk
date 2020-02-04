@@ -361,3 +361,26 @@ def search_tickets(request):
     }
 
     return render(request, template, context)
+
+
+@login_required
+def add_note(request, *args, **kwargs):
+    template = 'tickets/new_note.html'
+    ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+
+    if request.method == 'POST':
+        form = forms.NewNoteForm(request.POST)
+        if form.is_valid():
+            # commit=False means the form doesn't save at this time.
+            # commit defaults to True which means it normally saves.
+            note_instance = form.save(commit=False)
+            note_instance.user = request.user
+            note_instance.ticket = ticket
+            note_instance.save()
+            # TODO Send notification emails for new note
+            return HttpResponseRedirect(reverse('tickets:home'))  # TODO Go to DetailView for ticket
+    else:
+        form = forms.NewNoteForm()
+
+    context = {'form': form}
+    return render(request, template, context)

@@ -25,8 +25,12 @@ urlpatterns = [
     path('closed/', views.closed_tickets, name='view_closed_tickets'),
 
     # Search Tickets
-    path('search/', views.search_tickets, name="search_tickets")
+    path('search/', views.search_tickets, name="search_tickets"),
 
     # TODO Detail Ticket View URL
+    # path('detail/<int:ticket_id>/', views.detail_view , name='detail_view'),
+
+    # Add Note
+    path('add_note/<int:ticket_id>', views.add_note, name='add_note'),
 
 ]
