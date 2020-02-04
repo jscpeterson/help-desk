@@ -35,7 +35,7 @@ class Ticket(models.Model):
     # Supervisor that assigned this ticket
     assigned_by = models.ForeignKey(
         HelpDeskUser,
-        related_name='delegated_tickets',
+        related_name='tickets_assigned_by',
         on_delete=models.PROTECT,
         blank=True,
         null=True,
