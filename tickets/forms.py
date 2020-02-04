@@ -45,10 +45,6 @@ class AssignTicketForm(Form):
             choices=category_choices,
         )
 
-        self.fields['notes'] = forms.CharField(
-            required=False
-        )
-
 
 class ResolveTicketForm(Form):
 

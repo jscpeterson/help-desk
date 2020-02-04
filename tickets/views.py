@@ -105,7 +105,6 @@ def assign_ticket(request, *args, **kwargs):
             ticket.assignee = data.get('assignee')
             ticket.priority = data.get('priority')
             ticket.category = data.get('category')
-            ticket.notes = data.get('notes')
             ticket.assignment_date = timezone.now()
             ticket.assigned_by = request.user
             ticket.save()
