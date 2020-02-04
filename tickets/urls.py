@@ -25,8 +25,9 @@ urlpatterns = [
     path('closed/', views.closed_tickets, name='view_closed_tickets'),
 
     # Search Tickets
-    path('search/', views.search_tickets, name="search_tickets")
+    path('search/', views.search_tickets, name="search_tickets"),
 
-    # TODO Detail Ticket View URL
+    # Ticket Detail View
+    path('<int:ticket_id>', views.view_ticket, name='view_ticket'),
 
 ]

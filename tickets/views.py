@@ -361,3 +361,18 @@ def search_tickets(request):
     }
 
     return render(request, template, context)
+
+@login_required
+def view_ticket(request, *args, **kwargs):
+    ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+
+    template = 'tickets/view_ticket.html'
+
+    # ONLY SUPERVISOR, ASSIGNEE, and USER TICKET OWNER SHOULD HAVE ACCESS
+    #
+
+    context = {
+        'ticket': ticket,
+    }
+
+    return render(request, template, context)
