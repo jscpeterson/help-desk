@@ -5,9 +5,11 @@
 
 <!-- TICKET DETAIL CARD START -->
 
-<!-- TOP LEFT, TICKET ID -->
+<!-- TOP LEFT, TICKET ID SECTION START-->
 <h1>TICKET ID: {{ticket.id}}</h1>
-<!-- MIDDLE LEFT, TICKET META DATA, USER ASSIGNEE, CATEGORY PRIORITY -->
+<!-- TICKET ID SECTION END -->
+
+<!-- MIDDLE LEFT, TICKET META DATA, USER ASSIGNEE, CATEGORY PRIORITY SECTION START -->
 <h1>USER: {{ticket.user}}</h1>
 <h1>ASSIGNEE: {{ticket.assignee}}</h1>
 <h1>PRIORITY: {{ticket.get_priority_display}}</h1>
@@ -15,8 +17,8 @@
 <!-- CARD FOOTER/BOTTOM LEFT TICKET TIMELINE -->
 <h1>CREATED AT: {{ticket.created_date}}</h1>
 <h2>BY: {{ticket.user}}</h2>
-{% if ticket.assigned_date %}
-<h1>ASSIGNED AT: {{ticket.assigned_date}}</h1>
+{% if ticket.assignment_date %}
+<h1>ASSIGNED AT: {{ticket.assignment_date}}</h1>
 <h2>TO: {{ticket.assignee}}</h2>
 <h2>BY: {{ticket.assigned_by}}</h2>
 {% endif %}
@@ -24,35 +26,68 @@
 <h1>RESOLVED AT: {{ticket.closed_date}}</h1>
 <h2>BY: {{ticket.assignee}}</h2>
 {% endif %}
+<!-- TICKET META DATA SECTION END -->
 
-<!-- STATUS SECTION, TOP RIGHT -->
+<!-- STATUS SECTION, TOP RIGHT START-->
 <!-- IF STATUS IS OPEN -->
 {% if ticket.status == 1 %}
-  <!-- IF NOT ASSIGNED YET -->
-  {% if ticket.assigned_date %}
-  <h1>TICKET ASSIGNED AT: {{ticket.assigned_date}}</h1>
+  <!-- IF ASSIGNED -->
+  {% if ticket.assignment_date %}
+  <h1>TICKET ASSIGNED AT: {{ticket.assignment_date}}</h1>
+    {% if user.is_support or user.is_supervisor %}
+    <h6>Resolve ticket</h6>
+    <a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
+      <i class="material-icons">check_circle</i>
+    </a>
+    {% endif %}
+  <!-- IF NOT YET ASSIGNED -->
   {% else %}
   <h1>OPENED AT: {{ticket.created_date}}</h1>
+    {% if user.is_support or user.is_supervisor %}
+    <h6>Assign ticket</h6>
+    <a href={% url 'tickets:assign_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
+      <i class="material-icons">assignment_ind</i>
+    </a>
+    {% endif %}
   {% endif %}
 {% endif %}
 <!-- IF STATUS IS CLOSED -->
 {% if ticket.status == 2 %}
 <h1>CLOSED AT: {{ticket.closed_date}}</h1>
 {% endif %}
+<!-- STATUS SECTION END -->
 
-<!-- PROBLEM DESCRIPTION SECTION, MIDDLE RIGHT -->
+<!-- PROBLEM DESCRIPTION SECTION, MIDDLE RIGHT START -->
 <h6>PROBLEM DESCRIPTION: {{ticket.problem_description}}</h6>
+<!-- PROBLEM DESCRIPTION SECTION END -->
 
 <!-- PROBLEM RESOLUTION SECTION, BOTTOM RIGHT -->
+{% if ticket.resolution %}
 <h6>PROBLEM RESOLUTION: {{ticket.resolution}}</h6>
+{% endif %}
+<!-- PROBLEM RESOLUTION SECTION END -->
 
 <!-- TICKET DETAIL CARD END -->
 
+
 <!-- NOTES CARD START -->
+
+<!-- NEW NOTES BUTTON SECTION, TOP OF NOTES CARD START -->
+<h6>
+  <a href={% url 'tickets:add_note' ticket.id %} class="btn-floating btn-small waves-effect waves-light red hoverable" id="addbutton">
+    <i class="material-icons">add</i>
+  </a>Create New Note
+</h6>
+<!-- NEW NOTES BUTTON SECTION END -->
+
+<!-- NOTES CHAT LOG SECTION START -->
 {% for note in notes %}
 <h6>NOTE CREATED AT: {{note.created_date}}</h6>
 <h6>NOTE CREATOR: {{note.user}}</h6>
 <h1>NOTE TEXT: {{note.text}}</h1>
 {% endfor %}
+<!-- NOTES CHAT LOG SECTION END -->
+
 <!-- NOTES CARD END -->
+
 {% endblock %}
