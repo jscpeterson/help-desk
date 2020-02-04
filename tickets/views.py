@@ -9,7 +9,7 @@ from django.db.models import Q
 
 from datetime import date, datetime
 
-from tickets.models import Ticket
+from tickets.models import Ticket, Note
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
     check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
@@ -392,11 +392,14 @@ def view_ticket(request, *args, **kwargs):
 
     template = 'tickets/view_ticket.html'
 
+    notes = Note.objects.filter(ticket__id=ticket.id)
+
     # ONLY SUPERVISOR, ASSIGNEE, and USER TICKET OWNER SHOULD HAVE ACCESS
     #
 
     context = {
         'ticket': ticket,
+        'notes': notes,
     }
 
     return render(request, template, context)

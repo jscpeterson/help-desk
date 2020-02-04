@@ -49,6 +49,10 @@
 <!-- TICKET DETAIL CARD END -->
 
 <!-- NOTES CARD START -->
-<!-- WAITING FOR NOTES, UNTIL FOREIGN KEY MODEL IS ATTACHED TO TICKET -->
+{% for note in notes %}
+<h6>NOTE CREATED AT: {{note.created_date}}</h6>
+<h6>NOTE CREATOR: {{note.user}}</h6>
+<h1>NOTE TEXT: {{note.text}}</h1>
+{% endfor %}
 <!-- NOTES CARD END -->
 {% endblock %}
