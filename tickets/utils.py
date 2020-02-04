@@ -111,9 +111,25 @@ def check_is_assigned(user, ticket):
     Raises PermissionDenied exception if not.
     """
     if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
-        return True
+        return
     elif user.groups.filter(name=GROUP_SUPPORT).exists() and ticket.assignee == user:
-        return True
+        return
+    else:
+        raise PermissionDenied()
+
+
+def check_is_assigned_or_user(user, ticket):
+    """
+    Checks if user is a superuser/supervisor or if the user is a support user and is assigned to a ticket,
+    or if the ticket was submitted by the user.
+    Raises PermissionDenied exception if not.
+    """
+    if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
+        return
+    elif user.groups.filter(name=GROUP_SUPPORT).exists() and ticket.assignee == user:
+        return
+    elif ticket.user == user:
+        return
     else:
         raise PermissionDenied()
 

@@ -11,7 +11,7 @@ from datetime import date, datetime
 
 from tickets.models import Ticket
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
-    check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email
+    check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
 
@@ -367,6 +367,7 @@ def search_tickets(request):
 def add_note(request, *args, **kwargs):
     template = 'tickets/new_note.html'
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+    check_is_assigned_or_user(request.user, ticket)
 
     if request.method == 'POST':
         form = forms.NewNoteForm(request.POST)
