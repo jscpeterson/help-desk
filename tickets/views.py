@@ -107,6 +107,7 @@ def assign_ticket(request, *args, **kwargs):
             ticket.category = data.get('category')
             ticket.notes = data.get('notes')
             ticket.assignment_date = timezone.now()
+            ticket.assigned_by = request.user
             ticket.save()
 
             send_ticket_assigned_email(ticket, request)
