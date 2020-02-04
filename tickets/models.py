@@ -91,11 +91,6 @@ class Ticket(models.Model):
     )
 
     # To be filled by IT or a supervisor
-    notes = models.TextField(
-        default=''
-    )
-
-    # To be filled by IT or a supervisor
     resolution = models.TextField(
         default=''
     )
@@ -118,3 +113,33 @@ class Ticket(models.Model):
         blank=True,
         null=True,
     )
+
+
+class Note(models.Model):
+
+    ticket = models.ForeignKey(
+        Ticket,
+        related_name='notes',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
+
+    user = models.ForeignKey(
+        HelpDeskUser,
+        related_name='notes',
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+    )
+
+    # Automatically created
+    created_date = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    text = models.TextField(
+        default=''
+    )
+
+    # TODO Add FileField for an Attachment
