@@ -2,6 +2,89 @@
 
 {% block content %}
 
+<!-- CONTAINER START -->
+<div class="container">
+
+  <!-- ROW FOR DETAIL AND NOTES CARD START   -->
+  <div class="row">
+
+    <!-- COLUMN FOR TICKET DETAILS CARD START-->
+    <div class="col s12 l8">
+      <!-- TICKET DETAILS CARD START -->
+      <div class="card blue-grey darken-1">
+        <div class="card-content white-text">
+          <div class="row"> <!-- DETAIL ROW FOR TICKET TITLE, META, STATUS, DESCRIPTION, RESOLUTION START -->
+            <div class="col s12 m6"> <!--  COLUMN IN CARD FOR TICKET TITLE AND META START -->
+            <span class="card-title">Ticket {{ticket.id}}</span>
+            <div class="section"> <!-- TICKET META SECTION START -->
+            <h6>User: {{ticket.user}}</h6>
+            {% if ticket.assignment_date %}
+              <h6>Support Agent: {{ticket.assignee}}</h6>
+              <h6>Priority: {{ticket.get_priority_display}}</h6>
+              <h6>Category: {{ticket.get_category_display}}</h6>
+            {% endif %}
+          </div> <!-- TICKET META SECTION END -->
+            </div> <!--  COLUMN IN CARD FOR TICKET TITLE AND META END -->
+            <div class="col s12 m6"> <!--  COLUMN IN CARD FOR STATUS, DESCRIPTION, RESOLUTION START -->
+              <div class="section"> <!-- TICKET STATUS SECTION END -->
+              <!-- IF STATUS IS OPEN -->
+              {% if ticket.status == 1 %}
+                <!-- IF ASSIGNED -->
+                {% if ticket.assignment_date %}
+                <h6>STATUS - Assigned</h6>
+                <h6>Assigned at: {{ticket.assignment_date}}</h6>
+                  {% if user.is_support or user.is_supervisor %}
+                  <h6>Resolve ticket</h6>
+                  <a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
+                    <i class="material-icons">check_circle</i>
+                  </a>
+                  {% endif %}
+                <!-- IF NOT YET ASSIGNED -->
+                {% else %}
+                <h6>STATUS - Unassigned</h6>
+                <h6>Opened at: {{ticket.created_date}}</h6>
+                  {% if user.is_support or user.is_supervisor %}
+                  <h6>Assign ticket</h6>
+                  <a href={% url 'tickets:assign_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
+                    <i class="material-icons">assignment_ind</i>
+                  </a>
+                  {% endif %}
+                {% endif %}
+              {% endif %}
+              <!-- IF STATUS IS CLOSED -->
+              {% if ticket.status == 2 %}
+              <h6>STATUS - Closed</h6>
+              <h6>Closed at: {{ticket.closed_date}}</h6>
+              {% endif %}
+              </div> <!-- TICKET STATUS SECTION END -->
+
+              <div class="divider"></div>
+
+              <div class="section"> <!-- PROBLEM DESCRIPTION SECTION START -->
+              <h6>PROBLEM DESCRIPTION: {{ticket.problem_description}}</h6>
+              </div> <!-- PROBLEM DESCRIPTION SECTION END -->
+
+              <div class="divider"></div>
+
+              {% if ticket.resolution %}
+              <div class="section"> <!-- PROBLEM RESOLUTION SECTION START-->
+              <h6>PROBLEM RESOLUTION: {{ticket.resolution}}</h6>
+            </div> <!-- PROBLEM RESOLUTION SECTION END-->
+              {% endif %}
+            </div> <!--  COLUMN IN CARD FOR STATUS, DESCRIPTION, RESOLUTION END -->
+          </div> <!-- DETAIL ROW FOR TICKET TITLE, META, STATUS, DESCRIPTION, RESOLUTION END -->
+        </div>
+      </div>
+      <!-- TICKET DETAILS CARD END -->
+
+    </div>
+    <!-- COLUMN FOR TICKET DETAILS CARD END -->
+
+  </div>
+  <!-- ROW FOR DETAIL AND NOTES CARD END -->
+
+</div>
+<!-- CONTAINER END -->
 
 <!-- TICKET DETAIL CARD START -->
 
@@ -33,7 +116,8 @@
 {% if ticket.status == 1 %}
   <!-- IF ASSIGNED -->
   {% if ticket.assignment_date %}
-  <h1>TICKET ASSIGNED AT: {{ticket.assignment_date}}</h1>
+  <h1>STATUS - ASSIGNED</h1>
+  <h2>ASSIGNED AT: {{ticket.assignment_date}}</h2>
     {% if user.is_support or user.is_supervisor %}
     <h6>Resolve ticket</h6>
     <a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
@@ -42,7 +126,8 @@
     {% endif %}
   <!-- IF NOT YET ASSIGNED -->
   {% else %}
-  <h1>OPENED AT: {{ticket.created_date}}</h1>
+  <h1>STATUS - UNASSIGNED</h1>
+  <h2>OPENED AT: {{ticket.created_date}}</h2>
     {% if user.is_support or user.is_supervisor %}
     <h6>Assign ticket</h6>
     <a href={% url 'tickets:assign_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
@@ -53,7 +138,8 @@
 {% endif %}
 <!-- IF STATUS IS CLOSED -->
 {% if ticket.status == 2 %}
-<h1>CLOSED AT: {{ticket.closed_date}}</h1>
+<h1>STATUS - CLOSED</h1>
+<h2>CLOSED AT: {{ticket.closed_date}}</h2>
 {% endif %}
 <!-- STATUS SECTION END -->
 
