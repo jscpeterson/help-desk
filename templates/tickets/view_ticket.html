@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<!-- TICKET DETAIL CARD START -->
+
+<!-- TOP LEFT, TICKET ID -->
+<h1>TICKET ID: {{ticket.id}}</h1>
+<!-- MIDDLE LEFT, TICKET META DATA, USER ASSIGNEE, CATEGORY PRIORITY -->
+<h1>USER: {{ticket.user}}</h1>
+<h1>ASSIGNEE: {{ticket.assignee}}</h1>
+<h1>PRIORITY: {{ticket.get_priority_display}}</h1>
+<h1>CATEGORY: {{ticket.get_category_display}}</h1>
+<!-- CARD FOOTER/BOTTOM LEFT TICKET TIMELINE -->
+<h1>CREATED AT: {{ticket.created_date}}</h1>
+<h2>BY: {{ticket.user}}</h2>
+{% if ticket.assigned_date %}
+<h1>ASSIGNED AT: {{ticket.assigned_date}}</h1>
+<h2>TO: {{ticket.assignee}}</h2>
+<h2>BY: {{ticket.assigned_by}}</h2>
+{% endif %}
+{% if ticket.status == 2 %}
+<h1>RESOLVED AT: {{ticket.closed_date}}</h1>
+<h2>BY: {{ticket.assignee}}</h2>
+{% endif %}
+
+<!-- STATUS SECTION, TOP RIGHT -->
+<!-- IF STATUS IS OPEN -->
+{% if ticket.status == 1 %}
+  <!-- IF NOT ASSIGNED YET -->
+  {% if ticket.assigned_date %}
+  <h1>TICKET ASSIGNED AT: {{ticket.assigned_date}}</h1>
+  {% else %}
+  <h1>OPENED AT: {{ticket.created_date}}</h1>
+  {% endif %}
+{% endif %}
+<!-- IF STATUS IS CLOSED -->
+{% if ticket.status == 2 %}
+<h1>CLOSED AT: {{ticket.closed_date}}</h1>
+{% endif %}
+
+<!-- PROBLEM DESCRIPTION SECTION, MIDDLE RIGHT -->
+<h6>PROBLEM DESCRIPTION: {{ticket.problem_description}}</h6>
+
+<!-- PROBLEM RESOLUTION SECTION, BOTTOM RIGHT -->
+<h6>PROBLEM RESOLUTION: {{ticket.resolution}}</h6>
+
+<!-- TICKET DETAIL CARD END -->
+
+<!-- NOTES CARD START -->
+<!-- WAITING FOR NOTES, UNTIL FOREIGN KEY MODEL IS ATTACHED TO TICKET -->
+<!-- NOTES CARD END -->
+{% endblock %}
