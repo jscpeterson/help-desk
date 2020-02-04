@@ -25,7 +25,6 @@
                 <th>Priority</th>
                 <th>Description</th>
                 <th>Resolve</th>
-                <th>Notes</th>
             </tr>
         </thead>
             {% for ticket in assigned_tickets %}
@@ -41,7 +40,6 @@
                       <i class="material-icons">check_circle</i>
                         </a>
                     </td>
-                    <td>{{ ticket.notes }}</td>
                 </tr>
             {% endfor %}
             {% if assigned_tickets|length == 0 %}
