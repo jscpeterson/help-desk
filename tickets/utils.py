@@ -89,8 +89,6 @@ def send_resolution_email(ticket):
 
 def send_new_note_email(note, request):
 
-    # TODO Include information about attachment, if available.
-
     context = {
         'note': note,
         'host': request.get_host(),

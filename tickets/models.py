@@ -141,5 +141,3 @@ class Note(models.Model):
     text = models.TextField(
         default=''
     )
-
-    # TODO Add FileField for an Attachment
