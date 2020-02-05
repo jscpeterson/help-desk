@@ -32,6 +32,10 @@ CLASSES
   max-height: 40vh;
 }
 
+.card.detail-card {
+  max-height: 65vh;
+}
+
 .error_message {
   color: #ED4434;
 }

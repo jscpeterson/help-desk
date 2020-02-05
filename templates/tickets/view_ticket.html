@@ -4,6 +4,9 @@
 
 <!-- TODO: MAKE THE PROBLEM DESCRIPTION SECTION, AND POSSIBLY RESOLUTION, A CARD
 REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
+<!-- TODO: EXPERIMENT WITH MOVING CARD TITLES TO HEADER ABOVE CARDS, RATHER THAN
+LIVING INSIDE OF CARDS -->
+<!-- TODO: THE CARDS FOR THE DETAILS AND NOTES ARE NOT TALL ENOUGH BY DEFAULT - FIX THIS -->
 
 <!-- CONTAINER START -->
 <div class="container">
@@ -13,66 +16,73 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
 
     <!-- COLUMN FOR TICKET DETAILS CARD START-->
     <div class="col s12 l8">
+      <h4>Ticket {{ticket.id}} Details</h4>
       <!-- TICKET DETAILS CARD START -->
-      <div class="card blue-grey darken-1">
+      <div class="card detail-card blue-grey darken-1">
         <div class="card-content white-text">
           <div class="row"> <!-- DETAIL ROW FOR TICKET TITLE, META, STATUS, DESCRIPTION, RESOLUTION START -->
             <div class="col s12 m6"> <!--  COLUMN IN CARD FOR TICKET TITLE AND META START -->
-            <span class="card-title">Ticket {{ticket.id}}</span>
-            <div class="section"> <!-- TICKET META SECTION START -->
-            <h6>User: {{ticket.user}}</h6>
-            {% if ticket.assignment_date %}
-              <h6>Support Agent: {{ticket.assignee}}</h6>
-              <h6>Priority: {{ticket.get_priority_display}}</h6>
-              <h6>Category: {{ticket.get_category_display}}</h6>
-            {% endif %}
-          </div> <!-- TICKET META SECTION END -->
-            </div> <!--  COLUMN IN CARD FOR TICKET TITLE AND META END -->
-            <div class="col s12 m6"> <!--  COLUMN IN CARD FOR STATUS, DESCRIPTION, RESOLUTION START -->
-              <div class="section"> <!-- TICKET STATUS SECTION END -->
+              <div class="section"> <!-- WRAPPER SECTION FOR PADDING AND SPACING START-->
+              <div class="section blue-grey darken-2"> <!-- TICKET STATUS SECTION END -->
               <!-- IF STATUS IS OPEN -->
               {% if ticket.status == 1 %}
                 <!-- IF ASSIGNED -->
                 {% if ticket.assignment_date %}
                 <h6>STATUS - Assigned</h6>
-                <h6>Assigned at: {{ticket.assignment_date}}</h6>
+                <p>{{ticket.assignment_date}}</p>
                   {% if user.is_support or user.is_supervisor %}
-                  <h6>Resolve ticket</h6>
+                  <h6 id="resolveticketh6">
                   <a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
                     <i class="material-icons">check_circle</i>
-                  </a>
+                  </a>Resolve ticket
+                  </h6>
                   {% endif %}
                 <!-- IF NOT YET ASSIGNED -->
                 {% else %}
                 <h6>STATUS - Unassigned</h6>
-                <h6>Opened at: {{ticket.created_date}}</h6>
+                <p>{{ticket.created_date}}</p>
                   {% if user.is_support or user.is_supervisor %}
-                  <h6>Assign ticket</h6>
+                  <h6>
                   <a href={% url 'tickets:assign_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
                     <i class="material-icons">assignment_ind</i>
-                  </a>
+                  </a>Assign ticket
+                  </h6>
                   {% endif %}
                 {% endif %}
               {% endif %}
               <!-- IF STATUS IS CLOSED -->
               {% if ticket.status == 2 %}
               <h6>STATUS - Closed</h6>
-              <h6>Closed at: {{ticket.closed_date}}</h6>
+              <p>{{ticket.closed_date}}</p>
               {% endif %}
               </div> <!-- TICKET STATUS SECTION END -->
+            </div> <!-- WRAPPER SECTION FOR PADDING AND SPACING END-->
+            <div class="section"> <!-- WRAPPER FOR TICKET META SECTION START -->
+            <div class="section blue-grey darken-2">
+            <h6>User: {{ticket.user}}</h6>
+            {% if ticket.assignment_date %}
+              <h6>Support Agent: {{ticket.assignee}}</h6>
+              <h6>Priority: {{ticket.get_priority_display}}</h6>
+              <h6>Category: {{ticket.get_category_display}}</h6>
+            {% endif %}
+            </div>
+            </div> <!-- WRAPPER FOR TICKET META SECTION END -->
+            </div> <!--  COLUMN IN CARD FOR TICKET TITLE AND META END -->
+            <div class="col s12 m6"> <!--  COLUMN IN CARD FOR STATUS, DESCRIPTION, RESOLUTION START -->
 
-              <div class="divider"></div>
-
-              <div class="section"> <!-- PROBLEM DESCRIPTION SECTION START -->
-              <h6>PROBLEM DESCRIPTION: {{ticket.problem_description}}</h6>
+              <div class="section">
+              <div class="section blue-grey darken-2"> <!-- PROBLEM DESCRIPTION SECTION START -->
+              <h6>Issue Description</h6>
+              <p>{{ticket.problem_description}}</p>
               </div> <!-- PROBLEM DESCRIPTION SECTION END -->
-
-              <div class="divider"></div>
+              </div>
 
               {% if ticket.resolution %}
-              <div class="section"> <!-- PROBLEM RESOLUTION SECTION START-->
-              <h6>PROBLEM RESOLUTION: {{ticket.resolution}}</h6>
-            </div> <!-- PROBLEM RESOLUTION SECTION END-->
+              <div class="section blue-grey darken-2"> <!-- PROBLEM RESOLUTION SECTION START-->
+              <!-- <div class="divider"></div> -->
+              <h6>Issue Resolution</h6>
+              <p>{{ticket.resolution}}</p>
+               <!-- PROBLEM RESOLUTION SECTION END-->
               {% endif %}
             </div> <!--  COLUMN IN CARD FOR STATUS, DESCRIPTION, RESOLUTION END -->
           </div> <!-- DETAIL ROW FOR TICKET TITLE, META, STATUS, DESCRIPTION, RESOLUTION END -->
@@ -82,7 +92,7 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
               <h6>Timeline</h6>
               <div class="divider"></div>
               <div class="section"> <!-- TIMELINE SECTION START -->
-                <h6>CREATED AT: {{ticket.created_date}}</h6>
+                <h6>Created on {{ticket.created_date}} by {{ticket.user}}</h6>
                 <h6>BY: {{ticket.user}}</h6>
                 {% if ticket.assignment_date %}
                 <h6>ASSIGNED AT: {{ticket.assignment_date}}</h6>
@@ -103,100 +113,51 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
     </div>
     <!-- COLUMN FOR TICKET DETAILS CARD END -->
 
+    <div class="col s12 l4"> <!-- COLUMN FOR NOTES CARD START -->
+      <h4>Ticket {{ticket.id}} Notes</h4>
+      <div class="card detail-card blue-grey darken-1"> <!-- NOTES CARD START -->
+        <div class="card-content white-text">
+          <div class="row"> <!-- ROW FOR NOTES CARD HEADER START -->
+            <div class="col s12">
+              <div class="section blue-grey darken-2"> <!-- NOTES HEADER SECTION START -->
+              <h6 class="center-align">
+                <a href={% url 'tickets:add_note' ticket.id %} class="btn-floating btn-small waves-effect waves-light red hoverable" id="addbutton">
+                  <i class="material-icons">add</i>
+                </a>Add Note
+              </h6>
+              </div> <!-- NOTES HEADER SECTION END -->
+            </div>
+          </div> <!-- ROW FOR NOTES CARD HEADER END -->
+          <div class="row">
+            <div class="col s12">
+            {% if not notes %}
+            <h6>No notes...</h6>
+            {% endif %}
+            {% for note in notes %}
+            {% if note.user.is_support or note.user.is_supervisor %}
+            <div class="right-align blue-grey lighten-1">
+              <p>{{note.created_date}}</p>
+              <P>{{note.user}}</P>
+              <h6>{{note.text}}</h6>
+            </div>
+            {% else %}
+            <div class="left-align blue-grey lighten-3 black-text">
+              <p>{{note.created_date}}</p>
+              <P>{{note.user}}</P>
+              <h6>{{note.text}}</h6>
+            </div>
+            {% endif %}
+            {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div> <!-- NOTES CARD END -->
+    </div> <!-- COLUMN FOR NOTES CARD END -->
+
   </div>
   <!-- ROW FOR DETAIL AND NOTES CARD END -->
 
 </div>
 <!-- CONTAINER END -->
-
-<!-- TICKET DETAIL CARD START -->
-
-<!-- TOP LEFT, TICKET ID SECTION START-->
-<h1>TICKET ID: {{ticket.id}}</h1>
-<!-- TICKET ID SECTION END -->
-
-<!-- MIDDLE LEFT, TICKET META DATA, USER ASSIGNEE, CATEGORY PRIORITY SECTION START -->
-<h1>USER: {{ticket.user}}</h1>
-<h1>ASSIGNEE: {{ticket.assignee}}</h1>
-<h1>PRIORITY: {{ticket.get_priority_display}}</h1>
-<h1>CATEGORY: {{ticket.get_category_display}}</h1>
-<!-- CARD FOOTER/BOTTOM LEFT TICKET TIMELINE -->
-<h1>CREATED AT: {{ticket.created_date}}</h1>
-<h2>BY: {{ticket.user}}</h2>
-{% if ticket.assignment_date %}
-<h1>ASSIGNED AT: {{ticket.assignment_date}}</h1>
-<h2>TO: {{ticket.assignee}}</h2>
-<h2>BY: {{ticket.assigned_by}}</h2>
-{% endif %}
-{% if ticket.status == 2 %}
-<h1>RESOLVED AT: {{ticket.closed_date}}</h1>
-<h2>BY: {{ticket.assignee}}</h2>
-{% endif %}
-<!-- TICKET META DATA SECTION END -->
-
-<!-- STATUS SECTION, TOP RIGHT START-->
-<!-- IF STATUS IS OPEN -->
-{% if ticket.status == 1 %}
-  <!-- IF ASSIGNED -->
-  {% if ticket.assignment_date %}
-  <h1>STATUS - ASSIGNED</h1>
-  <h2>ASSIGNED AT: {{ticket.assignment_date}}</h2>
-    {% if user.is_support or user.is_supervisor %}
-    <h6>Resolve ticket</h6>
-    <a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
-      <i class="material-icons">check_circle</i>
-    </a>
-    {% endif %}
-  <!-- IF NOT YET ASSIGNED -->
-  {% else %}
-  <h1>STATUS - UNASSIGNED</h1>
-  <h2>OPENED AT: {{ticket.created_date}}</h2>
-    {% if user.is_support or user.is_supervisor %}
-    <h6>Assign ticket</h6>
-    <a href={% url 'tickets:assign_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
-      <i class="material-icons">assignment_ind</i>
-    </a>
-    {% endif %}
-  {% endif %}
-{% endif %}
-<!-- IF STATUS IS CLOSED -->
-{% if ticket.status == 2 %}
-<h1>STATUS - CLOSED</h1>
-<h2>CLOSED AT: {{ticket.closed_date}}</h2>
-{% endif %}
-<!-- STATUS SECTION END -->
-
-<!-- PROBLEM DESCRIPTION SECTION, MIDDLE RIGHT START -->
-<h6>PROBLEM DESCRIPTION: {{ticket.problem_description}}</h6>
-<!-- PROBLEM DESCRIPTION SECTION END -->
-
-<!-- PROBLEM RESOLUTION SECTION, BOTTOM RIGHT -->
-{% if ticket.resolution %}
-<h6>PROBLEM RESOLUTION: {{ticket.resolution}}</h6>
-{% endif %}
-<!-- PROBLEM RESOLUTION SECTION END -->
-
-<!-- TICKET DETAIL CARD END -->
-
-
-<!-- NOTES CARD START -->
-
-<!-- NEW NOTES BUTTON SECTION, TOP OF NOTES CARD START -->
-<h6>
-  <a href={% url 'tickets:add_note' ticket.id %} class="btn-floating btn-small waves-effect waves-light red hoverable" id="addbutton">
-    <i class="material-icons">add</i>
-  </a>Create New Note
-</h6>
-<!-- NEW NOTES BUTTON SECTION END -->
-
-<!-- NOTES CHAT LOG SECTION START -->
-{% for note in notes %}
-<h6>NOTE CREATED AT: {{note.created_date}}</h6>
-<h6>NOTE CREATOR: {{note.user}}</h6>
-<h1>NOTE TEXT: {{note.text}}</h1>
-{% endfor %}
-<!-- NOTES CHAT LOG SECTION END -->
-
-<!-- NOTES CARD END -->
 
 {% endblock %}

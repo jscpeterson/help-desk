@@ -395,6 +395,8 @@ def view_ticket(request, *args, **kwargs):
 
     notes = Note.objects.filter(ticket__id=ticket.id)
 
+    # IF THE TICKET IS UNASSIGNED, ANY SUPPORT SHOULD BE ABLE TO VIEW TICKET
+
     check_is_assigned_or_user(request.user, ticket)
 
     context = {
