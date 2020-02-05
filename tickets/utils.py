@@ -149,6 +149,18 @@ def check_groups(user, group_names):
         raise PermissionDenied()
 
 
+def check_groups_or_is_user(user, ticket, group_names):
+    """
+    Checks if the user is a superuser or in an allowed group for a given list of group names, or if a
+    ticket was submitted by the user.
+    Raises PermissionDenied exception if not.
+    """
+    if user.is_superuser or is_in_groups(user, group_names) or user == ticket.user:
+        return
+    else:
+        raise PermissionDenied()
+
+
 def check_is_assigned(user, ticket):
     """
     Checks if user is a superuser/supervisor or if the user is a support user and is assigned to a ticket.
