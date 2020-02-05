@@ -61,7 +61,7 @@ def new_ticket(request, *args, **kwargs):
 
             send_new_ticket_alert_email(ticket, request)
 
-            return HttpResponseRedirect(reverse('tickets:home'))
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
     else:
         form = forms.NewTicketForm(*args, **kwargs)
 
@@ -395,7 +395,7 @@ def view_ticket(request, *args, **kwargs):
 
     notes = Note.objects.filter(ticket__id=ticket.id)
 
-    check_is_assigned_or_user(request.user, ticket) 
+    check_is_assigned_or_user(request.user, ticket)
 
     context = {
         'ticket': ticket,
