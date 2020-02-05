@@ -395,8 +395,7 @@ def view_ticket(request, *args, **kwargs):
 
     notes = Note.objects.filter(ticket__id=ticket.id)
 
-    # ONLY SUPERVISOR, ASSIGNEE, and USER TICKET OWNER SHOULD HAVE ACCESS
-    #
+    check_is_assigned_or_user(request.user, ticket) 
 
     context = {
         'ticket': ticket,
