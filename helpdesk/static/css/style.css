@@ -27,7 +27,7 @@ CLASSES
 }
 
 .card {
-  overflow-y: scroll;
+  overflow-y: auto;
   min-height: 40vh;
   max-height: 40vh;
 }
@@ -38,6 +38,20 @@ CLASSES
 
 .error_message {
   color: #ED4434;
+}
+
+.table-title{
+    color:white;
+    padding: 8px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.table-subtitle{
+    color:white;
+    font-size: 14px;
+    padding: 0 0 0 8px;
+    display: inline-block;
 }
 
 /**************
