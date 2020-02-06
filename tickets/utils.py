@@ -94,8 +94,10 @@ def send_new_note_email(note, request):
         'host': request.get_host(),
     }
 
-    # If there is no assignee, notify the user only.
+    # If there is no assignee, notify the user only. Unless the request.user is the user, in which case send no email.
     if note.ticket.assignee is None:
+        if request.user == note.ticket.user:
+            return
         context['recipient'] = note.ticket.user
         recipient_list = [note.ticket.user.email]
     # If the author of the note is the ticket assignee, notify the user
