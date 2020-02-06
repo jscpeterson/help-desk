@@ -83,27 +83,34 @@ LIVING INSIDE OF CARDS -->
               <h6>Issue Resolution</h6>
               <p>{{ticket.resolution}}</p>
                <!-- PROBLEM RESOLUTION SECTION END-->
+              </div>
               {% endif %}
             </div> <!--  COLUMN IN CARD FOR STATUS, DESCRIPTION, RESOLUTION END -->
           </div> <!-- DETAIL ROW FOR TICKET TITLE, META, STATUS, DESCRIPTION, RESOLUTION END -->
           <div class="row"> <!-- ROW FOR TIMELINE FOOTER START-->
-            <div class="col s12"> <!-- COLUMN FOR FOOTER WITH TIMELINE START-->
-              <div class="divider"></div>
-              <h6>Timeline</h6>
-              <div class="divider"></div>
+            <div class="col s12"> <div><!-- COLUMN FOR FOOTER WITH TIMELINE START-->
+
+              <div class="blue-grey darken-2">
+                <div class="divider transparent"></div>
+                <h6>Timeline</h6>
+                <div class="divider transparent"></div>
+              </div>
               <div class="section"> <!-- TIMELINE SECTION START -->
-                <h6>Created on {{ticket.created_date}} by {{ticket.user}}</h6>
-                <h6>BY: {{ticket.user}}</h6>
+
+                <div class="blue-grey lighten-1">
+                  <h6>Created on {{ticket.created_date}} by {{ticket.user}}</h6>
+                </div>
                 {% if ticket.assignment_date %}
-                <h6>ASSIGNED AT: {{ticket.assignment_date}}</h6>
-                <h6>TO: {{ticket.assignee}}</h6>
-                <h6>BY: {{ticket.assigned_by}}</h6>
+                <div class="blue-grey lighten-1">
+                  <h6>Assigned on {{ticket.assignment_date}} to {{ticket.assignee}} by {{ticket.assigned_by}}</h6>
+                </div>
                 {% endif %}
                 {% if ticket.status == 2 %}
-                <h6>RESOLVED AT: {{ticket.closed_date}}</h6>
-                <h6>BY: {{ticket.assignee}}</h6>
+                <div class="blue-grey lighten-1">
+                  <h6>Resolved on {{ticket.closed_date}} by {{ticket.assignee}}</h6>
+                </div>
                 {% endif %}
-              </div> <!-- TIMELINE SECTION END -->
+              </div> <!-- TIMELINE SECTION END --></div>
             </div> <!-- COLUMN FOR FOOTER WITH TIMELINE END-->
           </div> <!-- ROW FOR TIMELINE FOOTER END-->
         </div>
