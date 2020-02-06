@@ -383,7 +383,11 @@ def add_note(request, *args, **kwargs):
     else:
         form = forms.NewNoteForm()
 
-    context = {'form': form}
+    context = {
+        'form': form,
+        'user': request.user,
+        'ticket': ticket,
+    }
     return render(request, template, context)
 
 

@@ -3,8 +3,33 @@
 {% block content %}
     <form method="post">
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-    </form>
+  <form method="post" action="/tickets/new/" class="col s12">
+    {% csrf_token %}
+    <div class="row">
+      <h4>Enter your note here</h4>
+      <h6>
+          {% if ticket.assignee == user %}
+          This will be sent to the user.
+
+          {% elif user.is_superuser or user.is_supervisor %}
+          This will be sent to both the assignee (if available) and the user.
+
+          {% else %}
+          This will be sent to the support member assigned to your ticket. (if available)
+
+          {% endif %}
+        <br>When complete click the submit button to send.</h6>
+      <div class="input-field col s12 m6">
+        <textarea name="text" id="id_note_text" class="materialize-textarea"></textarea>
+        <label for="id_note_text">Note</label>
+      </div>
+    </div>
+
+    <div id="buttonDiv">
+      <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Submit
+      <i class="material-icons right">send</i>
+      </button>
+    </div>
+  </form>
 {% endblock %}
 
