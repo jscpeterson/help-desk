@@ -89,8 +89,6 @@ def send_resolution_email(ticket):
 
 def send_new_note_email(note, request):
 
-    # TODO Include information about attachment, if available.
-
     context = {
         'note': note,
         'host': request.get_host(),
@@ -144,6 +142,18 @@ def check_groups(user, group_names):
     Raises PermissionDenied exception if not.
     """
     if user.is_superuser or is_in_groups(user, group_names):
+        return
+    else:
+        raise PermissionDenied()
+
+
+def check_groups_or_is_user(user, ticket, group_names):
+    """
+    Checks if the user is a superuser or in an allowed group for a given list of group names, or if a
+    ticket was submitted by the user.
+    Raises PermissionDenied exception if not.
+    """
+    if user.is_superuser or is_in_groups(user, group_names) or user == ticket.user:
         return
     else:
         raise PermissionDenied()

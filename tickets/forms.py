@@ -61,4 +61,4 @@ class NewNoteForm(ModelForm):
 
     class Meta:
         model = Note
-        fields = ['text']  # TODO Add File
+        fields = ['text']

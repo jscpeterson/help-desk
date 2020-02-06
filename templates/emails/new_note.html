@@ -5,6 +5,5 @@
 <br/>
 They wrote: <br/><em>{{ note.text }}</em><br/>
 <br/>
-{# TODO Include information about attachment, if available #}
 You may view or reply to this note at {{ host }}{% url 'tickets:view_ticket' note.ticket.id %}.<br/>
 {% endblock %}

@@ -12,7 +12,7 @@ from datetime import date, datetime
 from tickets.models import Ticket, Note
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
     check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user, \
-    send_new_note_email
+    send_new_note_email, check_groups_or_is_user
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
 
@@ -395,9 +395,10 @@ def view_ticket(request, *args, **kwargs):
 
     notes = Note.objects.filter(ticket__id=ticket.id)
 
-    # IF THE TICKET IS UNASSIGNED, ANY SUPPORT SHOULD BE ABLE TO VIEW TICKET
-
-    check_is_assigned_or_user(request.user, ticket)
+    if ticket.assignee is None:
+        check_groups_or_is_user(request.user, ticket, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+    else:
+        check_is_assigned_or_user(request.user, ticket)
 
     context = {
         'ticket': ticket,
