@@ -334,7 +334,7 @@ def search_tickets(request):
             users = users.split()
 
             description_queries = [Q(problem_description__icontains=keyword) for keyword in keywords]
-            notes_queries = [Q(notes__icontains=keyword) for keyword in keywords]
+            notes_queries = [Q(notes__text__icontains=keyword) for keyword in keywords]
             resolution_queries = [Q(resolution__icontains=keyword) for keyword in keywords]
 
             user_queries = [Q(user__username__icontains=user) for user in users]
