@@ -28,10 +28,12 @@ LIVING INSIDE OF CARDS -->
               {% if ticket.status == 1 %}
                 <!-- IF ASSIGNED -->
                 {% if ticket.assignment_date %}
-                <h6>STATUS - Assigned</h6>
+                <div class="yellow darken-1">
+                  <h6>STATUS - Assigned</h6>
+                </div>
                 <p>{{ticket.assignment_date}}</p>
                   {% if user.is_support or user.is_supervisor %}
-                  <h6 id="resolveticketh6">
+                  <h6>
                   <a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
                     <i class="material-icons">check_circle</i>
                   </a>Resolve ticket
@@ -39,7 +41,9 @@ LIVING INSIDE OF CARDS -->
                   {% endif %}
                 <!-- IF NOT YET ASSIGNED -->
                 {% else %}
-                <h6>STATUS - Unassigned</h6>
+                <div class="deep-orange">
+                  <h6>STATUS - Unassigned</h6>
+                </div>
                 <p>{{ticket.created_date}}</p>
                   {% if user.is_support or user.is_supervisor %}
                   <h6>
@@ -52,7 +56,9 @@ LIVING INSIDE OF CARDS -->
               {% endif %}
               <!-- IF STATUS IS CLOSED -->
               {% if ticket.status == 2 %}
-              <h6>STATUS - Closed</h6>
+              <div class="green darken-1">
+                <h6>STATUS - Closed</h6>
+              </div>
               <p>{{ticket.closed_date}}</p>
               {% endif %}
               </div> <!-- TICKET STATUS SECTION END -->
