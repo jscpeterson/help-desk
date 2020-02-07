@@ -12,12 +12,13 @@
       </h3>
     </div>            <!-- CLOSE ROW -->
 
-<!-- TODO: MAKE TABLE HEADERS STICKY SO THEY STAY AT TOP WHEN SCROLLING -->
 <div class="row"> <!-- START ROW -->
   <div id="admin" class="col s12">
     <div class="card material-table blue-grey darken-1">
       <div class="table-header">
         <span class="table-title">{{first_name}}'s Open Tickets</span>
+        <br/>
+        <span class="table-subtitle">Click on a ticket number to see notes and further information.</span>
       </div>
       <table class="white-text highlight" id="datatable">
         <thead>
@@ -34,7 +35,10 @@
         <tbody>
           {% for ticket in open_tickets %}
               <tr>
-                  <td>{{ ticket.id }}</td>
+                  <td><a href={% url 'tickets:view_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="idbutton">
+                      {{ ticket.id }}
+                      </a>
+                  </td>
                   <td>{{ ticket.created_date }}</td>
                   {% if ticket.assignment_date == none %}
                     <td colspan="4">Ticket Not Yet Assigned</td>
@@ -63,6 +67,8 @@
     <div class="card material-table blue-grey darken-1">
       <div class="table-header">
         <span class="table-title">{{first_name}}'s Closed Tickets</span>
+        <br/>
+        <span class="table-subtitle">Click on a ticket number to see notes and further information.</span>
       </div>
       <table class="white-text highlight" id="datatable">
         <thead>
@@ -79,7 +85,10 @@
         <tbody>
           {% for ticket in closed_tickets %}
               <tr>
-                <td>{{ ticket.id }}</td>
+                <td><a href={% url 'tickets:view_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="idbutton">
+                    {{ ticket.id }}
+                    </a>
+                </td>
                 <td>{{ ticket.created_date }}</td>
                 <td>{{ ticket.assignment_date }}</td>
                 <td>{{ ticket.assignee }}</td>

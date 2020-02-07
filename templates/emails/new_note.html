@@ -1,0 +1,9 @@
+{% extends "emails/email_template.html" %}
+
+{% block content %}
+<strong>{{ note.user }}</strong> has posted a new note for help desk ticket #{{ note.ticket.id }}.<br/>
+<br/>
+They wrote: <br/><em>{{ note.text }}</em><br/>
+<br/>
+You may view or reply to this note at {{ host }}{% url 'tickets:view_ticket' note.ticket.id %}.<br/>
+{% endblock %}

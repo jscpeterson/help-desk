@@ -9,4 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var dropdowns = document.querySelectorAll('.dropdown-trigger');
   M.Dropdown.init(dropdowns);
 
+  var collapsibles = document.querySelectorAll('.collapsible');
+  M.Collapsible.init(collapsibles);
+
   });

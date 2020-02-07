@@ -9,9 +9,10 @@ from django.db.models import Q
 
 from datetime import date, datetime
 
-from tickets.models import Ticket
+from tickets.models import Ticket, Note
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
-    check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email
+    check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user, \
+    send_new_note_email, check_groups_or_is_user
 from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
 from . import forms
 
@@ -60,7 +61,7 @@ def new_ticket(request, *args, **kwargs):
 
             send_new_ticket_alert_email(ticket, request)
 
-            return HttpResponseRedirect(reverse('tickets:home'))
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
     else:
         form = forms.NewTicketForm(*args, **kwargs)
 
@@ -105,7 +106,6 @@ def assign_ticket(request, *args, **kwargs):
             ticket.assignee = data.get('assignee')
             ticket.priority = data.get('priority')
             ticket.category = data.get('category')
-            ticket.notes = data.get('notes')
             ticket.assignment_date = timezone.now()
             ticket.assigned_by = request.user
             ticket.save()
@@ -334,7 +334,7 @@ def search_tickets(request):
             users = users.split()
 
             description_queries = [Q(problem_description__icontains=keyword) for keyword in keywords]
-            notes_queries = [Q(notes__icontains=keyword) for keyword in keywords]
+            notes_queries = [Q(notes__text__icontains=keyword) for keyword in keywords]
             resolution_queries = [Q(resolution__icontains=keyword) for keyword in keywords]
 
             user_queries = [Q(user__username__icontains=user) for user in users]
@@ -358,6 +358,55 @@ def search_tickets(request):
         'status_choices': status_choices,
         'found_tickets': queryset_list,
         'values': request.GET,
+    }
+
+    return render(request, template, context)
+
+
+@login_required
+def add_note(request, *args, **kwargs):
+    template = 'tickets/new_note.html'
+    ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+    check_is_assigned_or_user(request.user, ticket)
+
+    if request.method == 'POST':
+        form = forms.NewNoteForm(request.POST)
+        if form.is_valid():
+            # commit=False means the form doesn't save at this time.
+            # commit defaults to True which means it normally saves.
+            note_instance = form.save(commit=False)
+            note_instance.user = request.user
+            note_instance.ticket = ticket
+            note_instance.save()
+            send_new_note_email(note_instance, request)
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
+    else:
+        form = forms.NewNoteForm()
+
+    context = {
+        'form': form,
+        'user': request.user,
+        'ticket': ticket,
+    }
+    return render(request, template, context)
+
+
+@login_required
+def view_ticket(request, *args, **kwargs):
+    ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+
+    template = 'tickets/view_ticket.html'
+
+    notes = Note.objects.filter(ticket__id=ticket.id)
+
+    if ticket.assignee is None:
+        check_groups_or_is_user(request.user, ticket, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+    else:
+        check_is_assigned_or_user(request.user, ticket)
+
+    context = {
+        'ticket': ticket,
+        'notes': notes,
     }
 
     return render(request, template, context)

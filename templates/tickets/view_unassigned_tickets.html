@@ -11,6 +11,8 @@
         <div class="card material-table blue-grey darken-1">
           <div class="table-header">
             <span class="table-title">Unassigned Open Tickets</span>
+            <br/>
+            <span class="table-subtitle">Click on a ticket number to see notes and further information.</span>
           </div>
           <table class="white-text highlight" id="datatable">
           <thead>
@@ -24,7 +26,10 @@
           </thead>
               {% for ticket in unassigned_tickets %}
                   <tr>
-                      <td>{{ ticket.id }}</td>
+                    <td><a href={% url 'tickets:view_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="idbutton">
+                        {{ ticket.id }}
+                        </a>
+                    </td>
                       <td>{{ ticket.user }}</td>
                       <td>{{ ticket.created_date }}</td>
                       <td>{{ ticket.problem_description }}</td>
@@ -49,6 +54,8 @@
       <div class="card material-table blue-grey darken-1">
         <div class="table-header">
           <span class="table-title">Assigned Open Tickets</span>
+          <br/>
+          <span class="table-subtitle">Click on a ticket number to see notes and further information.</span>
         </div>
         <table class="white-text highlight" id="datatable">
         <thead>
@@ -66,7 +73,10 @@
         </thead>
             {% for ticket in assigned_tickets %}
                 <tr>
-                    <td>{{ ticket.id }}</td>
+                    <td><a href={% url 'tickets:view_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="idbutton">
+                        {{ ticket.id }}
+                        </a>
+                    </td>
                     <td>{{ ticket.user }}</td>
                     <td>{{ ticket.created_date }}</td>
                     <td>{{ ticket.assignment_date }}</td>
