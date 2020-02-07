@@ -22,35 +22,35 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
               <div class="section"> <!-- WRAPPER SECTION FOR PADDING AND SPACING START-->
               <div class="section blue-grey darken-2"> <!-- TICKET STATUS SECTION END -->
               <!-- IF STATUS IS OPEN -->
-              {% if ticket.status == 1 %}
-                <!-- IF ASSIGNED -->
-                {% if ticket.assignment_date %}
-                <div class="yellow darken-1">
-                  <h6>STATUS - Assigned</h6>
-                </div>
-                <p>{{ticket.assignment_date}}</p>
-                  {% if user.is_support or user.is_supervisor %}
-                  <h6>
-                  <a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
-                    <i class="material-icons">check_circle</i>
-                  </a>Resolve ticket
-                  </h6>
-                  {% endif %}
-                <!-- IF NOT YET ASSIGNED -->
-                {% else %}
-                <div class="deep-orange">
-                  <h6>STATUS - Unassigned</h6>
-                </div>
-                <p>{{ticket.created_date}}</p>
-                  {% if user.is_support or user.is_supervisor %}
-                  <h6>
-                  <a href={% url 'tickets:assign_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
-                    <i class="material-icons">assignment_ind</i>
-                  </a>Assign ticket
-                  </h6>
+                {% if ticket.status == 1 %}
+                  <!-- IF ASSIGNED -->
+                  {% if ticket.assignment_date %}
+                  <div class="yellow darken-1">
+                    <h6>STATUS - Assigned</h6>
+                  </div>
+                  <p>{{ticket.assignment_date}}</p>
+                    {% if user.is_support or user.is_supervisor %}
+                    <h6>
+                    <a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
+                      <i class="material-icons">check_circle</i>
+                    </a>Resolve ticket
+                    </h6>
+                    {% endif %}
+                  <!-- IF NOT YET ASSIGNED -->
+                  {% else %}
+                  <div class="deep-orange">
+                    <h6>STATUS - Unassigned</h6>
+                  </div>
+                  <p>{{ticket.created_date}}</p>
+                    {% if user.is_support or user.is_supervisor %}
+                    <h6>
+                    <a href={% url 'tickets:assign_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
+                      <i class="material-icons">assignment_ind</i>
+                    </a>Assign ticket
+                    </h6>
+                    {% endif %}
                   {% endif %}
                 {% endif %}
-              {% endif %}
               <!-- IF STATUS IS CLOSED -->
               {% if ticket.status == 2 %}
               <div class="green darken-1">
@@ -63,11 +63,11 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
             <div class="section"> <!-- WRAPPER FOR TICKET META SECTION START -->
             <div class="section blue-grey darken-2">
             <h6>User: {{ticket.user}}</h6>
-            {% if ticket.assignment_date %}
-              <h6>Support Agent: {{ticket.assignee}}</h6>
-              <h6>Priority: {{ticket.get_priority_display}}</h6>
-              <h6>Category: {{ticket.get_category_display}}</h6>
-            {% endif %}
+              {% if ticket.assignment_date %}
+                <h6>Support Agent: {{ticket.assignee}}</h6>
+                <h6>Priority: {{ticket.get_priority_display}}</h6>
+                <h6>Category: {{ticket.get_category_display}}</h6>
+              {% endif %}
             </div>
             </div> <!-- WRAPPER FOR TICKET META SECTION END -->
             </div> <!--  COLUMN IN CARD FOR TICKET TITLE AND META END -->
@@ -80,14 +80,14 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
               </div> <!-- PROBLEM DESCRIPTION SECTION END -->
               </div>
 
-              {% if ticket.resolution %}
-              <div class="section blue-grey darken-2"> <!-- PROBLEM RESOLUTION SECTION START-->
-              <!-- <div class="divider"></div> -->
-              <h6>Issue Resolution</h6>
-              <p>{{ticket.resolution}}</p>
-               <!-- PROBLEM RESOLUTION SECTION END-->
-              </div>
-              {% endif %}
+                {% if ticket.resolution %}
+                <div class="section blue-grey darken-2"> <!-- PROBLEM RESOLUTION SECTION START-->
+                <!-- <div class="divider"></div> -->
+                <h6>Issue Resolution</h6>
+                <p>{{ticket.resolution}}</p>
+                 <!-- PROBLEM RESOLUTION SECTION END-->
+                </div>
+                {% endif %}
             </div> <!--  COLUMN IN CARD FOR STATUS, DESCRIPTION, RESOLUTION END -->
           </div> <!-- DETAIL ROW FOR TICKET TITLE, META, STATUS, DESCRIPTION, RESOLUTION END -->
           <div class="row"> <!-- ROW FOR TIMELINE FOOTER START-->
@@ -103,16 +103,16 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
                 <div class="blue-grey lighten-1">
                   <h6>Created on {{ticket.created_date}} by {{ticket.user}}</h6>
                 </div>
-                {% if ticket.assignment_date %}
-                <div class="blue-grey lighten-1">
-                  <h6>Assigned on {{ticket.assignment_date}} to {{ticket.assignee}} by {{ticket.assigned_by}}</h6>
-                </div>
-                {% endif %}
-                {% if ticket.status == 2 %}
-                <div class="blue-grey lighten-1">
-                  <h6>Resolved on {{ticket.closed_date}} by {{ticket.assignee}}</h6>
-                </div>
-                {% endif %}
+                  {% if ticket.assignment_date %}
+                  <div class="blue-grey lighten-1">
+                    <h6>Assigned on {{ticket.assignment_date}} to {{ticket.assignee}} by {{ticket.assigned_by}}</h6>
+                  </div>
+                  {% endif %}
+                  {% if ticket.status == 2 %}
+                  <div class="blue-grey lighten-1">
+                    <h6>Resolved on {{ticket.closed_date}} by {{ticket.assignee}}</h6>
+                  </div>
+                  {% endif %}
               </div> <!-- TIMELINE SECTION END --></div>
             </div> <!-- COLUMN FOR FOOTER WITH TIMELINE END-->
           </div> <!-- ROW FOR TIMELINE FOOTER END-->
@@ -140,24 +140,24 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
           </div> <!-- ROW FOR NOTES CARD HEADER END -->
           <div class="row">
             <div class="col s12">
-            {% if not notes %}
-            <h6>No notes...</h6>
-            {% endif %}
-            {% for note in notes %}
-            {% if note.user.is_support or note.user.is_supervisor %}
-            <div class="right-align blue-grey lighten-1">
-              <p>{{note.created_date}}</p>
-              <P>{{note.user}}</P>
-              <h6>{{note.text}}</h6>
-            </div>
-            {% else %}
-            <div class="left-align blue-grey lighten-3 black-text">
-              <p>{{note.created_date}}</p>
-              <P>{{note.user}}</P>
-              <h6>{{note.text}}</h6>
-            </div>
-            {% endif %}
-            {% endfor %}
+              {% if not notes %}
+              <h6>No notes...</h6>
+              {% endif %}
+                {% for note in notes %}
+                  {% if note.user.is_support or note.user.is_supervisor %}
+                  <div class="right-align blue-grey lighten-1">
+                    <p>{{note.created_date}}</p>
+                    <P>{{note.user}}</P>
+                    <h6>{{note.text}}</h6>
+                  </div>
+                  {% else %}
+                  <div class="left-align blue-grey lighten-3 black-text">
+                    <p>{{note.created_date}}</p>
+                    <P>{{note.user}}</P>
+                    <h6>{{note.text}}</h6>
+                  </div>
+                  {% endif %}
+                {% endfor %}
             </div>
           </div>
         </div>
