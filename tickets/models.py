@@ -121,16 +121,12 @@ class Note(models.Model):
         Ticket,
         related_name='notes',
         on_delete=models.PROTECT,
-        blank=True,
-        null=True,
     )
 
     user = models.ForeignKey(
         HelpDeskUser,
         related_name='notes',
         on_delete=models.PROTECT,
-        blank=True,
-        null=True,
     )
 
     # Automatically created
