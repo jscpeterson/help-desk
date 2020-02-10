@@ -24,7 +24,13 @@ urlpatterns = [
     # Support / Supervisor Closed Tickets
     path('closed/', views.closed_tickets, name='view_closed_tickets'),
 
-    # TODO Supervisor/Support All Tickets / Ticket History / Past Tickets? URL
-    # TODO Detail Ticket View URL
+    # Search Tickets
+    path('search/', views.search_tickets, name="search_tickets"),
+
+    # Ticket Detail View
+    path('<int:ticket_id>', views.view_ticket, name='view_ticket'),
+
+    # Add Note
+    path('add_note/<int:ticket_id>', views.add_note, name='add_note'),
 
 ]

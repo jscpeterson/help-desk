@@ -1,0 +1,95 @@
+/**************
+***************
+ELEMENTS
+*************
+*************/
+
+th {
+  position: sticky;
+  top: 0;
+  background: #0d47a1;
+  z-index: 2;
+}
+
+/**************
+***************
+CLASSES
+*************
+*************/
+
+/* display the error messages for select boxes */
+.assignTicketSelect {
+  display: block;
+  height: 0;
+  padding: 0;
+  width: 0;
+  position: absolute;
+}
+
+.card {
+  overflow-y: auto;
+  min-height: 40vh;
+  max-height: 40vh;
+}
+
+.card.detail-card {
+  max-height: 65vh;
+}
+
+.error_message {
+  color: #ED4434;
+}
+
+.table-title{
+    color:white;
+    padding: 8px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.table-subtitle{
+    color:white;
+    font-size: 14px;
+    padding: 0 0 0 8px;
+    display: inline-block;
+}
+
+/**************
+***************
+IDS
+*************
+*************/
+
+#addbutton {
+  margin-right: 2em;
+}
+
+#addticketh3 {
+  letter-spacing: .3em;
+  padding-top: 2em;
+}
+
+#firstFormRow {
+  margin-top: 1em;
+}
+
+#loginLogo {
+  width: 20%;
+}
+
+#navbarLogo {
+  padding-right: 1em;
+  padding-left: 1em;
+  height: 25px;
+}
+
+/**************
+***************
+MATERIALIZE CUSTOMIZATION
+*************
+*************/
+
+/*TEXT COLOR FOR NAV DROPDOWN*/
+.dropdown-content li a{
+    color: #0d47a1;
+}

@@ -1,10 +1,18 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <base target="_top">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Materialize CSS -->
+    <link rel="stylesheet" href="{% static 'css/materialize.min.css' %}">
+    <!-- Material Icons -->
+    <link rel="stylesheet" href="{% static 'iconfont/material-icons.css' %}">
+    <!-- Helpdesk stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="{% static 'img/dalogo250.png' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Help Desk login</title>
 </head>
@@ -14,8 +22,7 @@
 
     <div id="splash" class="row"> <!-- START ROW -->
       <div class="center-align col s12">
-        <!-- serve the logo image from django static in the future -->
-        <img src="https://drive.google.com/uc?id=1NZwk32QRpOfiDCy2A1jadD4iAp2_l-kf" width="20%"/>
+        <img id="loginLogo" src="{% static 'img/logo.png' %}" alt="DAlogo">
       </div>
       <div class="row">
 
@@ -25,6 +32,9 @@
       </div>
     </div>                          <!-- CLOSE ROW -->
 
+    {% for key,value in form.errors.items %}
+    <h6 class='error_message'>{{ value }}</h6>
+    {% endfor %}
 
     <form method="post" action="/users/login/" id="warrantForm" class="formValidate">
       {% csrf_token %}
@@ -51,7 +61,7 @@
 
     <!-- SUBMIT BUTTON SECTION -->
     <div id="buttonDiv">
-      <button class="btn waves-effect waves-light hoverable" id="btn" type="submit" name="action">Login
+      <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Login
       <i class="material-icons right">send</i>
       </button>
     </div>
@@ -60,7 +70,8 @@
 
     </div> <!-- CLOSE CONTAINER -->
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="{% static 'js/materialize.min.js' %}" ></script>
+    <script src="{% static 'js/main.js' %}"></script>
 
 
 </body>

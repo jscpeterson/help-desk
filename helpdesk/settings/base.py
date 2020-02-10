@@ -73,7 +73,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'helpdesk.wsgi.application'
 
 AUTH_USER_MODEL = 'users.HelpDeskUser'
-# TODO Sync to LDAP
 
 LOGIN_URL = 'index'
 LOGIN_REDIRECT_URL = 'index'
@@ -126,9 +125,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'helpdesk/static')
 ]
 
 # Email settings

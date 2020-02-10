@@ -1,7 +1,8 @@
 from django import forms
-from django.forms import Form
+from django.forms import Form, ModelForm
+from django.db.models import Q
 
-from tickets.models import Ticket
+from tickets.models import Ticket, Note
 from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
 
 EMPTY_CHOICE = '---------'
@@ -22,7 +23,9 @@ class AssignTicketForm(Form):
         super(AssignTicketForm, self).__init__(*args, **kwargs)
 
         if user.is_superuser or user.groups.filter(name=GROUP_SUPERVISOR).exists():
-            assignee_queryset = HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT])
+            # ASSIGNEES FOR SUPERVISOR SHOULD BE ALL SUPPORT AGENTS AND SUPERVISOR SELF
+            assignee_queryset = HelpDeskUser.objects.filter(Q(groups__name__in=[GROUP_SUPPORT]) | Q(id=user.id))
+            assignee_queryset = assignee_queryset.distinct()
         elif user.groups.filter(name=GROUP_SUPPORT).exists():
             assignee_queryset = HelpDeskUser.objects.filter(id=user.id)
 
@@ -42,10 +45,6 @@ class AssignTicketForm(Form):
             choices=category_choices,
         )
 
-        self.fields['notes'] = forms.CharField(
-            required=False
-        )
-
 
 class ResolveTicketForm(Form):
 
@@ -56,3 +55,10 @@ class ResolveTicketForm(Form):
         self.fields['resolution'] = forms.CharField(
             required=False
         )
+
+
+class NewNoteForm(ModelForm):
+
+    class Meta:
+        model = Note
+        fields = ['text']
