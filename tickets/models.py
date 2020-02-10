@@ -137,3 +137,33 @@ class Note(models.Model):
     text = models.TextField(
         default=''
     )
+
+
+class Attachment(models.Model):
+
+    ticket = models.ForeignKey(
+        Ticket,
+        related_name='attachments',
+        on_delete=models.PROTECT,
+    )
+
+    user = models.ForeignKey(
+        HelpDeskUser,
+        related_name='attachments',
+        on_delete=models.PROTECT,
+    )
+
+    # Automatically created
+    created_date = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    file = models.FileField(
+        upload_to='uploads/'
+    )
+
+    description = models.TextField(
+        default='',
+        blank=True,
+        null=True
+    )

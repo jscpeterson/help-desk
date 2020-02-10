@@ -408,6 +408,36 @@ def add_note(request, *args, **kwargs):
 
 
 @login_required
+def add_attachment(request, *args, **kwargs):
+    template = 'tickets/new_attachment.html'
+    ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
+    check_is_assigned_or_user(request.user, ticket)
+
+    if request.method == 'POST':
+        form = forms.NewAttachmentForm(request.POST, request.FILES)
+        if form.is_valid():
+            # TODO Catch duplicates
+            files = request.FILES
+            # commit=False means the form doesn't save at this time.
+            # commit defaults to True which means it normally saves.
+            attachment_instance = form.save(commit=False)
+            attachment_instance.user = request.user
+            attachment_instance.ticket = ticket
+            attachment_instance.save()
+            # send_new_attachment_email(attachment_instance, request) TODO Implement function
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
+    else:
+        form = forms.NewAttachmentForm()
+
+    context = {
+        'form': form,
+        'user': request.user,
+        'ticket': ticket,
+    }
+    return render(request, template, context)
+
+
+@login_required
 def view_ticket(request, *args, **kwargs):
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
 
@@ -423,6 +453,7 @@ def view_ticket(request, *args, **kwargs):
     context = {
         'ticket': ticket,
         'notes': notes,
+        'attachments': ticket.attachments.all(),
     }
 
     return render(request, template, context)

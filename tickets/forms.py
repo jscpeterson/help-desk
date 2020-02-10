@@ -2,7 +2,7 @@ from django import forms
 from django.forms import Form, ModelForm
 from django.db.models import Q
 
-from tickets.models import Ticket, Note
+from tickets.models import Ticket, Note, Attachment
 from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
 
 EMPTY_CHOICE = '---------'
@@ -62,3 +62,10 @@ class NewNoteForm(ModelForm):
     class Meta:
         model = Note
         fields = ['text']
+
+
+class NewAttachmentForm(ModelForm):
+
+    class Meta:
+        model = Attachment
+        fields = ['description', 'file']

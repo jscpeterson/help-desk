@@ -167,6 +167,10 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
   </div>
   <!-- ROW FOR DETAIL AND NOTES CARD END -->
 
+{% for attachment in attachments %}
+    <a href={{ attachment.file.url }}> {{ attachment.file.name }} </a> <br/>
+{% endfor %}
+
 <div style="text-align:center">
     <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action"
     onclick="window.location.href = {% url 'tickets:home' %};

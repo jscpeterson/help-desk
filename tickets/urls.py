@@ -34,4 +34,7 @@ urlpatterns = [
     # Add Note
     path('add_note/<int:ticket_id>', views.add_note, name='add_note'),
 
+    # Add Attachment
+    path('add_attachment/<int:ticket_id>', views.add_attachment, name='add_attachment'),
+
 ]
