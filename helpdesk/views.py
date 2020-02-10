@@ -34,7 +34,7 @@ def handler500(request):
     # Redirect the user to the dashboard as they are likely already logged in
     # Catching both exceptions because it's unclear which is getting thrown
     if exception_type in [DjangoDBIntegrityError, Sqlite3IntegrityError]:
-        return HttpResponseRedirect(reverse('tickets:home'))
+        return HttpResponseRedirect(reverse('tickets'))
 
     response.status_code = 500
     return HttpResponseServerError(response)
