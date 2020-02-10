@@ -54,12 +54,18 @@ def new_ticket(request, *args, **kwargs):
     if request.method == 'POST':
         form = forms.NewTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():
-            ticket = Ticket.objects.create(
-                user=request.user,
-                problem_description=form.cleaned_data.get('problem_description')
-            )
+            if Ticket.objects.last().problem_description == form.cleaned_data.get('problem_description') and \
+                    Ticket.objects.last().user == request.user:
+                # Catch if the user made a duplicate submission, prevent from creating a new object
+                ticket = Ticket.objects.last()
+                pass
+            else:
+                ticket = Ticket.objects.create(
+                    user=request.user,
+                    problem_description=form.cleaned_data.get('problem_description')
+                )
 
-            send_new_ticket_alert_email(ticket, request)
+                send_new_ticket_alert_email(ticket, request)
 
             return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
     else:
@@ -372,13 +378,17 @@ def add_note(request, *args, **kwargs):
     if request.method == 'POST':
         form = forms.NewNoteForm(request.POST)
         if form.is_valid():
-            # commit=False means the form doesn't save at this time.
-            # commit defaults to True which means it normally saves.
-            note_instance = form.save(commit=False)
-            note_instance.user = request.user
-            note_instance.ticket = ticket
-            note_instance.save()
-            send_new_note_email(note_instance, request)
+            if Note.objects.last().text == form.cleaned_data.get('text') and Note.objects.last().user == request.user:
+                # Catch if the user made a duplicate submission, prevent from creating a new object
+                pass
+            else:
+                # commit=False means the form doesn't save at this time.
+                # commit defaults to True which means it normally saves.
+                note_instance = form.save(commit=False)
+                note_instance.user = request.user
+                note_instance.ticket = ticket
+                note_instance.save()
+                send_new_note_email(note_instance, request)
             return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
     else:
         form = forms.NewNoteForm()
