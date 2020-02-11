@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 app_name = 'tickets'
@@ -25,7 +25,8 @@ urlpatterns = [
     path('closed/', views.closed_tickets, name='view_closed_tickets'),
 
     # Search Tickets
-    path('search/', views.search_tickets, name="search_tickets"),
+    # regex represents the optional path used for the nav bar specific link
+    re_path('search(?:/(?P<link>nav))?/$', views.search_tickets, name='search_tickets'),
 
     # Ticket Detail View
     path('<int:ticket_id>', views.view_ticket, name='view_ticket'),

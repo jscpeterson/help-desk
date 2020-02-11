@@ -223,16 +223,20 @@ def closed_tickets(request):
 
 
 @login_required
-def search_tickets(request):
+def search_tickets(request, **kwargs):
     """Return the tickets search page."""
     template = 'tickets/search_tickets.html'
 
     check_groups(request.user, [GROUP_SUPERVISOR, GROUP_SUPPORT])
 
     # If the REFERER is a page other than the tickets
-    # search page don't do any extra work, and don't render the table
+    # search page, don't do any extra work, and don't render the table
     # filled with all Ticket objects. Just render the search page.
-    if request.path not in request.META.get('HTTP_REFERER'):
+    # If you clicked the search tickets link from nav bar and you were
+    # already on the search tickets page, just render basic page, no search results.
+    if request.META.get('HTTP_REFERER') is None \
+            or request.path not in request.META.get('HTTP_REFERER') \
+            or 'nav' in request.path:
         return render(request, template, {
             'assignee_choices': HelpDeskUser.objects.filter(groups__name__in=[GROUP_SUPPORT]),
             'priority_choices': Ticket.PRIORITY_CHOICES,
@@ -350,6 +354,7 @@ def search_tickets(request):
     priority_choices = Ticket.PRIORITY_CHOICES
     category_choices = Ticket.CATEGORY_CHOICES
     status_choices = Ticket.STATUS_CHOICES
+    searched_context = 'searchTicketsWrapper'
 
     context = {
         'assignee_choices': assignee_choices,
@@ -358,6 +363,7 @@ def search_tickets(request):
         'status_choices': status_choices,
         'found_tickets': queryset_list,
         'values': request.GET,
+        'searched_context': searched_context,
     }
 
     return render(request, template, context)
