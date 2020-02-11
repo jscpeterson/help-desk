@@ -1,5 +1,5 @@
-// <!-- Initializing materialize elements on document ready -->
 document.addEventListener('DOMContentLoaded', function() {
+  // INITIALIZING MATERIALIZE ELEMENTS
   var selects = document.querySelectorAll('select');
   M.FormSelect.init(selects);
 
@@ -12,4 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var collapsibles = document.querySelectorAll('.collapsible');
   M.Collapsible.init(collapsibles);
 
-  });
+
+  //SCROLLS THE SEARCH TICKET TABLE INTO VIEW AFTER SEARCHING
+  let searchTicketsWrapper = document.querySelector('.searchTicketsWrapper');
+  if (searchTicketsWrapper) {
+      searchTicketsWrapper.scrollIntoView({block: "center"});
+  }
+
+});
