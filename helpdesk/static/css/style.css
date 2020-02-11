@@ -4,6 +4,11 @@ ELEMENTS
 *************
 *************/
 
+div p, h6 {
+  padding-left: .5em;
+  padding-right: .5em;
+}
+
 th {
   position: sticky;
   top: 0;
