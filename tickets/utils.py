@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.shortcuts import render
 from django.template.loader import render_to_string
 
-from helpdesk import settings
+from helpdesk.settings import base as settings
 from tickets.models import Ticket
 from users.models import GROUP_SUPPORT, GROUP_SUPERVISOR, HelpDeskUser
 
