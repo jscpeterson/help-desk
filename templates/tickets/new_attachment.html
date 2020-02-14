@@ -1,9 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-    </form>
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+        <h4>Add an attachment to Ticket {{ ticket.id }} below</h4>
+        <h6>You can also provide an optional description for the file.</h6>
+
+        <div class="row">
+          <label>File Select</label>
+          <div class = "file-field input-field">
+             <div class = "btn waves-effect waves-light hoverable blue darken-4">
+                <span>Browse</span>
+                <input type = "file" name="file" required id="id_file"/>
+             </div>
+
+             <div class = "file-path-wrapper">
+                <input class = "file-path validate" type = "text"
+                   placeholder = "Upload file" />
+             </div>
+          </div>
+        </div>
+
+        <div class="input-field row">
+          <textarea id="id_description" name="description" class="materialize-textarea"></textarea>
+          <label for="id_description">Description</label>
+        </div>
+
+        <div id="buttonDiv" class="row">
+          <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Submit
+          <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

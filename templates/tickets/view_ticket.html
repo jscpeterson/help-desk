@@ -79,16 +79,18 @@ REVEAL WITH DESCRIPTION PARTIALLY SHOWN IN A FIXED HEIGHT SECTION -->
                 </a>
                 Upload File
               </h6>
-              {% if not attachments %}
-              <p>No attachments...</p>
-              {% endif %}
+                {% if not attachments %}
+                  <p>No attachments...</p>
+                {% endif %}
               {% for attachment in attachments %}
-              <div class="blue-grey darken-3">
-                <h6>
-                  <a href="{{ attachment.file.url }}"> {{ attachment.file.name }} </a>
-                </h6>
-                <p>{{ attachment.description }}</p>
-              </div>
+                <div class="blue-grey darken-3">
+                  <h6>
+                    <a href="{{ attachment.file.url }}"> {{ attachment.file.name }} </a>
+                  </h6>
+                    {% if attachment.description %}
+                      <p>{{ attachment.description }}</p>
+                    {% endif %}
+                </div>
               {% endfor %}
             </div> <!-- WRAPPER FOR TICKET META UPLOADS END -->
             </div>
