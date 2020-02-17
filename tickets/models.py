@@ -92,7 +92,7 @@ class Ticket(models.Model):
 
     # To be assigned by a supervisor
     category = models.IntegerField(
-        choices=CATEGORY_CHOICES,
+        choices=CATEGORY_CHOICES + DIVISION_HEAD_CATEGORY_CHOICES,
         null=True
     )
 
