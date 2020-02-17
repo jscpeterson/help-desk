@@ -4,6 +4,7 @@ from django.db import models
 # User Groups
 GROUP_SUPPORT = 'Support'
 GROUP_SUPERVISOR = 'Supervisor'
+GROUP_DIVISION_HEAD = 'Division Head'
 
 
 class HelpDeskUser(AbstractUser):

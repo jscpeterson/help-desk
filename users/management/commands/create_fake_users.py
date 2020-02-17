@@ -1,11 +1,11 @@
 from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
-from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
+from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR, GROUP_DIVISION_HEAD
 from faker import Faker
 
 faker = Faker()
 SUGGESTED_PASSWORD = 'HelpDesk1'
-GROUPS = [GROUP_SUPPORT, GROUP_SUPERVISOR]
+GROUPS = [GROUP_SUPPORT, GROUP_SUPERVISOR, GROUP_DIVISION_HEAD]
 
 
 class Command(BaseCommand):
