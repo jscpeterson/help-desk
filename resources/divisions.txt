@@ -1,0 +1,20 @@
+Administration Team
+Admin Fiscal Team
+Admin HR Team
+Admin IT Team
+Admin VIP Team
+General Crimes Blue Team
+General Crimes Red Team
+General Crimes Green Team
+General Crimes PPP Team
+Major Crimes Blue Team
+Major Crimes Red Team
+Major Crimes Green Team
+Major Crimes SVU Team
+Grand Jury Team
+Intake Team
+Juvenile Team
+Metro Team
+Process Locate Team
+Scan Project Team
+Special Proceedings Team

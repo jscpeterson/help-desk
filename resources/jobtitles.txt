@@ -1,0 +1,38 @@
+Administrative Secretary
+Assistant Trial Attorney
+Associate Trial Attorney
+Chief Deputy District Attorney
+Chief Financial Officer
+Clerk
+Clerk Apprentice
+Clerk Specialist
+DataBase Administrator
+Deputy District Attorney
+District Office Manager
+Extern-Intern-Temp
+Financial Assistant
+Financial Specialist
+Financial Specialist Supervisor
+Human Resources Administrator
+Human Resources Coordinator
+Information Systems Administrator
+Information Systems Assistant
+Information Systems Manager
+Investigator
+Law Student
+Lead Investigator
+Program Administrator
+Program Assistant
+Program Specialist
+Prosecution Assistant
+Prosecution Specialist
+Secretary
+Senior Investigator
+Senior Secretary
+Senior Trial Attorney
+Senior Victim Advocate
+Special Program Director
+Supervising Secretary
+Victim Advocate
+Victim Advocate Administrator
+Victim Advocate Coordinator
