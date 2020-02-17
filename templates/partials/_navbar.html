@@ -1,9 +1,15 @@
 {% load static %}
 
 <ul id="navDropdown" class="dropdown-content">
+  <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
+
+  {% if user.is_division_head %}
+  <li><a href="{% url 'tickets:move_request' %}">New Move Request</a></li>
+  <li><a href="{% url 'tickets:new_user_request' %}">New User Access Request</a></li>
+  {% endif %}
+
   {% if user.is_support or user.is_supervisor or user.is_superuser %}
   <li><a href="{% url 'tickets:search_tickets' 'nav' %}">Search Tickets</a></li>
-  <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
   <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
   {% endif %}
 
@@ -42,9 +48,15 @@
     </ul>
 
     <ul class="right hide-on-med-and-down">
+      <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
+
+      {% if user.is_division_head %}
+      <li><a href="{% url 'tickets:move_request' %}">New Move Request</a></li>
+      <li><a href="{% url 'tickets:new_user_request' %}">New User Access Request</a></li>
+      {% endif %}
+
       {% if user.is_support or user.is_supervisor or user.is_superuser %}
       <li><a href="{% url 'tickets:search_tickets' 'nav' %}">Search Tickets</a></li>
-      <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
       <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
       {% endif %}
 

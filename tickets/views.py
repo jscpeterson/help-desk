@@ -426,3 +426,15 @@ def view_ticket(request, *args, **kwargs):
     }
 
     return render(request, template, context)
+
+
+@login_required
+def move_request(request, *args, **kwargs):
+    # TODO Implement
+    pass
+
+
+@login_required
+def new_user_request(request, *args, **kwargs):
+    # TODO Implement
+    pass
