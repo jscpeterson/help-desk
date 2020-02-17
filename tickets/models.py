@@ -1,5 +1,9 @@
+import io
+import os
+
 from django.db import models
 
+from helpdesk.settings.base import BASE_DIR
 from users.models import HelpDeskUser
 
 
@@ -67,6 +71,9 @@ class Ticket(models.Model):
     SOFTWARE = 8
     ACCESS = 9
 
+    MOVE_REQUEST = 10
+    NEW_USER = 11
+
     CATEGORY_CHOICES = (
         (WORKSTATION, 'Workstation'),
         (LAPTOP, 'Laptop'),
@@ -76,7 +83,11 @@ class Ticket(models.Model):
         (SCANNER, 'Scanner'),
         (OTHER_PERIPHERAL, 'Other Peripheral'),
         (SOFTWARE, 'Software'),
-        (ACCESS, 'Access'),
+    )
+
+    DIVISION_HEAD_CATEGORY_CHOICES = (
+        (MOVE_REQUEST, 'Move Request'),
+        (NEW_USER, 'New User'),
     )
 
     # To be assigned by a supervisor
@@ -110,6 +121,91 @@ class Ticket(models.Model):
     )
 
     closed_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+
+
+RESOURCES_DIR = os.path.join(BASE_DIR, 'resources')
+
+
+def get_choice_list_from_resources(filename):
+    f = io.open(os.path.join(RESOURCES_DIR, filename))
+    choice_list = [[i+1, building] for i, building in enumerate(f.read().split('\n'))]
+    f.close()
+    return choice_list
+
+
+class MoveRequestTicket(Ticket):
+    BUILDING_CHOICES = get_choice_list_from_resources('buildings.txt')
+
+    old_building = models.IntegerField(
+        choices=BUILDING_CHOICES,
+        blank=True,
+        null=True
+    )
+
+    new_building = models.IntegerField(
+        choices=BUILDING_CHOICES,
+        blank=True,
+        null=True
+    )
+
+    DIVISION_CHOICES = get_choice_list_from_resources('divisions.txt')
+
+    old_division = models.IntegerField(
+        choices=DIVISION_CHOICES,
+        blank=True,
+        null=True,
+    )
+
+    new_division = models.IntegerField(
+        choices=DIVISION_CHOICES,
+        blank=True,
+        null=True,
+    )
+
+    scheduled_move_date = models.DateTimeField(
+        blank=True,
+        null=True,
+    )
+
+
+class NewUserTicket(Ticket):
+    BUILDING_CHOICES = get_choice_list_from_resources('buildings.txt')
+
+    building = models.IntegerField(
+        choices=BUILDING_CHOICES,
+        blank=True,
+        null=True,
+    )
+
+    DIVISION_CHOICES = get_choice_list_from_resources('divisions.txt')
+
+    division = models.IntegerField(
+        choices=DIVISION_CHOICES,
+        blank=True,
+        null=True,
+    )
+
+    CMS_ACCESS_CHOICES = get_choice_list_from_resources('cmsaccess.txt')
+
+    cms_access = models.IntegerField(
+        choices=CMS_ACCESS_CHOICES,
+        blank=True,
+        null=True,
+    )
+
+    JOB_TITLE_CHOICES = get_choice_list_from_resources('jobtitles.txt')
+
+    job_title = models.IntegerField(
+        choices=JOB_TITLE_CHOICES,
+        blank=True,
+        null=True,
+    )
+
+    # Date new user will begin work
+    start_date = models.DateTimeField(
         blank=True,
         null=True,
     )
