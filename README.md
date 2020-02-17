@@ -4,7 +4,7 @@
 This is a Django based web application that will allow users on an LDAP service to view and submit help desk tickets to support staff. Support staff may assign or resolve these tasks and an email will notify the user of their resolution. 
 
 ### Installation
-This application requires Python 3.7. For the time being, this application can be run in its Alpha state with Django's runserver command. The following instructins can be used for deployment.
+This application requires Python 3.7. The following instructions can be used to run a development server. For production, it is advised to follow [this guide](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-16-04).
 
  * Create your virtual environment using Python 3.7.  
  `python3 -m venv env`  
@@ -25,13 +25,14 @@ This application requires Python 3.7. For the time being, this application can b
  `cp .env.example .env`  
  `vim .env`
 
- * (Optional) Groups and test users can be created with the create_fake_users command.  
+ * Create groups with the create_groups command  
+ `python manage.py create_groups`
+
+ * (Optional) Test users can be created with the create_fake_users command.  
  `python manage.py create_fake_users`
 
- * (Optional) Set DEBUG to False in helpdesk/settings.py.
-
- * Run the server. (insecure flag will allow runserver to access static resources in Debug mode)  
- `python manage.py runserver [ADDRESS:PORT] --insecure`
+ * Run the server.   
+ `python manage.py runserver [ADDRESS:PORT] --settings=helpdesk.settings.dev`
 
 ### License
 All rights reserved by the Bernalillo County District Attorney's Office.

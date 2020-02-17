@@ -4,8 +4,8 @@ from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.shortcuts import render
 from django.template.loader import render_to_string
+from django.conf import settings
 
-from helpdesk import settings
 from tickets.models import Ticket
 from users.models import GROUP_SUPPORT, GROUP_SUPERVISOR, HelpDeskUser
 

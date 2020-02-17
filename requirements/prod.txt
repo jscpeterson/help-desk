@@ -1,0 +1,4 @@
+-r base.txt
+django-auth-ldap==2.1.0
+psycopg2==2.8.2
+gunicorn==19.9.0

@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.urls import reverse
 
-from helpdesk.settings import SUPPORT_EMAIL
+from django.conf import settings
 
 
 def test_exception(request):
@@ -15,13 +15,13 @@ def test_exception(request):
 
 
 def handler403(request, exception):
-    response = render(request, 'errors/403.html', {'support_email': SUPPORT_EMAIL})
+    response = render(request, 'errors/403.html', {'support_email': settings.SUPPORT_EMAIL})
     response.status_code = 403
     return HttpResponseForbidden(response)
 
 
 def handler404(request, exception):
-    response = render(request, 'errors/404.html', {'support_email': SUPPORT_EMAIL})
+    response = render(request, 'errors/404.html', {'support_email': settings.SUPPORT_EMAIL})
     response.status_code = 404
     return HttpResponseNotFound(response)
 
