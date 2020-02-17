@@ -15,5 +15,8 @@ class HelpDeskUser(AbstractUser):
     def is_support(self):
         return self.groups.filter(name=GROUP_SUPPORT).exists()
 
+    def is_division_head(self):
+        return self.groups.filter(name=GROUP_DIVISION_HEAD).exists()
+
     def __str__(self):
         return self.first_name + ' ' + self.last_name
