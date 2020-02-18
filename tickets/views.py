@@ -9,7 +9,7 @@ from django.db.models import Q
 
 from datetime import date, datetime
 
-from tickets.models import Ticket, Note, MoveRequestTicket
+from tickets.models import Ticket, Note, MoveRequestTicket, NewUserTicket
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
     check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user, \
     send_new_note_email, check_groups_or_is_user
@@ -146,7 +146,7 @@ def view_assigned_tickets(request):
     context = {
         'first_name': request.user.first_name,
         'assigned_tickets': Ticket.objects.filter(assignee=request.user, status=Ticket.OPEN).order_by('created_date')
-        .order_by('priority'),
+            .order_by('priority'),
         'unassigned_tickets': Ticket.objects.filter(status=Ticket.OPEN, assignee=None).order_by('created_date'),
     }
 
@@ -449,7 +449,7 @@ def move_request(request, *args, **kwargs):
                                       'OLD DIVISION: {old_division}\n' \
                                       'OLD LOCATION: ({old_building}) {old_room_number}\n' \
                                       'NEW DIVISION: {new_division}\n' \
-                                      'NEW LOCATION: ({new_building}) {new_room_number}\n' \
+                                      'NEW LOCATION: ({new_building}) {new_room_number}'
 
                 ticket = form.save(commit=False)
                 ticket.user = request.user
@@ -477,5 +477,46 @@ def move_request(request, *args, **kwargs):
 
 @login_required
 def new_user_request(request, *args, **kwargs):
-    # TODO Implement
-    pass
+    template = 'tickets/new_user_request.html'
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_DIVISION_HEAD])
+
+    if request.method == 'POST':
+        form = forms.NewUserRequestForm(request.POST, *args, **kwargs)
+        if form.is_valid():
+            if NewUserTicket.objects.last().name == form.cleaned_data.get('name') and \
+                    NewUserTicket.objects.last().user == request.user:
+                # Catch if the user made a duplicate submission, prevent from creating a new object
+                ticket = Ticket.objects.last()
+                pass
+            else:
+                move_request_format = 'NEW USER - {name} ({job_title})\n' \
+                                      'Starts {start_date}\n' \
+                                      'DIVISION: {division}\n' \
+                                      'LOCATION: ({building}) {room_number}\n' \
+                                      'CMS Access: {cms_access}' \
+                                      '{needs_computer}{needs_email_account}'
+
+                ticket = form.save(commit=False)
+                ticket.user = request.user
+                ticket.category = Ticket.NEW_USER
+                ticket.save()
+                ticket.problem_description = move_request_format.format(
+                    name=ticket.name,
+                    job_title=ticket.get_job_title_display(),
+                    start_date=ticket.start_date.strftime('%m/%d/%Y'),
+                    division=ticket.get_division_display(),
+                    building=ticket.get_building_display(),
+                    room_number=ticket.room_number,
+                    cms_access=ticket.get_cms_access_display(),
+                    needs_computer=', needs computer' if ticket.needs_computer else '',
+                    needs_email_account=', needs email account' if ticket.needs_email_account else '',
+                )
+                ticket.save()
+                send_new_ticket_alert_email(ticket, request)
+
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
+    else:
+        form = forms.NewUserRequestForm(*args, **kwargs)
+
+    context = {'form': form}
+    return render(request, template, context)

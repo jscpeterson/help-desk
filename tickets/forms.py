@@ -2,7 +2,7 @@ from django import forms
 from django.forms import Form, ModelForm
 from django.db.models import Q
 
-from tickets.models import Ticket, Note, MoveRequestTicket
+from tickets.models import Ticket, Note, MoveRequestTicket, NewUserTicket
 from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
 
 EMPTY_CHOICE = '---------'
@@ -74,8 +74,14 @@ class MoveRequestForm(ModelForm):
                   'scheduled_move_date']
 
 
-class NewUserRequestForm(Form):
+class NewUserRequestForm(ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        super(NewUserRequestForm, self).__init__(*args, **kwargs)
-        #  TODO Fill Out
+    class Meta:
+        model = NewUserTicket
+        fields = ['name',
+                  'building', 'division', 'room_number',
+                  'job_title',
+                  'cms_access',
+                  'needs_computer',
+                  'needs_email_account',
+                  'start_date']
