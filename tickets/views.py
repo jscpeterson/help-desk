@@ -104,6 +104,8 @@ def assign_ticket(request, *args, **kwargs):
     if ticket.assignee is not None:
         return render(request, 'errors/ticket_already_assigned.html', {'ticket_num': ticket.id})
 
+    category_already_set = ticket.category == Ticket.NEW_USER or ticket.category == Ticket.MOVE_REQUEST
+
     template = 'tickets/assign_ticket.html'
     kwargs['user'] = request.user
 
@@ -114,7 +116,8 @@ def assign_ticket(request, *args, **kwargs):
 
             ticket.assignee = data.get('assignee')
             ticket.priority = data.get('priority')
-            ticket.category = data.get('category')
+            if not category_already_set:
+                ticket.category = data.get('category')
             ticket.assignment_date = timezone.now()
             ticket.assigned_by = request.user
             ticket.save()
@@ -128,13 +131,15 @@ def assign_ticket(request, *args, **kwargs):
 
     assignee_choices = form.fields['assignee'].choices
     priority_choices = form.fields['priority'].choices
-    category_choices = form.fields['category'].choices  # TODO Set if a MoveRequest or NewUser, lock
+    category_choices = form.fields['category'].choices
 
     context = {
         'form': form,
         'support_agents': assignee_choices,
         'category_choices': category_choices,
-        'priority_choices': priority_choices
+        'priority_choices': priority_choices,
+        'category_disabled': category_already_set,
+        'category_label': 'Categories' if not category_already_set else ticket.get_category_display()
     }
     return render(request, template, context)
 

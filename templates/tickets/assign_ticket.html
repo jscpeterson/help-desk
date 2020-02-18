@@ -42,8 +42,13 @@
 
   <div class="row"> <!-- Row start -->
       <div class="input-field col s12 m8">
-      <select class="assignTicketSelect" name="category" required id="id_category">
-        <option value="" disabled selected>Categories</option>
+      <select class="assignTicketSelect" name="category" id="id_category"
+      {% if category_disabled %}
+      disabled
+      {% else %}
+      required
+      {% endif %}>
+        <option value="" disabled selected>{{ category_label }}</option>
         {% for category in category_choices %}
         <option value="{{category.0}}">{{ category.1 }}</option>
         {% endfor %}

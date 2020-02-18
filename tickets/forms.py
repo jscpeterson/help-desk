@@ -19,6 +19,8 @@ class AssignTicketForm(Form):
 
     def __init__(self, *args, **kwargs):
         ticket = Ticket.objects.get(id=kwargs.pop('ticket_id'))
+        category_already_set = ticket.category == Ticket.NEW_USER or ticket.category == Ticket.MOVE_REQUEST
+
         user = kwargs.pop('user')
         super(AssignTicketForm, self).__init__(*args, **kwargs)
 
@@ -43,6 +45,8 @@ class AssignTicketForm(Form):
 
         self.fields['category'] = forms.ChoiceField(
             choices=category_choices,
+            disabled=category_already_set,
+            required=not category_already_set,
         )
 
 
