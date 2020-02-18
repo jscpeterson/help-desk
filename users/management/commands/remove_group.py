@@ -23,15 +23,15 @@ class Command(BaseCommand):
         user = HelpDeskUser.objects.get(username=kwargs['username'])
         group = Group.objects.get(name=kwargs['group'].capitalize())
 
-        if user.groups.filter(name=group).exists():
-            print('{user} already has {group} privileges.'.format(
+        if not user.groups.filter(name=group).exists():
+            print('{user} does not have {group} privileges.'.format(
                 group=group,
                 user=user,
             ))
             return
 
-        user.groups.add(group)
-        print('{user} now has {group} privileges.'.format(
+        user.groups.remove(group)
+        print('{user} no longer has {group} privileges.'.format(
             group=group,
             user=user,
         ))
