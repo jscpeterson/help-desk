@@ -482,7 +482,19 @@ def move_request(request, *args, **kwargs):
     else:
         form = forms.MoveRequestForm(*args, **kwargs)
 
-    context = {'form': form}
+    # TAKING SLICE OF ARRAY, SO PLACEHOLDER '-----' NOT INCLUDED WITH CONTEXT
+    old_building_choices = form.fields['old_building'].choices[1:]
+    new_building_choices = form.fields['new_building'].choices[1:]
+    old_division_choices = form.fields['old_division'].choices[1:]
+    new_division_choices = form.fields['new_division'].choices[1:]
+
+    context = {
+        'form': form,
+        'old_building_choices': old_building_choices,
+        'new_building_choices': new_building_choices,
+        'old_division_choices': old_division_choices,
+        'new_division_choices': new_division_choices,
+    }
     return render(request, template, context)
 
 
