@@ -2,7 +2,7 @@ from django import forms
 from django.forms import Form, ModelForm
 from django.db.models import Q
 
-from tickets.models import Ticket, Note
+from tickets.models import Ticket, Note, MoveRequestTicket
 from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
 
 EMPTY_CHOICE = '---------'
@@ -62,3 +62,20 @@ class NewNoteForm(ModelForm):
     class Meta:
         model = Note
         fields = ['text']
+
+
+class MoveRequestForm(ModelForm):
+
+    class Meta:
+        model = MoveRequestTicket
+        fields = ['old_building', 'new_building',
+                  'old_division', 'new_division',
+                  'old_room_number', 'new_room_number',
+                  'scheduled_move_date']
+
+
+class NewUserRequestForm(Form):
+
+    def __init__(self, *args, **kwargs):
+        super(NewUserRequestForm, self).__init__(*args, **kwargs)
+        #  TODO Fill Out

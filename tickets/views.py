@@ -9,17 +9,19 @@ from django.db.models import Q
 
 from datetime import date, datetime
 
-from tickets.models import Ticket, Note
+from tickets.models import Ticket, Note, MoveRequestTicket
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
     check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user, \
     send_new_note_email, check_groups_or_is_user
-from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
+from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser, GROUP_DIVISION_HEAD
 from . import forms
+
+# TODO Reorganize views similar to urls
 
 
 @login_required
 def home(request):
-
+    # TODO Some code cleanup is needed here
     welcomeMessage = messages.success(request, "Welcome")
 
     if request.user.groups.filter(name=GROUP_SUPERVISOR).exists():
@@ -125,7 +127,7 @@ def assign_ticket(request, *args, **kwargs):
 
     assignee_choices = form.fields['assignee'].choices
     priority_choices = form.fields['priority'].choices
-    category_choices = form.fields['category'].choices
+    category_choices = form.fields['category'].choices  # TODO Set if a MoveRequest or NewUser, lock
 
     context = {
         'form': form,
@@ -430,8 +432,47 @@ def view_ticket(request, *args, **kwargs):
 
 @login_required
 def move_request(request, *args, **kwargs):
-    # TODO Implement
-    pass
+    template = 'tickets/move_request.html'
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_DIVISION_HEAD])
+
+    if request.method == 'POST':
+        form = forms.MoveRequestForm(request.POST, *args, **kwargs)
+        if form.is_valid():
+            if MoveRequestTicket.objects.last().old_room_number == form.cleaned_data.get('old_room_number') and \
+               MoveRequestTicket.objects.last().new_room_number == form.cleaned_data.get('new_room_number') and \
+               MoveRequestTicket.objects.last().user == request.user:
+                # Catch if the user made a duplicate submission, prevent from creating a new object
+                ticket = Ticket.objects.last()
+                pass
+            else:
+                move_request_format = 'MOVE REQUEST - {scheduled_move_date}\n' \
+                                      'OLD DIVISION: {old_division}\n' \
+                                      'OLD LOCATION: ({old_building}) {old_room_number}\n' \
+                                      'NEW DIVISION: {new_division}\n' \
+                                      'NEW LOCATION: ({new_building}) {new_room_number}\n' \
+
+                ticket = form.save(commit=False)
+                ticket.user = request.user
+                ticket.category = Ticket.MOVE_REQUEST
+                ticket.save()
+                ticket.problem_description = move_request_format.format(
+                    scheduled_move_date=ticket.scheduled_move_date.strftime('%m/%d/%Y'),
+                    old_division=ticket.get_old_division_display(),
+                    old_building=ticket.get_old_building_display(),
+                    old_room_number=ticket.old_room_number,
+                    new_division=ticket.get_new_division_display(),
+                    new_building=ticket.get_new_building_display(),
+                    new_room_number=ticket.new_room_number,
+                )
+                ticket.save()
+                send_new_ticket_alert_email(ticket, request)
+
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
+    else:
+        form = forms.MoveRequestForm(*args, **kwargs)
+
+    context = {'form': form}
+    return render(request, template, context)
 
 
 @login_required
