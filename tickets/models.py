@@ -141,45 +141,31 @@ class MoveRequestTicket(Ticket):
 
     old_building = models.IntegerField(
         choices=BUILDING_CHOICES,
-        blank=True,
-        null=True
     )
 
     new_building = models.IntegerField(
         choices=BUILDING_CHOICES,
-        blank=True,
-        null=True
     )
 
     DIVISION_CHOICES = get_choice_list_from_resources('divisions.txt')
 
     old_division = models.IntegerField(
         choices=DIVISION_CHOICES,
-        blank=True,
-        null=True,
     )
 
     new_division = models.IntegerField(
         choices=DIVISION_CHOICES,
-        blank=True,
-        null=True,
     )
 
     old_room_number = models.CharField(
         max_length=10,
-        blank=True,
-        null=True,
     )
 
     new_room_number = models.CharField(
         max_length=10,
-        blank=True,
-        null=True,
     )
 
     scheduled_move_date = models.DateTimeField(
-        blank=True,
-        null=True,
     )
 
 
@@ -187,46 +173,34 @@ class NewUserTicket(Ticket):
 
     name = models.CharField(
         max_length=120,
-        blank=True,
-        null=True,
     )
 
     BUILDING_CHOICES = get_choice_list_from_resources('buildings.txt')
 
     building = models.IntegerField(
         choices=BUILDING_CHOICES,
-        blank=True,
-        null=True,
     )
 
     DIVISION_CHOICES = get_choice_list_from_resources('divisions.txt')
 
     division = models.IntegerField(
         choices=DIVISION_CHOICES,
-        blank=True,
-        null=True,
     )
 
     CMS_ACCESS_CHOICES = get_choice_list_from_resources('cmsaccess.txt')
 
     cms_access = models.IntegerField(
         choices=CMS_ACCESS_CHOICES,
-        blank=True,
-        null=True,
     )
 
     JOB_TITLE_CHOICES = get_choice_list_from_resources('jobtitles.txt')
 
     job_title = models.IntegerField(
         choices=JOB_TITLE_CHOICES,
-        blank=True,
-        null=True,
     )
 
     room_number = models.CharField(
         max_length=10,
-        blank=True,
-        null=True,
     )
 
     needs_computer = models.BooleanField(
@@ -239,8 +213,6 @@ class NewUserTicket(Ticket):
 
     # Date new user will begin work
     start_date = models.DateTimeField(
-        blank=True,
-        null=True,
     )
 
 
