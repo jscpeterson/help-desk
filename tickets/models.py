@@ -165,6 +165,18 @@ class MoveRequestTicket(Ticket):
         null=True,
     )
 
+    old_room_number = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+    )
+
+    new_room_number = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+    )
+
     scheduled_move_date = models.DateTimeField(
         blank=True,
         null=True,
