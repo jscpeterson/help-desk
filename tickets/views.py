@@ -56,7 +56,8 @@ def new_ticket(request, *args, **kwargs):
     if request.method == 'POST':
         form = forms.NewTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():
-            if Ticket.objects.last().problem_description == form.cleaned_data.get('problem_description') and \
+            if Ticket.objects.last() is not None and \
+                    Ticket.objects.last().problem_description == form.cleaned_data.get('problem_description') and \
                     Ticket.objects.last().user == request.user:
                 # Catch if the user made a duplicate submission, prevent from creating a new object
                 ticket = Ticket.objects.last()
@@ -103,6 +104,8 @@ def assign_ticket(request, *args, **kwargs):
     if ticket.assignee is not None:
         return render(request, 'errors/ticket_already_assigned.html', {'ticket_num': ticket.id})
 
+    category_already_set = ticket.category == Ticket.NEW_USER or ticket.category == Ticket.MOVE_REQUEST
+
     template = 'tickets/assign_ticket.html'
     kwargs['user'] = request.user
 
@@ -113,7 +116,8 @@ def assign_ticket(request, *args, **kwargs):
 
             ticket.assignee = data.get('assignee')
             ticket.priority = data.get('priority')
-            ticket.category = data.get('category')
+            if not category_already_set:
+                ticket.category = data.get('category')
             ticket.assignment_date = timezone.now()
             ticket.assigned_by = request.user
             ticket.save()
@@ -127,13 +131,15 @@ def assign_ticket(request, *args, **kwargs):
 
     assignee_choices = form.fields['assignee'].choices
     priority_choices = form.fields['priority'].choices
-    category_choices = form.fields['category'].choices  # TODO Set if a MoveRequest or NewUser, lock
+    category_choices = form.fields['category'].choices
 
     context = {
         'form': form,
         'support_agents': assignee_choices,
         'category_choices': category_choices,
-        'priority_choices': priority_choices
+        'priority_choices': priority_choices,
+        'category_disabled': category_already_set,
+        'category_label': 'Categories' if not category_already_set else ticket.get_category_display()
     }
     return render(request, template, context)
 
@@ -386,7 +392,9 @@ def add_note(request, *args, **kwargs):
     if request.method == 'POST':
         form = forms.NewNoteForm(request.POST)
         if form.is_valid():
-            if Note.objects.last().text == form.cleaned_data.get('text') and Note.objects.last().user == request.user:
+            if Note.objects.last() is not None and \
+                    Note.objects.last().text == form.cleaned_data.get('text') and \
+                    Note.objects.last().user == request.user:
                 # Catch if the user made a duplicate submission, prevent from creating a new object
                 pass
             else:
@@ -438,9 +446,10 @@ def move_request(request, *args, **kwargs):
     if request.method == 'POST':
         form = forms.MoveRequestForm(request.POST, *args, **kwargs)
         if form.is_valid():
-            if MoveRequestTicket.objects.last().old_room_number == form.cleaned_data.get('old_room_number') and \
-               MoveRequestTicket.objects.last().new_room_number == form.cleaned_data.get('new_room_number') and \
-               MoveRequestTicket.objects.last().user == request.user:
+            if MoveRequestTicket.objects.last() is not None and \
+                    MoveRequestTicket.objects.last().old_room_number == form.cleaned_data.get('old_room_number') and \
+                    MoveRequestTicket.objects.last().new_room_number == form.cleaned_data.get('new_room_number') and \
+                    MoveRequestTicket.objects.last().user == request.user:
                 # Catch if the user made a duplicate submission, prevent from creating a new object
                 ticket = Ticket.objects.last()
                 pass
@@ -483,7 +492,8 @@ def new_user_request(request, *args, **kwargs):
     if request.method == 'POST':
         form = forms.NewUserRequestForm(request.POST, *args, **kwargs)
         if form.is_valid():
-            if NewUserTicket.objects.last().name == form.cleaned_data.get('name') and \
+            if NewUserTicket.objects.last() is not None and \
+                    NewUserTicket.objects.last().name == form.cleaned_data.get('name') and \
                     NewUserTicket.objects.last().user == request.user:
                 # Catch if the user made a duplicate submission, prevent from creating a new object
                 ticket = Ticket.objects.last()
