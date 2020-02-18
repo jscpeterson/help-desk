@@ -40,7 +40,7 @@
                     <td>{{ ticket.assignment_date }}</td>
                     <td>{{ ticket.get_category_display }}</td>
                     <td>{{ ticket.get_priority_display }}</td>
-                    <td>{{ ticket.problem_description }}</td>
+                    <td>{{ ticket.problem_description|linebreaksbr }}</td>
                     <td><a href={% url 'tickets:resolve_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
                       <i class="material-icons">check_circle</i>
                         </a>
@@ -86,7 +86,7 @@
                     </td>
                     <td>{{ ticket.user }}</td>
                     <td>{{ ticket.created_date }}</td>
-                    <td>{{ ticket.problem_description }}</td>
+                    <td>{{ ticket.problem_description|linebreaksbr }}</td>
                     <td><a href={% url 'tickets:assign_ticket' ticket.id %} class="btn-floating btn-small waves-effect waves-light blue hoverable" id="addbutton">
                       <i class="material-icons">assignment_ind</i>
                         </a>

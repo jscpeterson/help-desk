@@ -48,7 +48,7 @@
                   <td>{{ ticket.get_category_display }}</td>
                   <td>{{ ticket.get_priority_display }}</td>
                   {% endif %}
-                  <td>{{ ticket.problem_description }}</td>
+                  <td>{{ ticket.problem_description|linebreaksbr }}</td>
               </tr>
           {% endfor %}
           {% if open_tickets|length == 0 %}
@@ -93,7 +93,7 @@
                 <td>{{ ticket.assignment_date }}</td>
                 <td>{{ ticket.assignee }}</td>
                 <td>{{ ticket.closed_date }}</td>
-                <td>{{ ticket.problem_description }}</td>
+                <td>{{ ticket.problem_description|linebreaksbr }}</td>
                 <td>{{ ticket.resolution }}</td>
               </tr>
           {% endfor %}
