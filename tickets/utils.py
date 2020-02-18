@@ -58,9 +58,9 @@ def send_new_ticket_alert_email(ticket, request):
     html_message = render_to_string('emails/new_ticket.html', context)
 
     if ticket.category == Ticket.MOVE_REQUEST:
-        subject = 'New Move Request #{id} from {user}'.format(id=ticket.id, user=ticket.user),
+        subject = 'New Move Request #{id} from {user}'.format(id=ticket.id, user=ticket.user)
     elif ticket.category == Ticket.NEW_USER:
-        subject = 'New User Setup #{id} from {user}'.format(id=ticket.id, user=ticket.user),
+        subject = 'New User Setup #{id} from {user}'.format(id=ticket.id, user=ticket.user)
     else:
         subject = 'New Help Desk Ticket #{id} from {user}'.format(id=ticket.id, user=ticket.user)
 
