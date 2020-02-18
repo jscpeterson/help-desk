@@ -72,7 +72,8 @@ class MoveRequestForm(ModelForm):
 
     class Meta:
         model = MoveRequestTicket
-        fields = ['old_building', 'new_building',
+        fields = ['name',
+                  'old_building', 'new_building',
                   'old_division', 'new_division',
                   'old_room_number', 'new_room_number',
                   'scheduled_move_date']

@@ -137,6 +137,12 @@ def get_choice_list_from_resources(filename):
 
 
 class MoveRequestTicket(Ticket):
+
+    # Name of user to be moved
+    name = models.CharField(
+        max_length=120,
+    )
+
     BUILDING_CHOICES = get_choice_list_from_resources('buildings.txt')
 
     old_building = models.IntegerField(

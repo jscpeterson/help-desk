@@ -455,6 +455,7 @@ def move_request(request, *args, **kwargs):
                 pass
             else:
                 move_request_format = 'MOVE REQUEST - {scheduled_move_date}\n' \
+                                      '{name}\n' \
                                       'OLD DIVISION: {old_division}\n' \
                                       'OLD LOCATION: ({old_building}) {old_room_number}\n' \
                                       'NEW DIVISION: {new_division}\n' \
@@ -466,6 +467,7 @@ def move_request(request, *args, **kwargs):
                 ticket.save()
                 ticket.problem_description = move_request_format.format(
                     scheduled_move_date=ticket.scheduled_move_date.strftime('%m/%d/%Y'),
+                    name=ticket.name,
                     old_division=ticket.get_old_division_display(),
                     old_building=ticket.get_old_building_display(),
                     old_room_number=ticket.old_room_number,
@@ -499,8 +501,8 @@ def new_user_request(request, *args, **kwargs):
                 ticket = Ticket.objects.last()
                 pass
             else:
-                move_request_format = 'NEW USER - {name} ({job_title})\n' \
-                                      'Starts {start_date}\n' \
+                move_request_format = 'NEW USER - starting {start_date}\n' \
+                                      '{name} ({job_title})\n' \
                                       'DIVISION: {division}\n' \
                                       'LOCATION: ({building}) {room_number}\n' \
                                       'CMS Access: {cms_access}' \
