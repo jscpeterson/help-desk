@@ -184,6 +184,13 @@ class MoveRequestTicket(Ticket):
 
 
 class NewUserTicket(Ticket):
+
+    name = models.CharField(
+        max_length=120,
+        blank=True,
+        null=True,
+    )
+
     BUILDING_CHOICES = get_choice_list_from_resources('buildings.txt')
 
     building = models.IntegerField(
