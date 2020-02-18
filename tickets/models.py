@@ -216,6 +216,20 @@ class NewUserTicket(Ticket):
         null=True,
     )
 
+    room_number = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+    )
+
+    needs_computer = models.BooleanField(
+        default=False,
+    )
+
+    needs_email_account = models.BooleanField(
+        default=False,
+    )
+
     # Date new user will begin work
     start_date = models.DateTimeField(
         blank=True,
