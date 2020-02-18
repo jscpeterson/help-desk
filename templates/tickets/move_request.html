@@ -1,3 +1,5 @@
+<!-- TODO: ADD VALIDATION AND REQUIRED FIELDS -->
+
 {% extends 'base.html' %}
 
 {% block content %}
@@ -15,6 +17,11 @@
         {% csrf_token %}
         <div class="row">
           <h4>New Move Request</h4>
+
+        <div class="row">
+          <label class="sr-only">User Name</label>
+          <input type="text" name="name" id="id_name" class="form-control" placeholder="Name Of User Being Moved" maxlength="120"/>
+        </div>
 
         <div class="row">
           <label class="sr-only">Old Building</label>
