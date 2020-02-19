@@ -1,81 +1,141 @@
-<!-- TODO: ADD VALIDATION AND REQUIRED FIELDS -->
-
 {% extends 'base.html' %}
 
 {% block content %}
     <div class="container">
-    <div class="row">
-      <form method="post" class="col s12">
-        {% csrf_token %}
-        <div class="row">
-          <h4>New Move Request</h4>
+      <div class="row">
+        <form method="post" class="col s12">
+          {% csrf_token %}
+          <div class="row">
+            <h4>New Move Request</h4>
 
-        <div class="row">
-          <label class="sr-only">User Name</label>
-          <input type="text" name="name" id="id_name" class="form-control" placeholder="Name Of User Being Moved" required maxlength="120"/>
-        </div>
+            {% if form.errors %}
+              <h6 class="error_message">Something went wrong submitting your request. <br>
+                Check the form for errors.
+              </h6>
+            {% endif %}
 
-        <div class="row">
-          <label class="sr-only">Old Building</label>
-          <select name="old_building" id="id_old_building" class="form-control" required>
-            <option selected="true" disabled>Old Building</option>
-            {% for old_building in old_building_choices %}
-            <option value="{{ old_building.0 }}">{{ old_building.1 }}</option>
-            {% endfor %}
-          </select>
-        </div>
+          <div class="row">
+            <div class="col s12 m8">
+              <label class="sr-only">User Name</label>
+                {% for key,value in form.errors.items %}
+                  {% if key == 'name' %}
+                  <span class='error_message'>{{ value }}</h6>
+                  {% endif %}
+                {% endfor %}
+              <input type="text" name="name" id="id_name" class="form-control" placeholder="Name Of User Being Moved" required maxlength="120"/>
+            </div>
+          </div>
 
-        <div class="row">
-          <label class="sr-only">New Building</label>
-          <select name="new_building" id="id_new_building" class="form-control" required>
-            <option selected="true" disabled>New Building</option>
-            {% for new_building in new_building_choices %}
-            <option value="{{ new_building.0 }}">{{ new_building.1 }}</option>
-            {% endfor %}
-          </select>
-        </div>
+          <div class="row">
+            <div class="col s12 m8">
+              <label class="sr-only">Old Building</label>
+                {% for key,value in form.errors.items %}
+                  {% if key == 'old_building' %}
+                  <span class='error_message'>{{ value }}</h6>
+                  {% endif %}
+                {% endfor %}
+              <select name="old_building" id="id_old_building" class="form-control validate" required>
+                <option value="" selected disabled>Old Building</option>
+                {% for old_building in old_building_choices %}
+                <option value="{{ old_building.0 }}">{{ old_building.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
 
-        <div class="row">
-          <label class="sr-only">Old Division</label>
-          <select name="old_division" id="id_old_division" class="form-control">
-            <option selected="true" disabled>Old Division</option>
-            {% for old_division in old_division_choices %}
-            <option value="{{ old_division.0 }}">{{ old_division.1 }}</option>
-            {% endfor %}
-          </select>
-        </div>
+          <div class="row">
+            <div class="col s12 m8">
+              <label class="sr-only">New Building</label>
+                {% for key,value in form.errors.items %}
+                  {% if key == 'new_building' %}
+                  <span class='error_message'>{{ value }}</h6>
+                  {% endif %}
+                {% endfor %}
+              <select name="new_building" id="id_new_building" class="form-control" required>
+                <option value="" selected disabled>New Building</option>
+                {% for new_building in new_building_choices %}
+                <option value="{{ new_building.0 }}">{{ new_building.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
 
-        <div class="row">
-          <label class="sr-only">New Division</label>
-          <select name="new_division" id="id_new_division" class="form-control">
-            <option selected="true" disabled>New Division</option>
-            {% for new_division in new_division_choices %}
-            <option value="{{ new_division.0 }}">{{ new_division.1 }}</option>
-            {% endfor %}
-          </select>
-        </div>
+          <div class="row">
+            <div class="col s12 m8">
+              <label class="sr-only">Old Division</label>
+                {% for key,value in form.errors.items %}
+                  {% if key == 'old_division' %}
+                  <span class='error_message'>{{ value }}</h6>
+                  {% endif %}
+                {% endfor %}
+              <select name="old_division" id="id_old_division" class="form-control">
+                <option value="" selected disabled>Old Division</option>
+                {% for old_division in old_division_choices %}
+                <option value="{{ old_division.0 }}">{{ old_division.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
 
-        <div class="row">
-          <label class="sr-only">Old Room Number</label>
-          <input type="text" name="old_room_number" id="id_old_room_number" class="form-control" placeholder="Old Room" required maxlength="10"/>
-        </div>
+          <div class="row">
+            <div class="col s12 m8">
+              <label class="sr-only">New Division</label>
+                {% for key,value in form.errors.items %}
+                  {% if key == 'new_division' %}
+                  <span class='error_message'>{{ value }}</h6>
+                  {% endif %}
+                {% endfor %}
+              <select name="new_division" id="id_new_division" class="form-control">
+                <option value="" selected disabled>New Division</option>
+                {% for new_division in new_division_choices %}
+                <option value="{{ new_division.0 }}">{{ new_division.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
 
-        <div class="row">
-          <label class="sr-only">New Room Number</label>
-          <input type="text" name="new_room_number" id="id_new_room_number" class="form-control" placeholder="New Room" required maxlength="10" />
-        </div>
+          <div class="row">
+            <div class="col s12 m8">
+              <label class="sr-only">Old Room Number</label>
+                {% for key,value in form.errors.items %}
+                  {% if key == 'old_room_number' %}
+                  <span class='error_message'>{{ value }}</h6>
+                  {% endif %}
+                {% endfor %}
+              <input type="text" name="old_room_number" id="id_old_room_number" class="form-control" placeholder="Old Room" required maxlength="10"/>
+            </div>
+          </div>
 
-        <div class="row">
-          <label>Scheduled Move Date</label>
-          <input name="scheduled_move_date" id="scheduled_move_date" type="text" required class="datepicker">
-        </div>
+          <div class="row">
+            <div class="col s12 m8">
+              <label class="sr-only">New Room Number</label>
+                {% for key,value in form.errors.items %}
+                  {% if key == 'new_room_number' %}
+                  <span class='error_message'>{{ value }}</h6>
+                  {% endif %}
+                {% endfor %}
+              <input type="text" name="new_room_number" id="id_new_room_number" class="form-control" placeholder="New Room" required maxlength="10" />
+            </div>
+          </div>
 
-        <div id="buttonDiv">
-          <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Submit
-          <i class="material-icons right">send</i>
-          </button>
-        </div>
-      </form>
-    </div>
+          <div class="row">
+            <div class="col s12 m8">
+              <label>Scheduled Move Date</label>
+                {% for key,value in form.errors.items %}
+                  {% if key == 'scheduled_move_date' %}
+                  <span class='error_message'>{{ value }}</h6>
+                  {% endif %}
+                {% endfor %}
+              <input name="scheduled_move_date" id="scheduled_move_date" type="text" required class="datepicker">
+            </div>
+          </div>
+
+          <div id="buttonDiv">
+            <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Submit
+            <i class="material-icons right">send</i>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 {% endblock %}

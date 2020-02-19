@@ -12,10 +12,10 @@
           {% if forloop.first %}
           <!-- CHECK IF CURRENT USER IS THE ONLY VALUE IN THE LIST -->
             {% if user.id == agent.0 and forloop.last %}
-              <select class="assignTicketSelect" name="assignee" required id="id_assignee">
+              <select name="assignee" required id="id_assignee">
               <option value="{{agent.0}}" selected>{{ agent.1 }}</option>
             {% else %}
-              <select class="assignTicketSelect" name="assignee" required id="id_assignee">
+              <select name="assignee" required id="id_assignee">
               <option value="" disabled selected>Support Agents</option>
               <option value="{{agent.0}}">{{ agent.1 }}</option>
             {% endif %}
@@ -30,7 +30,7 @@
 
   <div class="row"> <!-- Row start -->
       <div class="input-field col s12 m8">
-      <select class="assignTicketSelect" name="priority" required id="id_priority">
+      <select name="priority" required id="id_priority">
         <option value="" disabled selected>Priority Levels</option>
         {% for priority in priority_choices %}
         <option value="{{priority.0}}">{{ priority.1 }}</option>
@@ -42,7 +42,7 @@
 
   <div class="row"> <!-- Row start -->
       <div class="input-field col s12 m8">
-      <select class="assignTicketSelect" name="category" id="id_category"
+      <select name="category" id="id_category"
       {% if category_disabled %}
       disabled
       {% else %}
