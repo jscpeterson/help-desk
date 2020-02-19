@@ -1,7 +1,9 @@
 {% load static %}
 
 <ul id="navDropdown" class="dropdown-content">
+  {% if user.is_authenticated %}
   <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
+  {% endif %}
 
   {% if user.is_division_head %}
   <li><a href="{% url 'tickets:move_request' %}">New Move Request</a></li>
@@ -48,7 +50,9 @@
     </ul>
 
     <ul class="right hide-on-med-and-down">
+      {% if user.is_authenticated %}
       <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
+      {% endif %}
 
       {% if user.is_division_head %}
       <li><a href="{% url 'tickets:move_request' %}">New Move Request</a></li>
