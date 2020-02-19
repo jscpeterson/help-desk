@@ -1,9 +1,4 @@
-import io
-import os
-
 from django.db import models
-
-from helpdesk.settings.base import BASE_DIR
 from users.models import HelpDeskUser
 
 
@@ -126,16 +121,35 @@ class Ticket(models.Model):
     )
 
 
-RESOURCES_DIR = os.path.join(BASE_DIR, 'resources')
+# Tables to be populated with external file
+class Building(models.Model):
+    name = models.CharField(
+        max_length=60,
+    )
+
+    def __str__(self):
+        return self.name
 
 
-def get_choice_list_from_resources(filename):
-    f = io.open(os.path.join(RESOURCES_DIR, filename))
-    choice_list = [[i+1, building] for i, building in enumerate(f.read().split('\n'))]
-    f.close()
-    return choice_list
+class Division(models.Model):
+    name = models.CharField(
+        max_length=60,
+    )
+
+    def __str__(self):
+        return self.name
 
 
+class JobTitle(models.Model):
+    name = models.CharField(
+        max_length=60,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+# Specialized tickets to be submitted by Division Heads
 class MoveRequestTicket(Ticket):
 
     # Name of user to be moved
@@ -143,24 +157,28 @@ class MoveRequestTicket(Ticket):
         max_length=120,
     )
 
-    BUILDING_CHOICES = get_choice_list_from_resources('buildings.txt')
-
-    old_building = models.IntegerField(
-        choices=BUILDING_CHOICES,
+    old_building = models.ForeignKey(
+        Building,
+        on_delete=models.PROTECT,
+        related_name='move_requests_from'
     )
 
-    new_building = models.IntegerField(
-        choices=BUILDING_CHOICES,
+    new_building = models.ForeignKey(
+        Building,
+        on_delete=models.PROTECT,
+        related_name='move_requests_to',
     )
 
-    DIVISION_CHOICES = get_choice_list_from_resources('divisions.txt')
-
-    old_division = models.IntegerField(
-        choices=DIVISION_CHOICES,
+    old_division = models.ForeignKey(
+        Division,
+        on_delete=models.PROTECT,
+        related_name='move_requests_from'
     )
 
-    new_division = models.IntegerField(
-        choices=DIVISION_CHOICES,
+    new_division = models.ForeignKey(
+        Division,
+        on_delete=models.PROTECT,
+        related_name='move_requests_to',
     )
 
     old_room_number = models.CharField(
@@ -181,28 +199,33 @@ class NewUserTicket(Ticket):
         max_length=120,
     )
 
-    BUILDING_CHOICES = get_choice_list_from_resources('buildings.txt')
-
-    building = models.IntegerField(
-        choices=BUILDING_CHOICES,
+    building = models.ForeignKey(
+        Building,
+        on_delete=models.PROTECT,
     )
 
-    DIVISION_CHOICES = get_choice_list_from_resources('divisions.txt')
-
-    division = models.IntegerField(
-        choices=DIVISION_CHOICES,
+    division = models.ForeignKey(
+        Division,
+        on_delete=models.PROTECT,
     )
 
-    CMS_ACCESS_CHOICES = get_choice_list_from_resources('cmsaccess.txt')
+    job_title = models.ForeignKey(
+        JobTitle,
+        on_delete=models.PROTECT,
+    )
+
+    CMS_NONE = 1
+    CMS_GUEST = 2
+    CMS_STAFF = 3
+
+    CMS_ACCESS_CHOICES = (
+        (CMS_NONE, 'None Needed'),
+        (CMS_GUEST, 'Guest (Read Only)'),
+        (CMS_STAFF, 'DAStaff (Read and Write)')
+    )
 
     cms_access = models.IntegerField(
         choices=CMS_ACCESS_CHOICES,
-    )
-
-    JOB_TITLE_CHOICES = get_choice_list_from_resources('jobtitles.txt')
-
-    job_title = models.IntegerField(
-        choices=JOB_TITLE_CHOICES,
     )
 
     room_number = models.CharField(

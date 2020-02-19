@@ -468,11 +468,11 @@ def move_request(request, *args, **kwargs):
                 ticket.problem_description = move_request_format.format(
                     scheduled_move_date=ticket.scheduled_move_date.strftime('%m/%d/%Y'),
                     name=ticket.name,
-                    old_division=ticket.get_old_division_display(),
-                    old_building=ticket.get_old_building_display(),
+                    old_division=ticket.old_division,
+                    old_building=ticket.old_building,
                     old_room_number=ticket.old_room_number,
-                    new_division=ticket.get_new_division_display(),
-                    new_building=ticket.get_new_building_display(),
+                    new_division=ticket.new_division,
+                    new_building=ticket.new_building,
                     new_room_number=ticket.new_room_number,
                 )
                 ticket.save()
@@ -482,11 +482,15 @@ def move_request(request, *args, **kwargs):
     else:
         form = forms.MoveRequestForm(*args, **kwargs)
 
-    # TAKING SLICE OF ARRAY, SO PLACEHOLDER '-----' NOT INCLUDED WITH CONTEXT
-    old_building_choices = form.fields['old_building'].choices[1:]
-    new_building_choices = form.fields['new_building'].choices[1:]
-    old_division_choices = form.fields['old_division'].choices[1:]
-    new_division_choices = form.fields['new_division'].choices[1:]
+    # REMOVING EMPTY_LABEL, SO PLACEHOLDER '-----' NOT INCLUDED WITH CONTEXT
+    form.fields['old_building'].empty_label = None
+    old_building_choices = form.fields['old_building'].choices
+    form.fields['new_building'].empty_label = None
+    new_building_choices = form.fields['new_building'].choices
+    form.fields['old_division'].empty_label = None
+    old_division_choices = form.fields['old_division'].choices
+    form.fields['new_division'].empty_label = None
+    new_division_choices = form.fields['new_division'].choices
 
     context = {
         'form': form,
@@ -526,10 +530,10 @@ def new_user_request(request, *args, **kwargs):
                 ticket.save()
                 ticket.problem_description = move_request_format.format(
                     name=ticket.name,
-                    job_title=ticket.get_job_title_display(),
+                    job_title=ticket.job_title,
                     start_date=ticket.start_date.strftime('%m/%d/%Y'),
-                    division=ticket.get_division_display(),
-                    building=ticket.get_building_display(),
+                    division=ticket.division,
+                    building=ticket.building,
                     room_number=ticket.room_number,
                     cms_access=ticket.get_cms_access_display(),
                     needs_computer=', needs computer' if ticket.needs_computer else '',
@@ -542,10 +546,14 @@ def new_user_request(request, *args, **kwargs):
     else:
         form = forms.NewUserRequestForm(*args, **kwargs)
 
-    building_choices = form.fields['building'].choices[1:]
-    division_choices = form.fields['division'].choices[1:]
-    job_title_choices = form.fields['job_title'].choices[1:]
-    cms_access_choices = form.fields['cms_access'].choices[1:]
+    form.fields['building'].empty_label = None
+    building_choices = form.fields['building'].choices
+    form.fields['division'].empty_label = None
+    division_choices = form.fields['division'].choices
+    form.fields['job_title'].empty_label = None
+    job_title_choices = form.fields['job_title'].choices
+    form.fields['cms_access'].empty_label = None
+    cms_access_choices = form.fields['cms_access'].choices
 
     context = {
         'form': form,
