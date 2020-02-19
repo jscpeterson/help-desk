@@ -3,14 +3,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-    </form>
-
-
-
     <div class="container">
     <div class="row">
       <form method="post" class="col s12">
