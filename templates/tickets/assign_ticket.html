@@ -44,9 +44,9 @@
       <div class="input-field col s12 m8">
       <select name="category" id="id_category"
       {% if category_disabled %}
-      disabled
+        disabled
       {% else %}
-      required
+        required
       {% endif %}>
         <option value="" disabled selected>{{ category_label }}</option>
         {% for category in category_choices %}

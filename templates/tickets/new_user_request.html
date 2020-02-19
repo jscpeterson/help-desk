@@ -19,7 +19,7 @@
             <label class="sr-only">Name</label>
               {% for key,value in form.errors.items %}
                 {% if key == 'name' %}
-                <span class='error_message'>{{ value }}</h6>
+                    <h6 class='error_message'>{{ value }}</h6>
                 {% endif %}
               {% endfor %}
             <input type="text" name="name" id="id_name" class="form-control validate" placeholder="Name of New User" required maxlength="120"/>
@@ -31,7 +31,7 @@
             <label class="sr-only">Building</label>
               {% for key,value in form.errors.items %}
                 {% if key == 'building' %}
-                <span class='error_message'>{{ value }}</h6>
+                    <h6 class='error_message'>{{ value }}</h6>
                 {% endif %}
               {% endfor %}
             <select name="building" id="id_building" class="form-control" required>
@@ -48,7 +48,7 @@
             <label class="sr-only">Division</label>
               {% for key,value in form.errors.items %}
                 {% if key == 'division' %}
-                <span class='error_message'>{{ value }}</h6>
+                    <h6 class='error_message'>{{ value }}</h6>
                 {% endif %}
               {% endfor %}
             <select name="division" id="id_division" class="form-control" required>
@@ -65,7 +65,7 @@
             <label class="sr-only">Room Number</label>
               {% for key,value in form.errors.items %}
                 {% if key == 'room_number' %}
-                <span class='error_message'>{{ value }}</h6>
+                    <h6 class='error_message'>{{ value }}</h6>
                 {% endif %}
               {% endfor %}
             <input type="text" name="room_number" id="id_room_number" class="form-control" placeholder="Room Number" required maxlength="10"/>
@@ -77,7 +77,7 @@
             <label class="sr-only">Job Title</label>
               {% for key,value in form.errors.items %}
                 {% if key == 'job_title' %}
-                <span class='error_message'>{{ value }}</h6>
+                <<h6 class='error_message'>{{ value }}</h6>
                 {% endif %}
               {% endfor %}
             <select name="job_title" id="id_job_title" class="form-control" required>
@@ -94,7 +94,7 @@
             <label class="sr-only">CMS Access Level</label>
               {% for key,value in form.errors.items %}
                 {% if key == 'cms_access' %}
-                <span class='error_message'>{{ value }}</h6>
+                <h6 class='error_message'>{{ value }}</h6>
                 {% endif %}
               {% endfor %}
             <select name="cms_access" id="id_cms_access" class="form-control" required>
@@ -137,7 +137,7 @@
             <label>Start Date</label>
               {% for key,value in form.errors.items %}
                 {% if key == 'start_date' %}
-                <span class='error_message'>{{ value }}</span>
+                    <h6 class='error_message'>{{ value }}</h6>
                 {% endif %}
               {% endfor %}
             <input name="start_date" id="id_start_date" type="text" required class="datepicker">
