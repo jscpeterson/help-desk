@@ -542,5 +542,16 @@ def new_user_request(request, *args, **kwargs):
     else:
         form = forms.NewUserRequestForm(*args, **kwargs)
 
-    context = {'form': form}
+    building_choices = form.fields['building'].choices[1:]
+    division_choices = form.fields['division'].choices[1:]
+    job_title_choices = form.fields['job_title'].choices[1:]
+    cms_access_choices = form.fields['cms_access'].choices[1:]
+
+    context = {
+        'form': form,
+        'building_choices': building_choices,
+        'division_choices': division_choices,
+        'job_title_choices': job_title_choices,
+        'cms_access_choices': cms_access_choices,
+    }
     return render(request, template, context)
