@@ -78,6 +78,7 @@ class Ticket(models.Model):
         (SCANNER, 'Scanner'),
         (OTHER_PERIPHERAL, 'Other Peripheral'),
         (SOFTWARE, 'Software'),
+        (ACCESS, 'Access')
     )
 
     DIVISION_HEAD_CATEGORY_CHOICES = (
