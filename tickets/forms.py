@@ -94,5 +94,6 @@ class NewUserRequestForm(ModelForm):
                   'building', 'division', 'room_number',
                   'job_title',
                   'needs_computer',
+                  'cms_access',
                   'needs_email_account',
                   'start_date']
