@@ -552,7 +552,6 @@ def new_user_request(request, *args, **kwargs):
     division_choices = form.fields['division'].choices
     form.fields['job_title'].empty_label = None
     job_title_choices = form.fields['job_title'].choices
-    form.fields['cms_access'].empty_label = None
     cms_access_choices = form.fields['cms_access'].choices
 
     context = {
