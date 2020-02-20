@@ -93,7 +93,6 @@ class NewUserRequestForm(ModelForm):
         fields = ['name',
                   'building', 'division', 'room_number',
                   'job_title',
-                  'cms_access',
                   'needs_computer',
                   'needs_email_account',
                   'start_date']
