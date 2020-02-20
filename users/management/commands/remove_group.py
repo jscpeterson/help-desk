@@ -12,7 +12,8 @@ class Command(BaseCommand):
         parser.add_argument('--username', type=str, required=True)
 
     def handle(self, *args, **kwargs):
-        if kwargs['group'].capitalize() not in GROUPS:
+        group_name = " ".join([word.capitalize() for word in kwargs['group'].split(" ")])
+        if group_name not in GROUPS:
             print('Group not recognized. Groups are as follows: {}'.format(', '.join(GROUPS)))
             return
 
@@ -21,7 +22,7 @@ class Command(BaseCommand):
             return
 
         user = HelpDeskUser.objects.get(username=kwargs['username'])
-        group = Group.objects.get(name=kwargs['group'].capitalize())
+        group = Group.objects.get(name=group_name)
 
         if not user.groups.filter(name=group).exists():
             print('{user} does not have {group} privileges.'.format(
