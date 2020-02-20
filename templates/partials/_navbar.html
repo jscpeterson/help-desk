@@ -52,9 +52,9 @@
     <ul class="right hide-on-med-and-down">
       {% if user.is_authenticated %}
         <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
-      {% endif %}
-
-      {% if user.is_division_head %}
+{#      {% endif %}#}
+        {# TODO Uncomment when DIVISION_HEADs clarified #}
+{#      {% if user.is_division_head %}#}
         <li><a href="{% url 'tickets:move_request' %}">New Move Request</a></li>
         <li><a href="{% url 'tickets:new_user_request' %}">New User Access Request</a></li>
       {% endif %}

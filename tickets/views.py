@@ -441,7 +441,7 @@ def view_ticket(request, *args, **kwargs):
 @login_required
 def move_request(request, *args, **kwargs):
     template = 'tickets/move_request.html'
-    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_DIVISION_HEAD])
+    # check_groups(request.user, [GROUP_SUPERVISOR, GROUP_DIVISION_HEAD]) TODO Uncomment when DIVISION_HEADs clarified
 
     if request.method == 'POST':
         form = forms.MoveRequestForm(request.POST, *args, **kwargs)
@@ -505,7 +505,7 @@ def move_request(request, *args, **kwargs):
 @login_required
 def new_user_request(request, *args, **kwargs):
     template = 'tickets/new_user_request.html'
-    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_DIVISION_HEAD])
+    # check_groups(request.user, [GROUP_SUPERVISOR, GROUP_DIVISION_HEAD]) TODO Uncomment when DIVISION_HEADs clarified
 
     if request.method == 'POST':
         form = forms.NewUserRequestForm(request.POST, *args, **kwargs)
