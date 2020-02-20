@@ -9,6 +9,20 @@ div p, h6 {
   padding-right: .5em;
 }
 
+/* display the error messages for select boxes */
+select[required]:focus{
+    outline: none !important;
+}
+select[required]{
+    display: block;
+    padding: 0;
+    position: absolute;
+    background: transparent;
+    color: transparent;
+    border: none;
+    top: 0;
+}
+
 th {
   position: sticky;
   top: 0;
@@ -21,15 +35,6 @@ th {
 CLASSES
 *************
 *************/
-
-/* display the error messages for select boxes */
-.assignTicketSelect {
-  display: block;
-  height: 0;
-  padding: 0;
-  width: 0;
-  position: absolute;
-}
 
 .card {
   overflow-y: auto;

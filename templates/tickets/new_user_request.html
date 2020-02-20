@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+    <div class="row">
+      <form method="post" class="col s12">
+        {% csrf_token %}
+        <div class="row">
+          <h4>New User Request</h4>
+
+          {% if form.errors %}
+            <h6 class="error_message">Something went wrong submitting your request.<br>
+              Check the form for errors.
+            </h6>
+          {% endif %}
+
+        <div class="row">
+          <div class="col s12 m8">
+            <label class="sr-only">Name</label>
+              {% for key,value in form.errors.items %}
+                {% if key == 'name' %}
+                    <h6 class='error_message'>{{ value }}</h6>
+                {% endif %}
+              {% endfor %}
+            <input type="text" name="name" id="id_name" class="form-control validate" placeholder="Name of New User" required maxlength="120"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m8">
+            <label class="sr-only">Building</label>
+              {% for key,value in form.errors.items %}
+                {% if key == 'building' %}
+                    <h6 class='error_message'>{{ value }}</h6>
+                {% endif %}
+              {% endfor %}
+            <select name="building" id="id_building" class="form-control" required>
+              <option value="" selected disabled>Building</option>
+                {% for building in building_choices %}
+                <option value="{{ building.0 }}">{{ building.1 }}</option>
+                {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m8">
+            <label class="sr-only">Division</label>
+              {% for key,value in form.errors.items %}
+                {% if key == 'division' %}
+                    <h6 class='error_message'>{{ value }}</h6>
+                {% endif %}
+              {% endfor %}
+            <select name="division" id="id_division" class="form-control" required>
+              <option value="" selected disabled>Division</option>
+                {% for division in division_choices %}
+                <option value="{{ division.0 }}">{{ division.1 }}</option>
+                {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m8">
+            <label class="sr-only">Room Number</label>
+              {% for key,value in form.errors.items %}
+                {% if key == 'room_number' %}
+                    <h6 class='error_message'>{{ value }}</h6>
+                {% endif %}
+              {% endfor %}
+            <input type="text" name="room_number" id="id_room_number" class="form-control" placeholder="Room Number" required maxlength="10"/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m8">
+            <label class="sr-only">Job Title</label>
+              {% for key,value in form.errors.items %}
+                {% if key == 'job_title' %}
+                <h6 class='error_message'>{{ value }}</h6>
+                {% endif %}
+              {% endfor %}
+            <select name="job_title" id="id_job_title" class="form-control" required>
+              <option value="" selected disabled>Job Title</option>
+                {% for job_title in job_title_choices %}
+                <option value="{{ job_title.0 }}">{{ job_title.1 }}</option>
+                {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m8">
+            <label class="sr-only">CMS Access Level</label>
+              {% for key,value in form.errors.items %}
+                {% if key == 'cms_access' %}
+                <h6 class='error_message'>{{ value }}</h6>
+                {% endif %}
+              {% endfor %}
+            <select name="cms_access" id="id_cms_access" class="form-control" required>
+              <option value="" selected disabled>Access Level</option>
+                {% for cms_access in cms_access_choices %}
+                <option value="{{ cms_access.0 }}">{{ cms_access.1 }}</option>
+                {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m8">
+            <h6>Needs Computer?</h6>
+            <p>
+              <label for="id_needs_computer">
+                <input name="needs_computer" id="id_needs_computer" type="checkbox" class="filled-in" />
+                <span>Yes</span>
+              </label>
+            </p>
+            <div class="divider"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m8">
+            <h6>Needs Email Account?</h6>
+            <p>
+              <label for="id_needs_email_account">
+                <input name="needs_email_account" id="id_needs_email_account" type="checkbox" class="filled-in" />
+                <span>Yes</span>
+              </label>
+            </p>
+            <div class="divider"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12 m8">
+            <label>Start Date</label>
+              {% for key,value in form.errors.items %}
+                {% if key == 'start_date' %}
+                    <h6 class='error_message'>{{ value }}</h6>
+                {% endif %}
+              {% endfor %}
+            <input name="start_date" id="id_start_date" type="text" required class="datepicker">
+          </div>
+        </div>
+
+        <div id="buttonDiv">
+          <button class="btn waves-effect waves-light hoverable blue darken-4" id="btn" type="submit" name="action">Submit
+          <i class="material-icons right">send</i>
+          </button>
+        </div>
+        </div>
+      </form>
+    </div>
+    </div>
+{% endblock %}

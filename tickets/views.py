@@ -9,17 +9,19 @@ from django.db.models import Q
 
 from datetime import date, datetime
 
-from tickets.models import Ticket, Note
+from tickets.models import Ticket, Note, MoveRequestTicket, NewUserTicket
 from tickets.utils import send_resolution_email, check_groups, check_is_assigned, check_ticket_unresolved, \
     check_ticket_unassigned, send_new_ticket_alert_email, send_ticket_assigned_email, check_is_assigned_or_user, \
     send_new_note_email, check_groups_or_is_user
-from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser
+from users.models import GROUP_SUPERVISOR, GROUP_SUPPORT, HelpDeskUser, GROUP_DIVISION_HEAD
 from . import forms
+
+# TODO Reorganize views similar to urls
 
 
 @login_required
 def home(request):
-
+    # TODO Some code cleanup is needed here
     welcomeMessage = messages.success(request, "Welcome")
 
     if request.user.groups.filter(name=GROUP_SUPERVISOR).exists():
@@ -54,7 +56,8 @@ def new_ticket(request, *args, **kwargs):
     if request.method == 'POST':
         form = forms.NewTicketForm(request.POST, *args, **kwargs)
         if form.is_valid():
-            if Ticket.objects.last().problem_description == form.cleaned_data.get('problem_description') and \
+            if Ticket.objects.last() is not None and \
+                    Ticket.objects.last().problem_description == form.cleaned_data.get('problem_description') and \
                     Ticket.objects.last().user == request.user:
                 # Catch if the user made a duplicate submission, prevent from creating a new object
                 ticket = Ticket.objects.last()
@@ -101,6 +104,8 @@ def assign_ticket(request, *args, **kwargs):
     if ticket.assignee is not None:
         return render(request, 'errors/ticket_already_assigned.html', {'ticket_num': ticket.id})
 
+    category_already_set = ticket.category == Ticket.NEW_USER or ticket.category == Ticket.MOVE_REQUEST
+
     template = 'tickets/assign_ticket.html'
     kwargs['user'] = request.user
 
@@ -111,7 +116,8 @@ def assign_ticket(request, *args, **kwargs):
 
             ticket.assignee = data.get('assignee')
             ticket.priority = data.get('priority')
-            ticket.category = data.get('category')
+            if not category_already_set:
+                ticket.category = data.get('category')
             ticket.assignment_date = timezone.now()
             ticket.assigned_by = request.user
             ticket.save()
@@ -131,7 +137,9 @@ def assign_ticket(request, *args, **kwargs):
         'form': form,
         'support_agents': assignee_choices,
         'category_choices': category_choices,
-        'priority_choices': priority_choices
+        'priority_choices': priority_choices,
+        'category_disabled': category_already_set,
+        'category_label': 'Categories' if not category_already_set else ticket.get_category_display()
     }
     return render(request, template, context)
 
@@ -144,7 +152,7 @@ def view_assigned_tickets(request):
     context = {
         'first_name': request.user.first_name,
         'assigned_tickets': Ticket.objects.filter(assignee=request.user, status=Ticket.OPEN).order_by('created_date')
-        .order_by('priority'),
+            .order_by('priority'),
         'unassigned_tickets': Ticket.objects.filter(status=Ticket.OPEN, assignee=None).order_by('created_date'),
     }
 
@@ -384,7 +392,9 @@ def add_note(request, *args, **kwargs):
     if request.method == 'POST':
         form = forms.NewNoteForm(request.POST)
         if form.is_valid():
-            if Note.objects.last().text == form.cleaned_data.get('text') and Note.objects.last().user == request.user:
+            if Note.objects.last() is not None and \
+                    Note.objects.last().text == form.cleaned_data.get('text') and \
+                    Note.objects.last().user == request.user:
                 # Catch if the user made a duplicate submission, prevent from creating a new object
                 pass
             else:
@@ -425,4 +435,131 @@ def view_ticket(request, *args, **kwargs):
         'notes': notes,
     }
 
+    return render(request, template, context)
+
+
+@login_required
+def move_request(request, *args, **kwargs):
+    template = 'tickets/move_request.html'
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_DIVISION_HEAD])
+
+    if request.method == 'POST':
+        form = forms.MoveRequestForm(request.POST, *args, **kwargs)
+        if form.is_valid():
+            if MoveRequestTicket.objects.last() is not None and \
+                    MoveRequestTicket.objects.last().old_room_number == form.cleaned_data.get('old_room_number') and \
+                    MoveRequestTicket.objects.last().new_room_number == form.cleaned_data.get('new_room_number') and \
+                    MoveRequestTicket.objects.last().user == request.user:
+                # Catch if the user made a duplicate submission, prevent from creating a new object
+                ticket = Ticket.objects.last()
+                pass
+            else:
+                move_request_format = 'MOVE REQUEST - {scheduled_move_date}\n' \
+                                      '{name}\n' \
+                                      'OLD DIVISION: {old_division}\n' \
+                                      'OLD LOCATION: ({old_building}) {old_room_number}\n' \
+                                      'NEW DIVISION: {new_division}\n' \
+                                      'NEW LOCATION: ({new_building}) {new_room_number}'
+
+                ticket = form.save(commit=False)
+                ticket.user = request.user
+                ticket.category = Ticket.MOVE_REQUEST
+                ticket.save()
+                ticket.problem_description = move_request_format.format(
+                    scheduled_move_date=ticket.scheduled_move_date.strftime('%m/%d/%Y'),
+                    name=ticket.name,
+                    old_division=ticket.old_division,
+                    old_building=ticket.old_building,
+                    old_room_number=ticket.old_room_number,
+                    new_division=ticket.new_division,
+                    new_building=ticket.new_building,
+                    new_room_number=ticket.new_room_number,
+                )
+                ticket.save()
+                send_new_ticket_alert_email(ticket, request)
+
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
+    else:
+        form = forms.MoveRequestForm(*args, **kwargs)
+
+    # REMOVING EMPTY_LABEL, SO PLACEHOLDER '-----' NOT INCLUDED WITH CONTEXT
+    form.fields['old_building'].empty_label = None
+    old_building_choices = form.fields['old_building'].choices
+    form.fields['new_building'].empty_label = None
+    new_building_choices = form.fields['new_building'].choices
+    form.fields['old_division'].empty_label = None
+    old_division_choices = form.fields['old_division'].choices
+    form.fields['new_division'].empty_label = None
+    new_division_choices = form.fields['new_division'].choices
+
+    context = {
+        'form': form,
+        'old_building_choices': old_building_choices,
+        'new_building_choices': new_building_choices,
+        'old_division_choices': old_division_choices,
+        'new_division_choices': new_division_choices,
+    }
+    return render(request, template, context)
+
+
+@login_required
+def new_user_request(request, *args, **kwargs):
+    template = 'tickets/new_user_request.html'
+    check_groups(request.user, [GROUP_SUPERVISOR, GROUP_DIVISION_HEAD])
+
+    if request.method == 'POST':
+        form = forms.NewUserRequestForm(request.POST, *args, **kwargs)
+        if form.is_valid():
+            if NewUserTicket.objects.last() is not None and \
+                    NewUserTicket.objects.last().name == form.cleaned_data.get('name') and \
+                    NewUserTicket.objects.last().user == request.user:
+                # Catch if the user made a duplicate submission, prevent from creating a new object
+                ticket = Ticket.objects.last()
+                pass
+            else:
+                move_request_format = 'NEW USER - starting {start_date}\n' \
+                                      '{name} ({job_title})\n' \
+                                      'DIVISION: {division}\n' \
+                                      'LOCATION: ({building}) {room_number}\n' \
+                                      'CMS Access: {cms_access}' \
+                                      '{needs_computer}{needs_email_account}'
+
+                ticket = form.save(commit=False)
+                ticket.user = request.user
+                ticket.category = Ticket.NEW_USER
+                ticket.save()
+                ticket.problem_description = move_request_format.format(
+                    name=ticket.name,
+                    job_title=ticket.job_title,
+                    start_date=ticket.start_date.strftime('%m/%d/%Y'),
+                    division=ticket.division,
+                    building=ticket.building,
+                    room_number=ticket.room_number,
+                    cms_access=ticket.get_cms_access_display(),
+                    needs_computer=', needs computer' if ticket.needs_computer else '',
+                    needs_email_account=', needs email account' if ticket.needs_email_account else '',
+                )
+                ticket.save()
+                send_new_ticket_alert_email(ticket, request)
+
+            return HttpResponseRedirect(reverse('tickets:view_ticket', kwargs={"ticket_id": ticket.id}))
+    else:
+        form = forms.NewUserRequestForm(*args, **kwargs)
+
+    form.fields['building'].empty_label = None
+    building_choices = form.fields['building'].choices
+    form.fields['division'].empty_label = None
+    division_choices = form.fields['division'].choices
+    form.fields['job_title'].empty_label = None
+    job_title_choices = form.fields['job_title'].choices
+    form.fields['cms_access'].empty_label = None
+    cms_access_choices = form.fields['cms_access'].choices
+
+    context = {
+        'form': form,
+        'building_choices': building_choices,
+        'division_choices': division_choices,
+        'job_title_choices': job_title_choices,
+        'cms_access_choices': cms_access_choices,
+    }
     return render(request, template, context)

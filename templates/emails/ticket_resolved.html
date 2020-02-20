@@ -3,7 +3,7 @@
 {% block content %}
 Ticket #{{ ticket.id }} has been resolved by <strong>{{ ticket.assignee }}</strong> ({{ ticket.assignee.email }})<br/>
 <br/>
-Your issue was as follows: <br/><em>{{ ticket.problem_description }}</em><br/>
+Your issue was as follows: <br/><em>{{ ticket.problem_description|linebreaksbr }}</em><br/>
 <br/>
 <strong>{{ ticket.assignee }}</strong> provided this information with the resolution: <br/><em>{{ ticket.resolution }}</em><br/>
 {% endblock %}

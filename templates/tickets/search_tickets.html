@@ -202,7 +202,7 @@
                   <td>{{ ticket.assignee}}</td>
                   <td>{{ ticket.get_category_display }}</td>
                   <td>{{ ticket.get_priority_display }}</td>
-                  <td>{{ ticket.problem_description }}</td>
+                  <td>{{ ticket.problem_description|linebreaksbr }}</td>
                   <td>{{ ticket.resolution }}</td>
               </tr>
           {% endfor %}

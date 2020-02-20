@@ -1,5 +1,4 @@
 from django.db import models
-
 from users.models import HelpDeskUser
 
 
@@ -67,6 +66,9 @@ class Ticket(models.Model):
     SOFTWARE = 8
     ACCESS = 9
 
+    MOVE_REQUEST = 10
+    NEW_USER = 11
+
     CATEGORY_CHOICES = (
         (WORKSTATION, 'Workstation'),
         (LAPTOP, 'Laptop'),
@@ -76,12 +78,16 @@ class Ticket(models.Model):
         (SCANNER, 'Scanner'),
         (OTHER_PERIPHERAL, 'Other Peripheral'),
         (SOFTWARE, 'Software'),
-        (ACCESS, 'Access'),
+    )
+
+    DIVISION_HEAD_CATEGORY_CHOICES = (
+        (MOVE_REQUEST, 'Move Request'),
+        (NEW_USER, 'New User'),
     )
 
     # To be assigned by a supervisor
     category = models.IntegerField(
-        choices=CATEGORY_CHOICES,
+        choices=CATEGORY_CHOICES + DIVISION_HEAD_CATEGORY_CHOICES,
         null=True
     )
 
@@ -112,6 +118,130 @@ class Ticket(models.Model):
     closed_date = models.DateTimeField(
         blank=True,
         null=True,
+    )
+
+
+# Tables to be populated with external file
+class Building(models.Model):
+    name = models.CharField(
+        max_length=60,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Division(models.Model):
+    name = models.CharField(
+        max_length=60,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class JobTitle(models.Model):
+    name = models.CharField(
+        max_length=60,
+    )
+
+    def __str__(self):
+        return self.name
+
+
+# Specialized tickets to be submitted by Division Heads
+class MoveRequestTicket(Ticket):
+
+    # Name of user to be moved
+    name = models.CharField(
+        max_length=120,
+    )
+
+    old_building = models.ForeignKey(
+        Building,
+        on_delete=models.PROTECT,
+        related_name='move_requests_from'
+    )
+
+    new_building = models.ForeignKey(
+        Building,
+        on_delete=models.PROTECT,
+        related_name='move_requests_to',
+    )
+
+    old_division = models.ForeignKey(
+        Division,
+        on_delete=models.PROTECT,
+        related_name='move_requests_from'
+    )
+
+    new_division = models.ForeignKey(
+        Division,
+        on_delete=models.PROTECT,
+        related_name='move_requests_to',
+    )
+
+    old_room_number = models.CharField(
+        max_length=10,
+    )
+
+    new_room_number = models.CharField(
+        max_length=10,
+    )
+
+    scheduled_move_date = models.DateTimeField(
+    )
+
+
+class NewUserTicket(Ticket):
+
+    name = models.CharField(
+        max_length=120,
+    )
+
+    building = models.ForeignKey(
+        Building,
+        on_delete=models.PROTECT,
+    )
+
+    division = models.ForeignKey(
+        Division,
+        on_delete=models.PROTECT,
+    )
+
+    job_title = models.ForeignKey(
+        JobTitle,
+        on_delete=models.PROTECT,
+    )
+
+    CMS_NONE = 1
+    CMS_GUEST = 2
+    CMS_STAFF = 3
+
+    CMS_ACCESS_CHOICES = (
+        (CMS_NONE, 'None Needed'),
+        (CMS_GUEST, 'Guest (Read Only)'),
+        (CMS_STAFF, 'DAStaff (Read and Write)')
+    )
+
+    cms_access = models.IntegerField(
+        choices=CMS_ACCESS_CHOICES,
+    )
+
+    room_number = models.CharField(
+        max_length=10,
+    )
+
+    needs_computer = models.BooleanField(
+        default=False,
+    )
+
+    needs_email_account = models.BooleanField(
+        default=False,
+    )
+
+    # Date new user will begin work
+    start_date = models.DateTimeField(
     )
 
 

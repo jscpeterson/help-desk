@@ -1,26 +1,34 @@
 {% load static %}
 
 <ul id="navDropdown" class="dropdown-content">
+  {% if user.is_authenticated %}
+    <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
+  {% endif %}
+
+  {% if user.is_division_head %}
+    <li><a href="{% url 'tickets:move_request' %}">New Move Request</a></li>
+    <li><a href="{% url 'tickets:new_user_request' %}">New User Access Request</a></li>
+  {% endif %}
+
   {% if user.is_support or user.is_supervisor or user.is_superuser %}
-  <li><a href="{% url 'tickets:search_tickets' 'nav' %}">Search Tickets</a></li>
-  <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
-  <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
+    <li><a href="{% url 'tickets:search_tickets' 'nav' %}">Search Tickets</a></li>
+    <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
   {% endif %}
 
   {% if user.is_support %}
-  <li><a href="{% url 'tickets:view_assigned_tickets' %}">Assigned Tickets</a></li>
-  <li class="divider"></li>
+    <li><a href="{% url 'tickets:view_assigned_tickets' %}">Assigned Tickets</a></li>
+    <li class="divider"></li>
   {% endif %}
 
   {% if user.is_supervisor %}
-  <li><a href="{% url 'tickets:view_unassigned_tickets' %}">Unassigned Tickets</a></li>
-  <li class="divider"></li>
+    <li><a href="{% url 'tickets:view_unassigned_tickets' %}">Unassigned Tickets</a></li>
+    <li class="divider"></li>
   {% endif %}
 
   {% if user.is_authenticated %}
-  <li><a href="{% url 'logout' %}">Logout <b>{{request.user.username}}</b></a></li>
+    <li><a href="{% url 'logout' %}">Logout <b>{{request.user.username}}</b></a></li>
   {% else %}
-  <li><a href="{% url 'login' %}">Login</a></li>
+    <li><a href="{% url 'login' %}">Login</a></li>
   {% endif %}
 </ul>
 
@@ -42,24 +50,32 @@
     </ul>
 
     <ul class="right hide-on-med-and-down">
+      {% if user.is_authenticated %}
+        <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
+      {% endif %}
+
+      {% if user.is_division_head %}
+        <li><a href="{% url 'tickets:move_request' %}">New Move Request</a></li>
+        <li><a href="{% url 'tickets:new_user_request' %}">New User Access Request</a></li>
+      {% endif %}
+
       {% if user.is_support or user.is_supervisor or user.is_superuser %}
-      <li><a href="{% url 'tickets:search_tickets' 'nav' %}">Search Tickets</a></li>
-      <li><a href="{% url 'tickets:new_ticket' %}">New Ticket</a></li>
-      <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
+        <li><a href="{% url 'tickets:search_tickets' 'nav' %}">Search Tickets</a></li>
+        <li><a href="{% url 'tickets:view_closed_tickets' %}">Closed Tickets</a></li>
       {% endif %}
 
       {% if user.is_support %}
-      <li><a href="{% url 'tickets:view_assigned_tickets' %}">Assigned Tickets</a></li>
+        <li><a href="{% url 'tickets:view_assigned_tickets' %}">Assigned Tickets</a></li>
       {% endif %}
 
       {% if user.is_supervisor %}
-      <li><a href="{% url 'tickets:view_unassigned_tickets' %}">Unassigned Tickets</a></li>
+        <li><a href="{% url 'tickets:view_unassigned_tickets' %}">Unassigned Tickets</a></li>
       {% endif %}
 
       {% if user.is_authenticated %}
-      <li><a href="{% url 'logout' %}">Logout <b>{{request.user.username}}</b></a></li>
+        <li><a href="{% url 'logout' %}">Logout <b>{{request.user.username}}</b></a></li>
       {% else %}
-      <li><a href="{% url 'login' %}">Login</a></li>
+        <li><a href="{% url 'login' %}">Login</a></li>
       {% endif %}
     </ul>
 

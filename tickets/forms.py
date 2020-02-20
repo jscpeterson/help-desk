@@ -2,7 +2,7 @@ from django import forms
 from django.forms import Form, ModelForm
 from django.db.models import Q
 
-from tickets.models import Ticket, Note
+from tickets.models import Ticket, Note, MoveRequestTicket, NewUserTicket
 from users.models import HelpDeskUser, GROUP_SUPPORT, GROUP_SUPERVISOR
 
 EMPTY_CHOICE = '---------'
@@ -19,6 +19,8 @@ class AssignTicketForm(Form):
 
     def __init__(self, *args, **kwargs):
         ticket = Ticket.objects.get(id=kwargs.pop('ticket_id'))
+        category_already_set = ticket.category == Ticket.NEW_USER or ticket.category == Ticket.MOVE_REQUEST
+
         user = kwargs.pop('user')
         super(AssignTicketForm, self).__init__(*args, **kwargs)
 
@@ -43,6 +45,8 @@ class AssignTicketForm(Form):
 
         self.fields['category'] = forms.ChoiceField(
             choices=category_choices,
+            disabled=category_already_set,
+            required=not category_already_set,
         )
 
 
@@ -62,3 +66,27 @@ class NewNoteForm(ModelForm):
     class Meta:
         model = Note
         fields = ['text']
+
+
+class MoveRequestForm(ModelForm):
+
+    class Meta:
+        model = MoveRequestTicket
+        fields = ['name',
+                  'old_building', 'new_building',
+                  'old_division', 'new_division',
+                  'old_room_number', 'new_room_number',
+                  'scheduled_move_date']
+
+
+class NewUserRequestForm(ModelForm):
+
+    class Meta:
+        model = NewUserTicket
+        fields = ['name',
+                  'building', 'division', 'room_number',
+                  'job_title',
+                  'cms_access',
+                  'needs_computer',
+                  'needs_email_account',
+                  'start_date']

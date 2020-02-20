@@ -1,8 +1,8 @@
 from django.contrib.auth.models import Group
 from django.core.management.base import BaseCommand
-from users.models import GROUP_SUPPORT, GROUP_SUPERVISOR
+from users.models import GROUP_SUPPORT, GROUP_SUPERVISOR, GROUP_DIVISION_HEAD
 
-GROUPS = [GROUP_SUPPORT, GROUP_SUPERVISOR]
+GROUPS = [GROUP_SUPPORT, GROUP_SUPERVISOR, GROUP_DIVISION_HEAD]
 
 
 class Command(BaseCommand):

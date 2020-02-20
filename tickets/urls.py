@@ -11,6 +11,10 @@ urlpatterns = [
     # User New Ticket Submission
     path('new/', views.new_ticket, name='new_ticket'),
 
+    # Division Head Special Tickets
+    path('move_request/', views.move_request, name='move_request'),
+    path('new_user_request/', views.new_user_request, name='new_user_request'),
+
     # Supervisor Unassigned Tickets
     path('unassigned/', views.view_unassigned_tickets, name='view_unassigned_tickets'),
     # Supervisor Ticket Assignment
