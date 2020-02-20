@@ -83,10 +83,10 @@ class MoveRequestForm(ModelForm):
 
 class NewUserRequestForm(ModelForm):
 
-    # cms_access = forms.ChoiceField(
-    #     choices=NewUserTicket.CMS_ACCESS_CHOICES,
-    #     initial="",
-    # )
+    cms_access = forms.ChoiceField(
+        choices=NewUserTicket.CMS_ACCESS_CHOICES,
+        initial="",
+    )
 
     class Meta:
         model = NewUserTicket
