@@ -387,7 +387,7 @@ def search_tickets(request, **kwargs):
 def add_note(request, *args, **kwargs):
     template = 'tickets/new_note.html'
     ticket = get_object_or_404(Ticket, id=kwargs.get('ticket_id'))
-    check_is_assigned_or_user(request.user, ticket)
+    check_groups_or_is_user(request.user, ticket, [GROUP_SUPERVISOR, GROUP_SUPPORT])
 
     if request.method == 'POST':
         form = forms.NewNoteForm(request.POST)
@@ -425,10 +425,10 @@ def view_ticket(request, *args, **kwargs):
 
     notes = Note.objects.filter(ticket__id=ticket.id)
 
-    if ticket.assignee is None:
-        check_groups_or_is_user(request.user, ticket, [GROUP_SUPERVISOR, GROUP_SUPPORT])
-    else:
-        check_is_assigned_or_user(request.user, ticket)
+    # if ticket.assignee is None:
+    check_groups_or_is_user(request.user, ticket, [GROUP_SUPERVISOR, GROUP_SUPPORT])
+    #else:
+    #    check_is_assigned_or_user(request.user, ticket)
 
     context = {
         'ticket': ticket,
