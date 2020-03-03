@@ -88,6 +88,8 @@ def view_unassigned_tickets(request):
         'unassigned_tickets': Ticket.objects.filter(status=Ticket.OPEN, assignee=None).order_by('created_date'),
         'assigned_tickets': Ticket.objects.filter(status=Ticket.OPEN).exclude(assignee=None).order_by('created_date')
         .order_by('priority'),
+        'num_unassigned': len(Ticket.objects.filter(status=Ticket.OPEN, assignee=None)),
+        'num_assigned': len(Ticket.objects.filter(status=Ticket.OPEN).exclude(assignee=None)),
     }
 
     return render(request, template, context)
@@ -153,7 +155,9 @@ def view_assigned_tickets(request):
         'first_name': request.user.first_name,
         'assigned_tickets': Ticket.objects.filter(assignee=request.user, status=Ticket.OPEN).order_by('created_date')
             .order_by('priority'),
-        'unassigned_tickets': Ticket.objects.filter(status=Ticket.OPEN, assignee=None).order_by('created_date'),
+        'unassigned_tickets': Ticket.objects.filter(assignee=None, status=Ticket.OPEN).order_by('created_date'),
+        'num_assigned': len(Ticket.objects.filter(assignee=request.user, status=Ticket.OPEN)),
+        'num_unassigned': len(Ticket.objects.filter(assignee=None, status=Ticket.OPEN)),
     }
 
     return render(request, template, context)
